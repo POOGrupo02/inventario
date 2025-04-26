@@ -11,8 +11,10 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class GuiProducto extends JDialog {
+public class GuiProducto extends JDialog implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
@@ -20,6 +22,7 @@ public class GuiProducto extends JDialog {
 	private JTextField txtNom;
 	private JTextField txtStock;
 	private JTextField txtPrecio;
+	private JButton btnAgregar;
 
 	/**
 	 * Launch the application.
@@ -38,35 +41,32 @@ public class GuiProducto extends JDialog {
 	 * Create the dialog.
 	 */
 	public GuiProducto() {
+		setModal(true);
 		setTitle("Producto");
-		setBounds(100, 100, 519, 359);
+		setBounds(100, 100, 548, 422);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		
-		JButton btnNewButton = new JButton("New button");
-		btnNewButton.setBounds(10, 104, 89, 23);
-		contentPanel.add(btnNewButton);
+		JButton btnModificar = new JButton("Modificar");
+		btnModificar.setBounds(109, 104, 89, 23);
+		contentPanel.add(btnModificar);
 		
-		JButton btnNewButton_1 = new JButton("New button");
-		btnNewButton_1.setBounds(125, 104, 89, 23);
-		contentPanel.add(btnNewButton_1);
+		JButton btnBuscarxNombre = new JButton("Buscar por nombre");
+		btnBuscarxNombre.setBounds(338, 104, 123, 23);
+		contentPanel.add(btnBuscarxNombre);
 		
-		JButton btnNewButton_1_1 = new JButton("New button");
-		btnNewButton_1_1.setBounds(365, 104, 89, 23);
-		contentPanel.add(btnNewButton_1_1);
-		
-		JButton btnNewButton_1_1_1 = new JButton("New button");
-		btnNewButton_1_1_1.setBounds(256, 104, 89, 23);
-		contentPanel.add(btnNewButton_1_1_1);
+		JButton btnBuscarxCod = new JButton("Buscar por código");
+		btnBuscarxCod.setBounds(208, 104, 117, 23);
+		contentPanel.add(btnBuscarxCod);
 		
 		JLabel lblNewLabel = new JLabel("ID:");
 		lblNewLabel.setBounds(10, 15, 46, 14);
 		contentPanel.add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("Nombre:");
-		lblNewLabel_1.setBounds(226, 18, 228, 14);
+		lblNewLabel_1.setBounds(226, 18, 63, 14);
 		contentPanel.add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_2 = new JLabel("Stock: 10");
@@ -98,14 +98,34 @@ public class GuiProducto extends JDialog {
 		txtPrecio.setColumns(10);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 142, 483, 167);
+		scrollPane.setBounds(10, 183, 483, 177);
 		contentPanel.add(scrollPane);
 		
-		JTextArea textArea = new JTextArea();
-		scrollPane.setViewportView(textArea);
+		JTextArea txtLstProducto = new JTextArea();
+		scrollPane.setViewportView(txtLstProducto);
 		
 		JLabel lblNewLabel_2_1 = new JLabel("Modificar stock:");
 		lblNewLabel_2_1.setBounds(10, 60, 75, 14);
 		contentPanel.add(lblNewLabel_2_1);
+		
+		JButton btnEliminar = new JButton("Eliminar por código");
+		btnEliminar.setBounds(10, 149, 123, 23);
+		contentPanel.add(btnEliminar);
+		
+		JButton btnSalir = new JButton("Salir");
+		btnSalir.setBounds(143, 149, 89, 23);
+		contentPanel.add(btnSalir);
+		
+		btnAgregar = new JButton("Agregar");
+		btnAgregar.addActionListener(this);
+		btnAgregar.setBounds(10, 104, 89, 23);
+		contentPanel.add(btnAgregar);
+	}
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnAgregar) {
+			do_btnAgregar_actionPerformed(e);
+		}
+	}
+	protected void do_btnAgregar_actionPerformed(ActionEvent e) {
 	}
 }

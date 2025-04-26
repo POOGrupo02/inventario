@@ -7,7 +7,7 @@ public class Arreglo_producto {
     public Arreglo_producto() {
     	produc=new ArrayList<Producto>();
     }
-    public void Adicionar(Producto p) {
+    public void Agregar(Producto p) {
     	produc.add(p);
     }
     public int Cant_Productos() {
