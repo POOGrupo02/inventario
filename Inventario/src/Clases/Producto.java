@@ -42,7 +42,5 @@ public double getPrecio() {
 public void setPrecio(double precio) {
 	this.precio = precio;
 }
-public String MostrarInfo(int id, String nombre, String categoria,double precio) {
-	return id+"\t"+nombre+"\t"+categoria+"\t"+precio;
-}
+
 }
