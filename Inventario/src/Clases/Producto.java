@@ -1,7 +1,7 @@
 package Clases;
 
 public class Producto {
-protected int id,stock;
+protected int id,stock=10;
 protected String nombre,categoría;
 protected double precio;
 public Producto(int id, int stock, String nombre, String categoría, double precio) {
