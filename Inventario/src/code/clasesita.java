@@ -1,5 +1,5 @@
 package code;
 
 public class clasesita {
-	private String mensaje = "gaaaaaaaaaaaaaa";
+	private String mensaje = "gaaaaaaaa";
 }
