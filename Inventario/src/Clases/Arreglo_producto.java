@@ -16,14 +16,6 @@ public class Arreglo_producto {
     public Producto Obtener(int posicion){
     	return produc.get(posicion);
     }
-    public Producto Buscar(int id) {
-    	for (int i = 0; i < Cant_Productos(); i++) {
-			if (Obtener(i).getId()==id) 
-			{
-				  return Obtener(i);
-			}
-		}
-    	return null;
-    }
+    
     
 }
