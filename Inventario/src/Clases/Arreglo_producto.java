@@ -27,7 +27,7 @@ public class Arreglo_producto {
     }
     public Producto Buscar(String nombre) {
     	for (int i = 0; i < Cant_Productos(); i++) {
-			if (Obtener(i).getNombre()==nombre) 
+			if (Obtener(i).getNombre().equals(nombre)) 
 			{
 				  return Obtener(i);
 			}

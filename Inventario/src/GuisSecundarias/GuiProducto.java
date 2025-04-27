@@ -59,7 +59,8 @@ public class GuiProducto extends JDialog implements ActionListener {
 		btnModificar.setBounds(123, 127, 89, 23);
 		contentPanel.add(btnModificar);
 		
-		JButton btnBuscarxNombre = new JButton("Buscar por nombre");
+		btnBuscarxNombre = new JButton("Buscar por nombre");
+		btnBuscarxNombre.addActionListener(this);
 		btnBuscarxNombre.setBounds(397, 127, 165, 23);
 		contentPanel.add(btnBuscarxNombre);
 		
@@ -148,6 +149,9 @@ public class GuiProducto extends JDialog implements ActionListener {
 		}
 	}
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnBuscarxNombre) {
+			do_btnBuscarxNombre_actionPerformed(e);
+		}
 		if (e.getSource() == btnBuscarxCod) {
 			do_btnBuscarxCod_actionPerformed(e);
 		}
@@ -175,6 +179,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 	private JButton btnSalir;
 	private JButton btnModificar;
 	private JButton btnBuscarxCod;
+	private JButton btnBuscarxNombre;
 	
 	public int LeerID() {
 		return Integer.parseInt(txtID.getText());
@@ -254,7 +259,28 @@ public class GuiProducto extends JDialog implements ActionListener {
 			Producto p=ap.Buscar(LeerID());
 	        if (p!=null) {
 	        	JOptionPane.showMessageDialog(this, "Producto encontrado");
-	        	Cabezal();
+	        	Imprimir(Cabezal());
+	        	Imprimir(p.getId()+"\t"+p.getNombre()+
+						"\t"+p.getPrecio()+"\t"+p.getCategoría()+
+						"\t"+p.getStock());
+			}
+	        else 
+	        {
+				JOptionPane.showMessageDialog(this, "El producto no existe");
+			}
+		} catch (Exception e2) {
+			JOptionPane.showMessageDialog(this,"Ingrese un código válido");
+			// TODO: handle exception
+		}
+	}
+	
+	protected void do_btnBuscarxNombre_actionPerformed(ActionEvent e) {
+		txtLstProduc.setText("");
+		try {
+			Producto p=ap.Buscar(LeerNombre());
+	        if (p!=null) {
+	        	JOptionPane.showMessageDialog(this, "Producto encontrado");
+	        	Imprimir(Cabezal());
 	        	Imprimir(p.getId()+"\t"+p.getNombre()+
 						"\t"+p.getPrecio()+"\t"+p.getCategoría()+
 						"\t"+p.getStock());
@@ -272,4 +298,5 @@ public class GuiProducto extends JDialog implements ActionListener {
 	protected void do_btnSalir_actionPerformed(ActionEvent e) {
 		dispose();
 	}
+	
 }
