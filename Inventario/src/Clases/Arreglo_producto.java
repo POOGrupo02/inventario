@@ -34,4 +34,8 @@ public class Arreglo_producto {
 		}
     	return null;
     }
+    public void Eliminar(Producto p){
+    	produc.remove(p);
+    }
+    
 }
