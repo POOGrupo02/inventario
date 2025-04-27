@@ -73,39 +73,39 @@ public class GuiProducto extends JDialog implements ActionListener {
 		contentPanel.add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("Nombre:");
-		lblNewLabel_1.setBounds(226, 18, 63, 14);
+		lblNewLabel_1.setBounds(247, 17, 63, 14);
 		contentPanel.add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_2 = new JLabel("Stock: 10");
-		lblNewLabel_2.setBounds(10, 46, 46, 14);
+		lblNewLabel_2.setBounds(10, 46, 63, 14);
 		contentPanel.add(lblNewLabel_2);
 		
 		JLabel lblNewLabel_3 = new JLabel("Precio:");
-		lblNewLabel_3.setBounds(226, 57, 46, 14);
+		lblNewLabel_3.setBounds(247, 56, 46, 14);
 		contentPanel.add(lblNewLabel_3);
 		
 		txtID = new JTextField();
-		txtID.setBounds(95, 12, 86, 20);
+		txtID.setBounds(116, 11, 86, 20);
 		contentPanel.add(txtID);
 		txtID.setColumns(10);
 		
 		txtNom = new JTextField();
-		txtNom.setBounds(301, 15, 153, 20);
+		txtNom.setBounds(322, 14, 153, 20);
 		contentPanel.add(txtNom);
 		txtNom.setColumns(10);
 		
 		txtStock = new JTextField();
-		txtStock.setBounds(95, 54, 86, 20);
+		txtStock.setBounds(116, 53, 86, 20);
 		contentPanel.add(txtStock);
 		txtStock.setColumns(10);
 		
 		txtPrecio = new JTextField();
-		txtPrecio.setBounds(301, 54, 86, 20);
+		txtPrecio.setBounds(322, 53, 86, 20);
 		contentPanel.add(txtPrecio);
 		txtPrecio.setColumns(10);
 		
 		JLabel lblNewLabel_2_1 = new JLabel("Modificar stock:");
-		lblNewLabel_2_1.setBounds(10, 60, 75, 14);
+		lblNewLabel_2_1.setBounds(10, 60, 103, 14);
 		contentPanel.add(lblNewLabel_2_1);
 		
 		JButton btnEliminar = new JButton("Eliminar por código");
@@ -124,12 +124,12 @@ public class GuiProducto extends JDialog implements ActionListener {
 		{
 			txtCategoria = new JTextField();
 			txtCategoria.setColumns(10);
-			txtCategoria.setBounds(95, 96, 86, 20);
+			txtCategoria.setBounds(116, 95, 86, 20);
 			contentPanel.add(txtCategoria);
 		}
 		{
 			lblNewLabel_2_2 = new JLabel("Categoría:");
-			lblNewLabel_2_2.setBounds(10, 101, 75, 14);
+			lblNewLabel_2_2.setBounds(10, 101, 89, 14);
 			contentPanel.add(lblNewLabel_2_2);
 		}
 		
@@ -206,13 +206,18 @@ public class GuiProducto extends JDialog implements ActionListener {
 	}
 	
 	protected void do_btnAgregar_actionPerformed(ActionEvent e) {
-		Producto p=new Producto(LeerID(),LeerStock(),LeerNombre(),LeerCategoria(),LeerPrecio());
-		
-		if (ap.Buscar(LeerID())!=null) {
-			JOptionPane.showMessageDialog(this,"El producto ya existe");
-			return;
+		try {
+			Producto p=new Producto(LeerID(),LeerStock(),LeerNombre(),LeerCategoria(),LeerPrecio());
+			
+			if (ap.Buscar(LeerID())!=null) {
+				JOptionPane.showMessageDialog(this,"El producto ya existe");
+				return;
+			}
+			ap.Agregar(p);
+		} catch (Exception e2) {
+			JOptionPane.showMessageDialog(this,"Error al registrar el producto, verifique los datos ingresados");
+			// TODO: handle exception
 		}
-		ap.Agregar(p);
 	}
 	protected void do_btnListar_actionPerformed(ActionEvent e) {
 		if (ap.Cant_Productos()==0) {
@@ -225,32 +230,42 @@ public class GuiProducto extends JDialog implements ActionListener {
 	}
 	
 	protected void do_btnModificar_actionPerformed(ActionEvent e) {
-		Producto p=ap.Buscar(LeerID());
-        if (p!=null) {
-		    p.setNombre(LeerNombre());
-		    p.setPrecio(LeerPrecio());
-		    p.setCategoría(LeerCategoria());
-		    p.setStock(LeerStock());
-		}
-        else 
-        {
-			JOptionPane.showMessageDialog(this, "El producto no existe");
+		try {
+			Producto p=ap.Buscar(LeerID());
+	        if (p!=null) {
+			    p.setNombre(LeerNombre());
+			    p.setPrecio(LeerPrecio());
+			    p.setCategoría(LeerCategoria());
+			    p.setStock(LeerStock());
+			}
+	        else 
+	        {
+				JOptionPane.showMessageDialog(this, "El producto no existe");
+			}
+		} catch (Exception e2) {
+			JOptionPane.showMessageDialog(this,"Ingrese un código válido");
+			// TODO: handle exception
 		}
         
 	}
 	protected void do_btnBuscarxCod_actionPerformed(ActionEvent e) {
 		txtLstProduc.setText("");
-		Producto p=ap.Buscar(LeerID());
-        if (p!=null) {
-        	JOptionPane.showMessageDialog(this, "Producto encontrado");
-        	Cabezal();
-        	Imprimir(p.getId()+"\t"+p.getNombre()+
-					"\t"+p.getPrecio()+"\t"+p.getCategoría()+
-					"\t"+p.getStock());
-		}
-        else 
-        {
-			JOptionPane.showMessageDialog(this, "El producto no existe");
+		try {
+			Producto p=ap.Buscar(LeerID());
+	        if (p!=null) {
+	        	JOptionPane.showMessageDialog(this, "Producto encontrado");
+	        	Cabezal();
+	        	Imprimir(p.getId()+"\t"+p.getNombre()+
+						"\t"+p.getPrecio()+"\t"+p.getCategoría()+
+						"\t"+p.getStock());
+			}
+	        else 
+	        {
+				JOptionPane.showMessageDialog(this, "El producto no existe");
+			}
+		} catch (Exception e2) {
+			JOptionPane.showMessageDialog(this,"Ingrese un código válido");
+			// TODO: handle exception
 		}
 	}
 	
