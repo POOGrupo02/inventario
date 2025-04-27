@@ -306,7 +306,8 @@ public class GuiProducto extends JDialog implements ActionListener {
 	protected void do_btnEliminar_actionPerformed(ActionEvent e) {
 		try {
 			Producto p=ap.Buscar(LeerNombre());
-			if (p!=null) {
+			if (p!=null) 
+			{
 	        	ap.Eliminar(p);
 			}
 	        else 
