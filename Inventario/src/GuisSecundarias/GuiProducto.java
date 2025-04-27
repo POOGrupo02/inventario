@@ -109,7 +109,8 @@ public class GuiProducto extends JDialog implements ActionListener {
 		lblNewLabel_2_1.setBounds(10, 60, 103, 14);
 		contentPanel.add(lblNewLabel_2_1);
 		
-		JButton btnEliminar = new JButton("Eliminar por código");
+		btnEliminar = new JButton("Eliminar por código");
+		btnEliminar.addActionListener(this);
 		btnEliminar.setBounds(24, 161, 146, 23);
 		contentPanel.add(btnEliminar);
 		
@@ -149,6 +150,9 @@ public class GuiProducto extends JDialog implements ActionListener {
 		}
 	}
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnEliminar) {
+			do_btnEliminar_actionPerformed(e);
+		}
 		if (e.getSource() == btnBuscarxNombre) {
 			do_btnBuscarxNombre_actionPerformed(e);
 		}
@@ -180,6 +184,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 	private JButton btnModificar;
 	private JButton btnBuscarxCod;
 	private JButton btnBuscarxNombre;
+	private JButton btnEliminar;
 	
 	public int LeerID() {
 		return Integer.parseInt(txtID.getText());
@@ -267,6 +272,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 	        else 
 	        {
 				JOptionPane.showMessageDialog(this, "El producto no existe");
+				return;
 			}
 		} catch (Exception e2) {
 			JOptionPane.showMessageDialog(this,"Ingrese un código válido");
@@ -275,8 +281,8 @@ public class GuiProducto extends JDialog implements ActionListener {
 	}
 	
 	protected void do_btnBuscarxNombre_actionPerformed(ActionEvent e) {
+		
 		txtLstProduc.setText("");
-		try {
 			Producto p=ap.Buscar(LeerNombre());
 	        if (p!=null) {
 	        	JOptionPane.showMessageDialog(this, "Producto encontrado");
@@ -284,6 +290,24 @@ public class GuiProducto extends JDialog implements ActionListener {
 	        	Imprimir(p.getId()+"\t"+p.getNombre()+
 						"\t"+p.getPrecio()+"\t"+p.getCategoría()+
 						"\t"+p.getStock());
+			}
+	        else {
+	        	if (LeerNombre().equals("")) {
+	        		JOptionPane.showMessageDialog(this, "Ingrese un nombre");
+	        		return;
+				}
+	        	JOptionPane.showMessageDialog(this, "El producto no existe");
+	        	
+				
+			}
+		
+	}
+	
+	protected void do_btnEliminar_actionPerformed(ActionEvent e) {
+		try {
+			Producto p=ap.Buscar(LeerNombre());
+			if (p!=null) {
+	        	ap.Eliminar(p);
 			}
 	        else 
 	        {
@@ -294,9 +318,9 @@ public class GuiProducto extends JDialog implements ActionListener {
 			// TODO: handle exception
 		}
 	}
-	
 	protected void do_btnSalir_actionPerformed(ActionEvent e) {
 		dispose();
 	}
+	
 	
 }
