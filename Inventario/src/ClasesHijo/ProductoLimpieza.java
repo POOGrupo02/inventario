@@ -3,7 +3,7 @@ package ClasesHijo;
 import ClasePadre.Producto;
 
 public class ProductoLimpieza extends Producto{
-private String tipoUso; //puede ser doméstico, industrial,etc
+private String tipoUso; //puede ser doméstico, industrial, eléctronico,etc
 private double cantLitros;
 public ProductoLimpieza(int id, int stock, String nombre, String categoría, double precio, String tipoUso,
 		double cantLitros) {
