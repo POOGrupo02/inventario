@@ -1,4 +1,4 @@
-package Clases;
+package ClasePadre;
 
 public class Producto {
 protected int id,stock=10;
@@ -42,5 +42,6 @@ public double getPrecio() {
 public void setPrecio(double precio) {
 	this.precio = precio;
 }
+
 
 }

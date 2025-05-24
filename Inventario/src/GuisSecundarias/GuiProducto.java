@@ -8,8 +8,8 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import Clases.Arreglo_producto;
-import Clases.Producto;
+import Arreglo.Arreglo_producto;
+import ClasePadre.Producto;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -18,6 +18,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class GuiProducto extends JDialog implements ActionListener {
 
@@ -54,19 +56,19 @@ public class GuiProducto extends JDialog implements ActionListener {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		
-		btnModificar = new JButton("Modificar");
+		btnModificar = new JButton("Modificar por Código");
 		btnModificar.addActionListener(this);
-		btnModificar.setBounds(123, 127, 89, 23);
+		btnModificar.setBounds(123, 127, 153, 23);
 		contentPanel.add(btnModificar);
 		
 		btnBuscarxNombre = new JButton("Buscar por nombre");
 		btnBuscarxNombre.addActionListener(this);
-		btnBuscarxNombre.setBounds(397, 127, 165, 23);
+		btnBuscarxNombre.setBounds(451, 127, 165, 23);
 		contentPanel.add(btnBuscarxNombre);
 		
 		btnBuscarxCod = new JButton("Buscar por código");
 		btnBuscarxCod.addActionListener(this);
-		btnBuscarxCod.setBounds(222, 127, 153, 23);
+		btnBuscarxCod.setBounds(288, 127, 153, 23);
 		contentPanel.add(btnBuscarxCod);
 		
 		JLabel lblNewLabel = new JLabel("ID:");
@@ -124,14 +126,8 @@ public class GuiProducto extends JDialog implements ActionListener {
 		btnAgregar.setBounds(24, 127, 89, 23);
 		contentPanel.add(btnAgregar);
 		{
-			txtCategoria = new JTextField();
-			txtCategoria.setColumns(10);
-			txtCategoria.setBounds(116, 95, 86, 20);
-			contentPanel.add(txtCategoria);
-		}
-		{
 			lblNewLabel_2_2 = new JLabel("Categoría:");
-			lblNewLabel_2_2.setBounds(10, 101, 89, 14);
+			lblNewLabel_2_2.setBounds(10, 98, 89, 14);
 			contentPanel.add(lblNewLabel_2_2);
 		}
 		
@@ -147,6 +143,12 @@ public class GuiProducto extends JDialog implements ActionListener {
 				txtLstProduc = new JTextArea();
 				scrollPane.setViewportView(txtLstProduc);
 			}
+		}
+		{
+			cboCategoría = new JComboBox();
+			cboCategoría.setModel(new DefaultComboBoxModel(new String[] {"Alimenticio", "Electrónico", "Limpieza"}));
+			cboCategoría.setBounds(116, 94, 96, 22);
+			contentPanel.add(cboCategoría);
 		}
 	}
 	public void actionPerformed(ActionEvent e) {
@@ -174,8 +176,6 @@ public class GuiProducto extends JDialog implements ActionListener {
 	}
 	
 	Arreglo_producto ap=new Arreglo_producto();
-	
-	private JTextField txtCategoria;
 	private JLabel lblNewLabel_2_2;
 	private JButton btnListar;
 	private JScrollPane scrollPane;
@@ -185,6 +185,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 	private JButton btnBuscarxCod;
 	private JButton btnBuscarxNombre;
 	private JButton btnEliminar;
+	private JComboBox cboCategoría;
 	
 	public int LeerID() {
 		return Integer.parseInt(txtID.getText());
@@ -196,7 +197,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 		return Integer.parseInt(txtStock.getText());
 	}
 	public String LeerCategoria() {
-		return txtCategoria.getText();
+		return cboCategoría.getSelectedItem().toString();
 	}
 	public double LeerPrecio() {
 		return Double.parseDouble(txtPrecio.getText());
@@ -232,6 +233,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 	protected void do_btnListar_actionPerformed(ActionEvent e) {
 		if (ap.Cant_Productos()==0) {
 			JOptionPane.showMessageDialog(this,"La lista está vacía");
+			txtLstProduc.setText("");
 			return;
 		}
 		txtLstProduc.setText("");
@@ -322,6 +324,4 @@ public class GuiProducto extends JDialog implements ActionListener {
 	protected void do_btnSalir_actionPerformed(ActionEvent e) {
 		dispose();
 	}
-	
-	
 }

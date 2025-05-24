@@ -1,6 +1,14 @@
-package Clases;
+package Arreglo;
 
 import java.util.ArrayList;
+
+import ClasePadre.Producto;
+
+import java.io.FileWriter;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
 
 public class Arreglo_producto {
 	private ArrayList<Producto>produc;
