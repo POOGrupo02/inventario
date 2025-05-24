@@ -10,9 +10,9 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 
-public class Arreglo_producto {
+public class ArregloProducto {
 	private ArrayList<Producto>produc;
-    public Arreglo_producto() {
+    public ArregloProducto() {
     	produc=new ArrayList<Producto>();
     }
     public void Agregar(Producto p) {

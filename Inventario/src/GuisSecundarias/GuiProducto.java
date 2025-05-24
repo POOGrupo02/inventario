@@ -8,7 +8,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import Arreglo.Arreglo_producto;
+import Arreglo.ArregloProducto;
 import ClasePadre.Producto;
 
 import javax.swing.JLabel;
@@ -175,7 +175,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 		}
 	}
 	
-	Arreglo_producto ap=new Arreglo_producto();
+	ArregloProducto ap=new ArregloProducto();
 	private JLabel lblNewLabel_2_2;
 	private JButton btnListar;
 	private JScrollPane scrollPane;
