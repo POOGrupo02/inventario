@@ -4,12 +4,12 @@ import ClasePadre.Producto;
 
 public class ProductoLimpieza extends Producto{
 private String tipoUso; //puede ser doméstico, industrial,etc
-private double contenidoLitros;
+private double cantLitros;
 public ProductoLimpieza(int id, int stock, String nombre, String categoría, double precio, String tipoUso,
-		double contenidoLitros) {
+		double cantLitros) {
 	super(id, stock, nombre, categoría, precio);
 	this.tipoUso = tipoUso;
-	this.contenidoLitros = contenidoLitros;
+	this.cantLitros = cantLitros;
 }
 public String getTipoUso() {
 	return tipoUso;
@@ -17,11 +17,12 @@ public String getTipoUso() {
 public void setTipoUso(String tipoUso) {
 	this.tipoUso = tipoUso;
 }
-public double getContenidoLitros() {
-	return contenidoLitros;
+public double getCantLitros() {
+	return cantLitros;
 }
-public void setContenidoLitros(double contenidoLitros) {
-	this.contenidoLitros = contenidoLitros;
+public void setCantLitros(double cantLitros) {
+	this.cantLitros = cantLitros;
 }
+
 
 }
