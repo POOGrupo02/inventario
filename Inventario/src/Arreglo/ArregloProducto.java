@@ -2,13 +2,16 @@ package Arreglo;
 
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 import ClasePadre.Producto;
 
+import java.io.File;
 import java.io.FileWriter;
-import java.io.FileReader;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.OutputStreamWriter;
+
 
 public class ArregloProducto {
 	private ArrayList<Producto>produc;
@@ -45,5 +48,21 @@ public class ArregloProducto {
     public void Eliminar(Producto p){
     	produc.remove(p);
     }
-    
+    public void GuardarCsv() {
+    	File archivo=new File("productos.csv");
+    	try (PrintWriter pw=new PrintWriter(new FileWriter(archivo))) {
+			pw.println("ID;Nombre;Precio;Categoria;Stock");
+			 for (int i = 0; i < Cant_Productos(); i++) {
+		            Producto p =Obtener(i);  // 5. Obtiene cada producto de la lista
+		            
+		            // 6. Escribe una línea por producto con sus atributos separados por comas
+		            pw.println(p.getId() + ";" + p.getNombre() + ";" + p.getPrecio() + ";" +
+		                       p.getCategoría() + ";" + p.getStock());
+		        }
+			 JOptionPane.showMessageDialog(null, "Archivo guardado correctamente en la carpeta del proyecto");
+		} catch (Exception e) {
+			 JOptionPane.showMessageDialog(null, "Error al guardar el archivo");
+			// TODO: handle exception
+		}
+    }
 }

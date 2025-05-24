@@ -133,7 +133,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 		
 		btnListar = new JButton("Listar Productos");
 		btnListar.addActionListener(this);
-		btnListar.setBounds(232, 161, 142, 23);
+		btnListar.setBounds(218, 161, 142, 23);
 		contentPanel.add(btnListar);
 		{
 			scrollPane = new JScrollPane();
@@ -150,8 +150,17 @@ public class GuiProducto extends JDialog implements ActionListener {
 			cboCategoría.setBounds(116, 94, 96, 22);
 			contentPanel.add(cboCategoría);
 		}
+		{
+			btnGuardarLista = new JButton("Guardar Lista");
+			btnGuardarLista.addActionListener(this);
+			btnGuardarLista.setBounds(482, 205, 119, 23);
+			contentPanel.add(btnGuardarLista);
+		}
 	}
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnGuardarLista) {
+			do_btnGuardarLista_actionPerformed(e);
+		}
 		if (e.getSource() == btnEliminar) {
 			do_btnEliminar_actionPerformed(e);
 		}
@@ -186,6 +195,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 	private JButton btnBuscarxNombre;
 	private JButton btnEliminar;
 	private JComboBox cboCategoría;
+	private JButton btnGuardarLista;
 	
 	public int LeerID() {
 		return Integer.parseInt(txtID.getText());
@@ -221,7 +231,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 			Producto p=new Producto(LeerID(),LeerStock(),LeerNombre(),LeerCategoria(),LeerPrecio());
 			
 			if (ap.Buscar(LeerID())!=null) {
-				JOptionPane.showMessageDialog(this,"El producto ya existe");
+				JOptionPane.showMessageDialog(this,"El código del producto ya existe");
 				return;
 			}
 			ap.Agregar(p);
@@ -323,5 +333,8 @@ public class GuiProducto extends JDialog implements ActionListener {
 	}
 	protected void do_btnSalir_actionPerformed(ActionEvent e) {
 		dispose();
+	}
+	protected void do_btnGuardarLista_actionPerformed(ActionEvent e) {
+		ap.GuardarCsv();
 	}
 }
