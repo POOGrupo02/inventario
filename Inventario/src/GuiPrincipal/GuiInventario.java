@@ -36,7 +36,7 @@ public class GuiInventario extends JFrame implements ActionListener {
 	private final JLabel lblNewLabel_1_1_1_1 = new JLabel("Listar productos");
 	private JButton btnIrVenta;
 	private JLabel lblNewLabel;
-	private final JLabel lblNewLabel_1_1_1_1_1 = new JLabel("Compra");
+	private final JLabel lblNewLabel_1_1_1_1_1 = new JLabel("Comprar");
 	private final JButton btnIrCompra = new JButton("");
 	/**
 	 * Launch the application.
@@ -128,7 +128,7 @@ public class GuiInventario extends JFrame implements ActionListener {
 		{
 			lblNewLabel_1_1_1_1_1.setForeground(Color.BLACK);
 			lblNewLabel_1_1_1_1_1.setFont(new Font("Tahoma", Font.BOLD, 25));
-			lblNewLabel_1_1_1_1_1.setBounds(699, 79, 98, 43);
+			lblNewLabel_1_1_1_1_1.setBounds(699, 79, 109, 43);
 			contentPane.add(lblNewLabel_1_1_1_1_1);
 		}
 		{
