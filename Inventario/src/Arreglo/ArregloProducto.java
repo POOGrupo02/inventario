@@ -27,7 +27,7 @@ public class ArregloProducto {
     public Producto Obtener(int posicion){
     	return produc.get(posicion);
     }
-    public Producto Buscar(int id) {
+    public Producto BuscarId(String id) {
     	for (int i = 0; i < Cant_Productos(); i++) {
 			if (Obtener(i).getId()==id) 
 			{
@@ -36,7 +36,7 @@ public class ArregloProducto {
 		}
     	return null;
     }
-    public Producto Buscar(String nombre) {
+    public Producto BuscarNombre(String nombre) {
     	for (int i = 0; i < Cant_Productos(); i++) {
 			if (Obtener(i).getNombre().equals(nombre)) 
 			{

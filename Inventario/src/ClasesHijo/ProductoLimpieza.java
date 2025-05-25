@@ -5,9 +5,9 @@ import ClasePadre.Producto;
 public class ProductoLimpieza extends Producto{
 private String tipoUso; //puede ser doméstico, industrial, eléctronico,etc
 private double cantLitros;
-public ProductoLimpieza(int id, int stock, String nombre, String categoría, double precio, String tipoUso,
+public ProductoLimpieza(String id, int stock,  int stockMin, String nombre, String categoría, double precio, String tipoUso,
 		double cantLitros) {
-	super(id, stock, nombre, categoría, precio);
+	super(id, nombre,precio, categoría,stock, stockMin);
 	this.tipoUso = tipoUso;
 	this.cantLitros = cantLitros;
 }

@@ -7,6 +7,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import GuisSecundarias.GuiControlStock;
+import GuisSecundarias.GuiListaProductos;
+import GuisSecundarias.GuiMovimientos;
 import GuisSecundarias.GuiProducto;
 
 import javax.swing.JMenuBar;
@@ -18,13 +21,22 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.Color;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 
 public class GuiInventario extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JMenuItem menu_Producto;
+	private JButton btnIrMovimientos;
+	private JButton btnIrRegistrarProducto;
+	private JButton btnIrControlStock;
+	private final JButton btnIrListarProductos = new JButton("");
+	private final JLabel lblNewLabel_1_1_1_1 = new JLabel("Listar productos");
+	private JButton btnIrVenta;
 	private JLabel lblNewLabel;
+	private JButton btnIrCompra;
+	private JLabel lblCompra;
 
 	/**
 	 * Launch the application.
@@ -47,17 +59,7 @@ public class GuiInventario extends JFrame implements ActionListener {
 	 */
 	public GuiInventario() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
-		
-		JMenuBar menuBar = new JMenuBar();
-		setJMenuBar(menuBar);
-		
-		JMenu mnNewMenu = new JMenu("Menú Inventario");
-		menuBar.add(mnNewMenu);
-		
-		menu_Producto = new JMenuItem("Producto");
-		menu_Producto.addActionListener(this);
-		mnNewMenu.add(menu_Producto);
+		setBounds(100, 100, 923, 625);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(128, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -65,19 +67,104 @@ public class GuiInventario extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		lblNewLabel = new JLabel("BIENVENIDO");
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 23));
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(128, 11, 183, 43);
+		JLabel lblNewLabel_1_1_1 = new JLabel("Control de stock");
+		lblNewLabel_1_1_1.setForeground(new Color(0, 0, 0));
+		lblNewLabel_1_1_1.setFont(new Font("Tahoma", Font.BOLD, 25));
+		lblNewLabel_1_1_1.setBounds(72, 331, 216, 43);
+		contentPane.add(lblNewLabel_1_1_1);
+		
+		JLabel lblNewLabel_1_1 = new JLabel("Registrar producto");
+		lblNewLabel_1_1.setForeground(new Color(0, 0, 0));
+		lblNewLabel_1_1.setFont(new Font("Tahoma", Font.BOLD, 25));
+		lblNewLabel_1_1.setBounds(37, 79, 243, 43);
+		contentPane.add(lblNewLabel_1_1);
+		
+		JLabel lblNewLabel_1 = new JLabel("Movimientos");
+		lblNewLabel_1.setForeground(new Color(0, 0, 0));
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 25));
+		lblNewLabel_1.setBounds(416, 331, 163, 43);
+		contentPane.add(lblNewLabel_1);
+		
+		btnIrControlStock = new JButton("");
+		btnIrControlStock.addActionListener(this);
+		btnIrControlStock.setIcon(new ImageIcon(GuiInventario.class.getResource("/images/control_stock.jpg")));
+		btnIrControlStock.setBounds(10, 375, 344, 200);
+		contentPane.add(btnIrControlStock);
+		
+		btnIrRegistrarProducto = new JButton("");
+		btnIrRegistrarProducto.addActionListener(this);
+		btnIrRegistrarProducto.setIcon(new ImageIcon(GuiInventario.class.getResource("/images/registra_producto.png")));
+		btnIrRegistrarProducto.setBounds(10, 120, 296, 200);
+		contentPane.add(btnIrRegistrarProducto);
+		
+		btnIrMovimientos = new JButton("");
+		btnIrMovimientos.addActionListener(this);
+		btnIrMovimientos.setIcon(new ImageIcon(GuiInventario.class.getResource("/images/movimientos_productos.png")));
+		btnIrMovimientos.setBounds(384, 375, 224, 200);
+		contentPane.add(btnIrMovimientos);
+		{
+			btnIrListarProductos.addActionListener(this);
+			btnIrListarProductos.setIcon(new ImageIcon(GuiInventario.class.getResource("/images/produc_list.png")));
+			btnIrListarProductos.setBounds(395, 120, 198, 200);
+			contentPane.add(btnIrListarProductos);
+		}
+		{
+			lblNewLabel_1_1_1_1.setForeground(Color.BLACK);
+			lblNewLabel_1_1_1_1.setFont(new Font("Tahoma", Font.BOLD, 25));
+			lblNewLabel_1_1_1_1.setBounds(384, 79, 216, 43);
+			contentPane.add(lblNewLabel_1_1_1_1);
+		}
+		
+		btnIrVenta = new JButton("");
+		btnIrVenta.setIcon(new ImageIcon(GuiInventario.class.getResource("/images/venta.png")));
+		btnIrVenta.setBounds(645, 375, 224, 200);
+		contentPane.add(btnIrVenta);
+		
+		lblNewLabel = new JLabel("Venta");
+		lblNewLabel.setForeground(Color.BLACK);
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 25));
+		lblNewLabel.setBounds(708, 331, 78, 43);
 		contentPane.add(lblNewLabel);
+		
+		btnIrCompra = new JButton("");
+		btnIrCompra.setIcon(new ImageIcon(GuiInventario.class.getResource("/images/compra.png")));
+		btnIrCompra.setBounds(645, 120, 224, 200);
+		contentPane.add(btnIrCompra);
+		
+		lblCompra = new JLabel("Compra");
+		lblCompra.setForeground(Color.BLACK);
+		lblCompra.setFont(new Font("Tahoma", Font.BOLD, 25));
+		lblCompra.setBounds(699, 79, 101, 43);
+		contentPane.add(lblCompra);
 	}
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == menu_Producto) {
-			do_Menu_Producto_actionPerformed(e);
+		if (e.getSource() == btnIrListarProductos) {
+			do_btnIrListarProductos_actionPerformed(e);
+		}
+		if (e.getSource() == btnIrControlStock) {
+			do_btnIrControlStock_actionPerformed(e);
+		}
+		if (e.getSource() == btnIrRegistrarProducto) {
+			do_btnIrRegistrarProducto_actionPerformed(e);
+		}
+		if (e.getSource() == btnIrMovimientos) {
+			do_btnIrMovimientos_actionPerformed(e);
 		}
 	}
-	protected void do_Menu_Producto_actionPerformed(ActionEvent e) {
-		GuiProducto p=new GuiProducto();
-		p.setVisible(true);
+	protected void do_btnIrMovimientos_actionPerformed(ActionEvent e) {
+		GuiMovimientos mov = new GuiMovimientos();
+		mov.setVisible(true);
+	}
+	protected void do_btnIrRegistrarProducto_actionPerformed(ActionEvent e) {
+		GuiProducto product = new GuiProducto();
+		product.setVisible(true);
+	}
+	protected void do_btnIrControlStock_actionPerformed(ActionEvent e) {
+		GuiControlStock conStk = new GuiControlStock();
+		conStk.setVisible(true);
+	}
+	protected void do_btnIrListarProductos_actionPerformed(ActionEvent e) {
+		GuiListaProductos lP = new GuiListaProductos();
+		lP.setVisible(true);
 	}
 }

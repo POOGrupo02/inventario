@@ -8,9 +8,9 @@ public class ProductoAlimenticio extends Producto{
 private Date fechaVencimiento;
 private double peso;
 private boolean esPerecible;
-public ProductoAlimenticio(int id, int stock, String nombre, String categoría, double precio, Date fechaVencimiento,
+public ProductoAlimenticio(String id, int stock, int stockMin, String nombre, String categoría, double precio, Date fechaVencimiento,
 		double peso, boolean esPerecible) {
-	super(id, stock, nombre, categoría, precio);
+	super(id, nombre,precio, categoría,stock,stockMin);
 	this.fechaVencimiento = fechaVencimiento;
 	this.peso = peso;
 	this.esPerecible = esPerecible;

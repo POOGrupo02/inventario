@@ -1,3 +1,2 @@
-ID;Nombre;Precio;Categoria;Stock
-1;pan;5.0;Alimenticio;2
-2;lejia;5.0;Limpieza;2
+﻿ID;Nombre;Precio;Categoria;Stock
+N002;Arroz Costeño 1kg;3.2;Alimenticio;20

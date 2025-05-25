@@ -1,21 +1,22 @@
 package ClasePadre;
 
 public class Producto {
-protected int id,stock=10;
-protected String nombre,categoría;
+protected int stock,stockMin;
+protected String id,nombre,categoría;
 protected double precio;
-public Producto(int id, int stock, String nombre, String categoría, double precio) {
+public Producto(String id, String nombre, double precio, String categoría, int stock, int stockMin) {
 	super();
 	this.id = id;
 	this.stock = stock;
 	this.nombre = nombre;
 	this.categoría = categoría;
 	this.precio = precio;
+	this.stockMin = stockMin;
 }
-public int getId() {
+public String getId() {
 	return id;
 }
-public void setId(int id) {
+public void setId(String id) {
 	this.id = id;
 }
 public int getStock() {
