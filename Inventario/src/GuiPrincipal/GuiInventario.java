@@ -83,7 +83,7 @@ public class GuiInventario extends JFrame implements ActionListener {
 			contentPane.add(lblNewLabel2);
 		}
 		{
-			lblNewLabel3 = new JLabel("PARA CONTINUAR SELECIONA \"Menú Inventario\"");
+			lblNewLabel3 = new JLabel("PARA CONTINUAR SELECCIONA \"Menú Inventario\"");
 			lblNewLabel3.setHorizontalAlignment(SwingConstants.CENTER);
 			lblNewLabel3.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 14));
 			lblNewLabel3.setBounds(10, 79, 400, 43);
