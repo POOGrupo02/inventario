@@ -35,8 +35,8 @@ public class GuiInventario extends JFrame implements ActionListener {
 	private final JButton btnIrListarProductos = new JButton("");
 	private final JLabel lblNewLabel_1_1_1_1 = new JLabel("Listar productos");
 	private JButton btnIrVenta;
-	private JLabel lblNewLabel;
-	private final JLabel lblNewLabel_1_1_1_1_1 = new JLabel("Comprar");
+	private JLabel lbl_ventas;
+	private final JLabel lbl_comprar = new JLabel("Comprar");
 	private final JButton btnIrCompra = new JButton("");
 	/**
 	 * Launch the application.
@@ -67,11 +67,11 @@ public class GuiInventario extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblNewLabel_1_1_1 = new JLabel("Control de stock");
-		lblNewLabel_1_1_1.setForeground(new Color(0, 0, 0));
-		lblNewLabel_1_1_1.setFont(new Font("Tahoma", Font.BOLD, 25));
-		lblNewLabel_1_1_1.setBounds(72, 331, 216, 43);
-		contentPane.add(lblNewLabel_1_1_1);
+		JLabel lbl_control_stock = new JLabel("Control de stock");
+		lbl_control_stock.setForeground(new Color(0, 0, 0));
+		lbl_control_stock.setFont(new Font("Tahoma", Font.BOLD, 25));
+		lbl_control_stock.setBounds(72, 331, 216, 43);
+		contentPane.add(lbl_control_stock);
 		
 		JLabel lblNewLabel_1_1 = new JLabel("Registrar producto");
 		lblNewLabel_1_1.setForeground(new Color(0, 0, 0));
@@ -79,11 +79,12 @@ public class GuiInventario extends JFrame implements ActionListener {
 		lblNewLabel_1_1.setBounds(37, 79, 243, 43);
 		contentPane.add(lblNewLabel_1_1);
 		
-		JLabel lblNewLabel_1 = new JLabel("Movimientos");
-		lblNewLabel_1.setForeground(new Color(0, 0, 0));
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 25));
-		lblNewLabel_1.setBounds(416, 331, 163, 43);
-		contentPane.add(lblNewLabel_1);
+		JLabel lbl_movimientos = new JLabel("Movimientos");
+		lbl_movimientos.setForeground(new Color(0, 0, 0));
+		lbl_movimientos.setFont(new Font("Tahoma", Font.BOLD, 25));
+		lbl_movimientos.setBounds(416, 331, 163, 43);
+		contentPane.add(lbl_movimientos);
+		
 		
 		btnIrControlStock = new JButton("");
 		btnIrControlStock.addActionListener(this);
@@ -120,16 +121,16 @@ public class GuiInventario extends JFrame implements ActionListener {
 		btnIrVenta.setBounds(645, 375, 224, 200);
 		contentPane.add(btnIrVenta);
 		
-		lblNewLabel = new JLabel("Venta");
-		lblNewLabel.setForeground(Color.BLACK);
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 25));
-		lblNewLabel.setBounds(708, 331, 78, 43);
-		contentPane.add(lblNewLabel);
+		lbl_ventas = new JLabel("Venta");
+		lbl_ventas.setForeground(Color.BLACK);
+		lbl_ventas.setFont(new Font("Tahoma", Font.BOLD, 25));
+		lbl_ventas.setBounds(708, 331, 78, 43);
+		contentPane.add(lbl_ventas);
 		{
-			lblNewLabel_1_1_1_1_1.setForeground(Color.BLACK);
-			lblNewLabel_1_1_1_1_1.setFont(new Font("Tahoma", Font.BOLD, 25));
-			lblNewLabel_1_1_1_1_1.setBounds(699, 79, 109, 43);
-			contentPane.add(lblNewLabel_1_1_1_1_1);
+			lbl_comprar.setForeground(Color.BLACK);
+			lbl_comprar.setFont(new Font("Tahoma", Font.BOLD, 25));
+			lbl_comprar.setBounds(699, 79, 109, 43);
+			contentPane.add(lbl_comprar);
 		}
 		{
 			btnIrCompra.addActionListener(this);
@@ -137,6 +138,15 @@ public class GuiInventario extends JFrame implements ActionListener {
 			btnIrCompra.setBounds(645, 120, 224, 200);
 			contentPane.add(btnIrCompra);
 		}
+		
+		lbl_comprar.setVisible(false);
+		lbl_ventas.setVisible(false);
+		lbl_control_stock.setVisible(false);
+		lbl_movimientos.setVisible(false);
+		btnIrCompra.setVisible(false);
+		btnIrControlStock.setVisible(false);
+		btnIrMovimientos.setVisible(false);
+		btnIrVenta.setVisible(false);
 	}
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnIrCompra) {
