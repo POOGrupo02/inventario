@@ -18,6 +18,8 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.Color;
+import javax.swing.ImageIcon;
+import java.awt.Label;
 
 public class GuiInventario extends JFrame implements ActionListener {
 
@@ -25,6 +27,9 @@ public class GuiInventario extends JFrame implements ActionListener {
 	private JPanel contentPane;
 	private JMenuItem menu_Producto;
 	private JLabel lblNewLabel;
+	private JLabel lblNewLabel2;
+	private JLabel lblNewLabel3;
+	private JLabel lblNewLabel3_1;
 
 	/**
 	 * Launch the application.
@@ -70,6 +75,27 @@ public class GuiInventario extends JFrame implements ActionListener {
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setBounds(128, 11, 183, 43);
 		contentPane.add(lblNewLabel);
+		{
+			lblNewLabel2 = new JLabel("AL CENTRO DE GESTIÓN");
+			lblNewLabel2.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNewLabel2.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 20));
+			lblNewLabel2.setBounds(85, 44, 272, 43);
+			contentPane.add(lblNewLabel2);
+		}
+		{
+			lblNewLabel3 = new JLabel("PARA CONTINUAR SELECIONA \"Menú Inventario\"");
+			lblNewLabel3.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNewLabel3.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 14));
+			lblNewLabel3.setBounds(10, 79, 400, 43);
+			contentPane.add(lblNewLabel3);
+		}
+		
+		lblNewLabel3_1 = new JLabel("");
+		lblNewLabel3_1.setIcon(new ImageIcon(GuiInventario.class.getResource("/Imagen/Caja1.jpg")));
+		lblNewLabel3_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel3_1.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 14));
+		lblNewLabel3_1.setBounds(85, 119, 238, 134);
+		contentPane.add(lblNewLabel3_1);
 	}
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == menu_Producto) {
