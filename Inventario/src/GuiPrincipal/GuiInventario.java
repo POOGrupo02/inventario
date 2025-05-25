@@ -23,6 +23,7 @@ import java.awt.Font;
 import java.awt.Color;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import java.awt.Label;
 
 public class GuiInventario extends JFrame implements ActionListener {
 
@@ -35,9 +36,8 @@ public class GuiInventario extends JFrame implements ActionListener {
 	private final JLabel lblNewLabel_1_1_1_1 = new JLabel("Listar productos");
 	private JButton btnIrVenta;
 	private JLabel lblNewLabel;
-	private JButton btnIrCompra;
-	private JLabel lblCompra;
-
+	private final JLabel lblNewLabel_1_1_1_1_1 = new JLabel("Compra");
+	private final JButton btnIrCompra = new JButton("");
 	/**
 	 * Launch the application.
 	 */
@@ -125,19 +125,23 @@ public class GuiInventario extends JFrame implements ActionListener {
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 25));
 		lblNewLabel.setBounds(708, 331, 78, 43);
 		contentPane.add(lblNewLabel);
-		
-		btnIrCompra = new JButton("");
-		btnIrCompra.setIcon(new ImageIcon(GuiInventario.class.getResource("/images/compra.png")));
-		btnIrCompra.setBounds(645, 120, 224, 200);
-		contentPane.add(btnIrCompra);
-		
-		lblCompra = new JLabel("Compra");
-		lblCompra.setForeground(Color.BLACK);
-		lblCompra.setFont(new Font("Tahoma", Font.BOLD, 25));
-		lblCompra.setBounds(699, 79, 101, 43);
-		contentPane.add(lblCompra);
+		{
+			lblNewLabel_1_1_1_1_1.setForeground(Color.BLACK);
+			lblNewLabel_1_1_1_1_1.setFont(new Font("Tahoma", Font.BOLD, 25));
+			lblNewLabel_1_1_1_1_1.setBounds(699, 79, 98, 43);
+			contentPane.add(lblNewLabel_1_1_1_1_1);
+		}
+		{
+			btnIrCompra.addActionListener(this);
+			btnIrCompra.setIcon(new ImageIcon(GuiInventario.class.getResource("/images/compra.png")));
+			btnIrCompra.setBounds(645, 120, 224, 200);
+			contentPane.add(btnIrCompra);
+		}
 	}
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnIrCompra) {
+			do_btnIrCompra_actionPerformed(e);
+		}
 		if (e.getSource() == btnIrListarProductos) {
 			do_btnIrListarProductos_actionPerformed(e);
 		}
@@ -166,5 +170,7 @@ public class GuiInventario extends JFrame implements ActionListener {
 	protected void do_btnIrListarProductos_actionPerformed(ActionEvent e) {
 		GuiListaProductos lP = new GuiListaProductos();
 		lP.setVisible(true);
+	}
+	protected void do_btnIrCompra_actionPerformed(ActionEvent e) {
 	}
 }
