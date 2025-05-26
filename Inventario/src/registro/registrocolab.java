@@ -107,6 +107,11 @@ public class registrocolab extends JFrame implements ActionListener {
 		char [] clave = jpassClave.getPassword();
 		String clavefinal= new String (clave);
 		
+		if(txtUsuario.getText().isBlank() || clavefinal.isBlank()) {
+			JOptionPane.showMessageDialog(this, "Los campos no pueden estar vacíos.");
+			return;
+		}
+		
 		if(txtUsuario.getText().equals("Piero")&& clavefinal.equals("123")) {
 			dispose();
 			JOptionPane.showMessageDialog(null, "Bienvenido al sistema", "Ingresaste",JOptionPane.INFORMATION_MESSAGE);

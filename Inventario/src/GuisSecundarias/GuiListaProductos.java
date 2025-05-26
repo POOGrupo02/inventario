@@ -11,9 +11,9 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import ClasePadre.ProductSingleton;
 import ClasePadre.Producto;
 import ClasesHijo.ControlStock;
+import ClasesHijo.ProductSingleton;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -42,7 +42,7 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 	private final JLabel lblNewLabel_1 = new JLabel("Nombre:");
 	private final JTextField txtNom = new JTextField();
 	private ProductSingleton pS = ProductSingleton.getInstance();
-	private String[] columnas = { "ID_PRODUCTO", "NOMBRE", "PRECIO", "CATEGORÍA", "STOCK"};
+	private String[] columnas = { "ID_PRODUCTO", "NOMBRE", "PRECIO", "CATEGORÍA", "STOCK" };
 
 	/**
 	 * Launch the application.
@@ -70,7 +70,7 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 		{
 			scrollPane.setBounds(72, 183, 795, 345);
 			contentPanel.add(scrollPane);
-			
+
 			Object[][] datos = new Object[pS.getSize()][5];
 
 			for (int i = 0; i < pS.getSize(); i++) {
@@ -120,6 +120,7 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 			contentPanel.add(txtNom);
 		}
 	}
+
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnBuscarxNombre) {
 			do_btnBuscarxNombre_actionPerformed(e);
@@ -131,84 +132,67 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 			do_btnGuardarLista_actionPerformed(e);
 		}
 	}
+
 	protected void do_btnGuardarLista_actionPerformed(ActionEvent e) {
-		File archivo=new File("productos.csv");
-    	try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(archivo), "UTF-8");
-    		     PrintWriter pw = new PrintWriter(writer)) {
-    		    
-    		    writer.write('\uFEFF');
-    		    
-    		    pw.println("ID;Nombre;Precio;Categoria;Stock");
-
-    		    for (int i = 0; i < pS.getSize(); i++) {
-    		        Producto p = pS.getProducto(i);
-    		        pw.println(p.getId() + ";" + p.getNombre() + ";" + p.getPrecio() + ";" +
-    		                   p.getCategoría() + ";" + p.getStock());
-    		    }
-
-    		    JOptionPane.showMessageDialog(null, "Archivo guardado correctamente en la carpeta del proyecto");
-
-    		} catch (Exception e1) {
-    		    JOptionPane.showMessageDialog(null, "Error al guardar el archivo");
-    		}
+		pS.guardarCsv();
 	}
+
 	protected void do_btnBuscarxCod_actionPerformed(ActionEvent e) {
 		try {
-			if(LeerID().isBlank()) {
+			if (LeerID().isBlank()) {
 				JOptionPane.showMessageDialog(this, "El campo está vacío.");
 				return;
 			}
-			Producto p= pS.BuscarId(LeerID());
-	        if (p!=null) {
-	        	JOptionPane.showMessageDialog(this, "Producto encontrado");
-	        	table.setModel(new DefaultTableModel());
-	        	Object[][] datos = new Object[1][5];
-	        	datos[0][0] = p.getId();
+			Producto p = pS.buscarPorId(LeerID());
+			if (p != null) {
+				JOptionPane.showMessageDialog(this, "Producto encontrado");
+				table.setModel(new DefaultTableModel());
+				Object[][] datos = new Object[1][5];
+				datos[0][0] = p.getId();
 				datos[0][1] = p.getNombre();
 				datos[0][2] = p.getPrecio();
 				datos[0][3] = p.getCategoría();
 				datos[0][4] = p.getStock();
-	        	table.setModel(new DefaultTableModel(datos, columnas));
-			}
-	        else 
-	        {
-				JOptionPane.showMessageDialog(this, "El producto no existe");
+				table.setModel(new DefaultTableModel(datos, columnas));
+			} else {
+				JOptionPane.showMessageDialog(this, "Producto no encontrado.");
 				return;
 			}
 		} catch (Exception e2) {
-			JOptionPane.showMessageDialog(this,"Ingrese un código válido");
+			JOptionPane.showMessageDialog(this, "Ingrese un código válido");
 		}
 	}
+
 	protected void do_btnBuscarxNombre_actionPerformed(ActionEvent e) {
 		try {
-			if(LeerNombre().isBlank()) {
+			if (LeerNombre().isBlank()) {
 				JOptionPane.showMessageDialog(this, "El campo está vacío.");
 				return;
 			}
-			Producto p=pS.BuscarNombre(LeerNombre());
-	        if (p!=null) {
-	        	JOptionPane.showMessageDialog(this, "Producto encontrado");
-	        	table.setModel(new DefaultTableModel());
-	        	Object[][] datos = new Object[1][5];
-	        	datos[0][0] = p.getId();
+			Producto p = pS.buscarPorNombre(LeerNombre());
+			if (p != null) {
+				JOptionPane.showMessageDialog(this, "Producto encontrado");
+				table.setModel(new DefaultTableModel());
+				Object[][] datos = new Object[1][5];
+				datos[0][0] = p.getId();
 				datos[0][1] = p.getNombre();
 				datos[0][2] = p.getPrecio();
 				datos[0][3] = p.getCategoría();
 				datos[0][4] = p.getStock();
-	        	table.setModel(new DefaultTableModel(datos, columnas));
+				table.setModel(new DefaultTableModel(datos, columnas));
+			} else {
+				JOptionPane.showMessageDialog(this, "Producto no encontrado.");
 			}
-	        else {
-	        	JOptionPane.showMessageDialog(this, "El producto no existe");
-			}
-		}catch (Exception e2) {
-			JOptionPane.showMessageDialog(this,"Ingrese un código válido");
+		} catch (Exception e2) {
+			JOptionPane.showMessageDialog(this, "Ingrese un código válido");
 		}
-		
+
 	}
-	
+
 	private String LeerID() {
 		return txtID.getText();
-	} 
+	}
+
 	private String LeerNombre() {
 		return txtNom.getText();
 	}
