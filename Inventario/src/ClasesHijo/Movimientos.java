@@ -4,9 +4,9 @@ public class Movimientos {
 	private int id,  cantidad;
 	private String idProducto,producto, movimiento, fecha;
 	
-	public Movimientos(int id, String idProducto, String producto, String movimiento, int cantidad, String fecha) {
+	public Movimientos(int id, String codigoProducto, String producto, String movimiento, int cantidad, String fecha) {
 		this.id = id;
-		this.idProducto = idProducto;
+		this.idProducto = codigoProducto;
 		this.producto = producto;
 		this.movimiento = movimiento;
 		this.cantidad = cantidad;

@@ -75,7 +75,7 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 
 			for (int i = 0; i < pS.getSize(); i++) {
 				Producto p = pS.getProducto(i);
-				datos[i][0] = p.getId();
+				datos[i][0] = p.getCodigo();
 				datos[i][1] = p.getNombre();
 				datos[i][2] = p.getPrecio();
 				datos[i][3] = p.getCategoría();
@@ -148,7 +148,7 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(this, "Producto encontrado");
 				table.setModel(new DefaultTableModel());
 				Object[][] datos = new Object[1][5];
-				datos[0][0] = p.getId();
+				datos[0][0] = p.getCodigo();
 				datos[0][1] = p.getNombre();
 				datos[0][2] = p.getPrecio();
 				datos[0][3] = p.getCategoría();
@@ -174,7 +174,7 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(this, "Producto encontrado");
 				table.setModel(new DefaultTableModel());
 				Object[][] datos = new Object[1][5];
-				datos[0][0] = p.getId();
+				datos[0][0] = p.getCodigo();
 				datos[0][1] = p.getNombre();
 				datos[0][2] = p.getPrecio();
 				datos[0][3] = p.getCategoría();

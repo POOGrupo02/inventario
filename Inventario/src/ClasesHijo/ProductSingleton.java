@@ -47,7 +47,7 @@ public class ProductSingleton {
 
 	public Producto buscarPorId(String id) {
 		for (int i = 0; i < listProducts.size(); i++) {
-			if (getProducto(i).getId().equals(id)) {
+			if (getProducto(i).getCodigo().equals(id)) {
 				return getProducto(i);
 			}
 		}
@@ -65,7 +65,7 @@ public class ProductSingleton {
 
 	public boolean eliminarProductoPorId(String id) {
 		for (int i = 0; i < listProducts.size(); i++) {
-			if (id.equals(listProducts.get(i).getId())) {
+			if (id.equals(listProducts.get(i).getCodigo())) {
 				listProducts.remove(i);
 				return true;
 			}
@@ -84,7 +84,7 @@ public class ProductSingleton {
 
 			for (int i = 0; i < getSize(); i++) {
 				Producto p = getProducto(i);
-				pw.println(p.getId() + ";" + p.getNombre() + ";" + p.getPrecio() + ";" + p.getCategoría() + ";"
+				pw.println(p.getCodigo() + ";" + p.getNombre() + ";" + p.getPrecio() + ";" + p.getCategoría() + ";"
 						+ p.getStock());
 			}
 
