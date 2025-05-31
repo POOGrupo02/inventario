@@ -45,7 +45,4 @@ public class ProductoLimpieza extends Producto {
 	public void setInstruciones(String instruciones) {
 		this.instruciones = instruciones;
 	}
-	
-	
-
 }

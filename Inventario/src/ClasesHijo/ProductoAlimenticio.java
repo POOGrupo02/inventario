@@ -6,8 +6,9 @@ import java.util.List;
 import ClasePadre.Producto;
 
 public class ProductoAlimenticio extends Producto {
+	
 	private List<InformacionNutricional> informacionNutricional;
-
+	
 	public ProductoAlimenticio(
 			String codigo, 
 			String nombre, 

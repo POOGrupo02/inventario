@@ -5,7 +5,7 @@ import java.util.Date;
 import ClasePadre.Producto;
 
 public class ProductoElectrónico extends Producto {
-	private String marca;
+
 	private int mesesGarantía;
 	public ProductoElectrónico(String codigo, String nombre, String categoría, String marca, String proveedor,
 			String unidadVenta, String unidadMedida, double precio, double cantidadPorUnidad, int stock, int stockMin,
@@ -15,7 +15,4 @@ public class ProductoElectrónico extends Producto {
 		marca = marca2;
 		this.mesesGarantía = mesesGarantía;
 	}
-
-	
-
 }

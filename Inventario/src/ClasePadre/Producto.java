@@ -3,6 +3,7 @@ package ClasePadre;
 import java.util.Date;
 
 public class Producto {
+
 	private String codigo, nombre, categoría, marca, proveedor, unidadVenta, unidadMedida;
 	private double precio, cantidadPorUnidad;
 	private int stock, stockMin;
@@ -26,7 +27,6 @@ public class Producto {
 		this.fechaFabricacion = fechaFabricacion;
 		this.fechaVencimiento = fechaVencimiento;
 	}
-
 
 	public String getCodigo() {
 		return codigo;
@@ -156,8 +156,5 @@ public class Producto {
 	public void setFechaVencimiento(Date fechaVencimiento) {
 		this.fechaVencimiento = fechaVencimiento;
 	}
-	
-	
-	
-	
+
 }
