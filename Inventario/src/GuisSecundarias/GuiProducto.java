@@ -7,9 +7,11 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.MaskFormatter;
 
 import ClasePadre.Producto;
 import ClasesHijo.ProductSingleton;
+import mysql.ProductoDAO;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -17,6 +19,8 @@ import javax.swing.JTextField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
@@ -33,6 +37,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 	private JTextField txtPrecio;
 	private JButton btnAgregar;
 	private ProductSingleton pS = ProductSingleton.getInstance();
+	private ProductoDAO pDAO = new ProductoDAO();
 
 	/**
 	 * Launch the application.
@@ -51,6 +56,8 @@ public class GuiProducto extends JDialog implements ActionListener {
 	 * Create the dialog.
 	 */
 	public GuiProducto() {
+		txtDiaFab.setBounds(145, 380, 31, 20);
+		txtDiaFab.setColumns(10);
 		txtCantidadXUnidad.setBounds(135, 274, 86, 20);
 		txtCantidadXUnidad.setColumns(10);
 		setModal(true);
@@ -151,21 +158,13 @@ public class GuiProducto extends JDialog implements ActionListener {
 		cboUnidadMedida.setModel(new DefaultComboBoxModel(new String[] {"Miligramo", "Gramo", "Kilogramo"}));
 		cboUnidadMedida.setBounds(135, 206, 117, 22);
 		contentPanel.add(cboUnidadMedida);
-		{
-			txtFechaFabricacion.setBounds(135, 380, 96, 20);
-			contentPanel.add(txtFechaFabricacion);
-		}
-		{
-			txtFechaVencimiento.setBounds(135, 411, 96, 20);
-			contentPanel.add(txtFechaVencimiento);
-		}
 		
 		lblNewLabel_5 = new JLabel("Fecha de fabricación");
-		lblNewLabel_5.setBounds(24, 383, 102, 14);
+		lblNewLabel_5.setBounds(24, 383, 117, 14);
 		contentPanel.add(lblNewLabel_5);
 		
 		lblNewLabel_6 = new JLabel("Fecha de vencimiento");
-		lblNewLabel_6.setBounds(24, 414, 109, 14);
+		lblNewLabel_6.setBounds(24, 414, 117, 14);
 		contentPanel.add(lblNewLabel_6);
 		
 		lblNewLabel_1_2 = new JLabel("Marca:");
@@ -185,6 +184,46 @@ public class GuiProducto extends JDialog implements ActionListener {
 		cboProveedor.setModel(new DefaultComboBoxModel(new String[] {"A"}));
 		cboProveedor.setBounds(135, 140, 117, 22);
 		contentPanel.add(cboProveedor);
+		{
+			contentPanel.add(txtDiaFab);
+		}
+		{
+			txtMesFab.setColumns(10);
+			txtMesFab.setBounds(186, 380, 31, 20);
+			contentPanel.add(txtMesFab);
+		}
+		{
+			txtAnioFab.setColumns(10);
+			txtAnioFab.setBounds(227, 380, 46, 20);
+			contentPanel.add(txtAnioFab);
+		}
+		{
+			txtDiaVenc.setColumns(10);
+			txtDiaVenc.setBounds(145, 411, 31, 20);
+			contentPanel.add(txtDiaVenc);
+		}
+		{
+			txtMesVenc.setColumns(10);
+			txtMesVenc.setBounds(186, 411, 31, 20);
+			contentPanel.add(txtMesVenc);
+		}
+		{
+			txtAnioVenc.setColumns(10);
+			txtAnioVenc.setBounds(227, 411, 46, 20);
+			contentPanel.add(txtAnioVenc);
+		}
+		{
+			lblNewLabel_7.setBounds(145, 442, 24, 14);
+			contentPanel.add(lblNewLabel_7);
+		}
+		{
+			lblNewLabel_7_1.setBounds(186, 442, 24, 14);
+			contentPanel.add(lblNewLabel_7_1);
+		}
+		{
+			lblNewLabel_7_1_1.setBounds(227, 442, 24, 14);
+			contentPanel.add(lblNewLabel_7_1_1);
+		}
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -207,8 +246,6 @@ public class GuiProducto extends JDialog implements ActionListener {
 	private final JTextField txtCantidadXUnidad = new JTextField();
 	private final JLabel lblNewLabel_1_1_1_1 = new JLabel("Unidad de medida:");
 	private JComboBox cboUnidadMedida;
-	private final JFormattedTextField txtFechaFabricacion = new JFormattedTextField();
-	private final JFormattedTextField txtFechaVencimiento = new JFormattedTextField();
 	private JLabel lblNewLabel_5;
 	private JLabel lblNewLabel_6;
 	private JLabel lblNewLabel_1_2;
@@ -216,6 +253,15 @@ public class GuiProducto extends JDialog implements ActionListener {
 	private JLabel lblNewLabel_1_3;
 	private JComboBox cboProveedor;
 	Date fechaActual = new Date();
+	private final JTextField txtDiaFab = new JTextField();
+	private final JTextField txtMesFab = new JTextField();
+	private final JTextField txtAnioFab = new JTextField();
+	private final JTextField txtDiaVenc = new JTextField();
+	private final JTextField txtMesVenc = new JTextField();
+	private final JTextField txtAnioVenc = new JTextField();
+	private final JLabel lblNewLabel_7 = new JLabel("Día");
+	private final JLabel lblNewLabel_7_1 = new JLabel("Mes");
+	private final JLabel lblNewLabel_7_1_1 = new JLabel("Año");
 
 	private String leerCodigo() {
 		return txtCod.getText();
@@ -246,12 +292,27 @@ public class GuiProducto extends JDialog implements ActionListener {
 		return Double.parseDouble(txtCantidadXUnidad.getText());
 	}
 	
-	private Date leerFechaFabricacion() {
-		return fechaActual;
+	private Date leerFechaFabricacion() throws ParseException {
+		String dia = txtDiaFab.getText().trim();
+		String mes = txtMesFab.getText().trim();
+		String anio = txtAnioFab.getText().trim();
+		String fechaTexto = anio + "-" + mes + "-" + dia;
+		
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = format.parse(fechaTexto);
+		return date;
 	}
 	
-	private Date leerFechaVencimiento() {
-		return fechaActual;
+	private Date leerFechaVencimiento() throws ParseException {
+		String dia = txtDiaVenc.getText().trim();
+		String mes = txtMesVenc.getText().trim();
+		String anio = txtAnioVenc.getText().trim();
+		String fechaTexto = anio + "-" + mes + "-" + dia;
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = format.parse(fechaTexto);
+		return date;
 	}
 
 	private int leerStock() {
@@ -315,10 +376,11 @@ public class GuiProducto extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(this, "El código del producto ya existe");
 				return;
 			}
-			pS.addProducto(p);
+			pDAO.crearUsuario(p);
 			JOptionPane.showMessageDialog(this, "El producto fue registrado con éxito.");
 			limpiarCampos();
 		} catch (Exception e2) {
+			System.out.println(e2);
 			JOptionPane.showMessageDialog(this, "Error al registrar el producto, verifique los datos ingresados");
 			// TODO: handle exception
 		}
