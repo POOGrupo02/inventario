@@ -14,7 +14,9 @@ import javax.swing.table.DefaultTableModel;
 import ClasePadre.Producto;
 import ClasesHijo.ControlStock;
 import ClasesHijo.ProductSingleton;
+import ClasesHijo.ProductoGeneral;
 import mysql.ProductoDAO;
+import mysql.ProductoGeneralDAO;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -28,6 +30,7 @@ import java.io.FileWriter;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.awt.event.ActionEvent;
+import javax.swing.JComboBox;
 
 public class GuiListaProductos extends JDialog implements ActionListener {
 
@@ -37,12 +40,14 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 	private final JTable table = new JTable();
 	private final JButton btnGuardarLista = new JButton("Guardar Lista");
 	private final JButton btnBuscarxCod = new JButton("Buscar por código");
-	private final JButton btnBuscarxNombre = new JButton("Buscar por nombre");
-	private final JLabel lblNewLabel = new JLabel("ID:");
-	private final JTextField txtID = new JTextField();
-	private final JLabel lblNewLabel_1 = new JLabel("Nombre:");
-	private final JTextField txtNom = new JTextField();
+	private final JLabel lblNewLabel = new JLabel("Código de producto:");
+	private final JTextField txtCodProd = new JTextField();
+	private final JLabel lblNewLabel_1 = new JLabel("Buscar por nombre:");
 	private ProductoDAO pDAO = new ProductoDAO();
+	private ProductoGeneralDAO pgDAO = new ProductoGeneralDAO();
+	private final JComboBox<String> cboProd = new JComboBox<>();
+	private List<ProductoGeneral> pg = pgDAO.listarProductosGenerales();
+	private boolean comboBoxInitialized = false;
 	private String[] columnas = {
 		    "CÓDIGO_PRODUCTO",
 		    "NOMBRE",
@@ -85,10 +90,10 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		{
-			scrollPane.setBounds(72, 190, 619, 297);
+			scrollPane.setBounds(54, 166, 813, 297);
 			contentPanel.add(scrollPane);
 			
-			List<Producto> productos = pDAO.listarProductos();
+			List<Producto> productos = pDAO.readProds();
 
 			Object[][] datos = new Object[productos.size()][14];
 
@@ -118,42 +123,64 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 		}
 		{
 			btnGuardarLista.addActionListener(this);
-			btnGuardarLista.setBounds(748, 122, 119, 23);
+			btnGuardarLista.setBounds(766, 31, 119, 23);
 			contentPanel.add(btnGuardarLista);
 		}
 		{
 			btnBuscarxCod.addActionListener(this);
-			btnBuscarxCod.setBounds(72, 122, 153, 23);
+			btnBuscarxCod.setBounds(72, 77, 153, 23);
 			contentPanel.add(btnBuscarxCod);
 		}
 		{
-			btnBuscarxNombre.addActionListener(this);
-			btnBuscarxNombre.setBounds(375, 122, 165, 23);
-			contentPanel.add(btnBuscarxNombre);
-		}
-		{
-			lblNewLabel.setBounds(72, 35, 46, 14);
+			lblNewLabel.setBounds(72, 35, 140, 14);
 			contentPanel.add(lblNewLabel);
 		}
 		{
-			txtID.setColumns(10);
-			txtID.setBounds(110, 32, 86, 20);
-			contentPanel.add(txtID);
+			txtCodProd.setColumns(10);
+			txtCodProd.setBounds(241, 32, 86, 20);
+			contentPanel.add(txtCodProd);
 		}
 		{
-			lblNewLabel_1.setBounds(257, 35, 63, 14);
+			lblNewLabel_1.setBounds(395, 35, 119, 14);
 			contentPanel.add(lblNewLabel_1);
 		}
 		{
-			txtNom.setColumns(10);
-			txtNom.setBounds(322, 32, 153, 20);
-			contentPanel.add(txtNom);
+			cboProd.addActionListener(this);
+			cboProd.setBounds(512, 31, 119, 22);
+			contentPanel.add(cboProd);
 		}
+		
+		cboProd.addItem("");
+		
+		for (int i = 0; i < pg.size(); i++) {
+			cboProd.addItem(pg.get(i).getName());
+		}
+		
+		
+	}
+	
+	private String getCodProd() {
+		return txtCodProd.getText();
+	}
+	
+	private String getProd() {
+		return String.valueOf(getIdProd());
+	}
+
+	private int getIdProd() {
+		String product = cboProd.getSelectedItem().toString();
+		int id = -1;
+		for (int i = 0; i < pg.size(); i++) {
+			if (pg.get(i).getName().equals(product)) {
+				id = pg.get(i).getId();
+			}
+		}
+		return id;
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnBuscarxNombre) {
-			do_btnBuscarxNombre_actionPerformed(e);
+		if (e.getSource() == cboProd) {
+			do_cboProd_actionPerformed(e);
 		}
 		if (e.getSource() == btnBuscarxCod) {
 			do_btnBuscarxCod_actionPerformed(e);
@@ -169,11 +196,11 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 
 	protected void do_btnBuscarxCod_actionPerformed(ActionEvent e) {
 		try {
-			if (LeerID().isBlank()) {
+			if (getCodProd().isBlank()) {
 				JOptionPane.showMessageDialog(this, "El campo está vacío.");
 				return;
 			}
-			Producto p = pDAO.leerProductoPorCodigo(LeerID());
+			Producto p = pDAO.readProdByCod(getCodProd());
 			if (p != null) {
 				JOptionPane.showMessageDialog(this, "Producto encontrado");
 				table.setModel(new DefaultTableModel());
@@ -202,17 +229,40 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 			JOptionPane.showMessageDialog(this, "Ingrese un código válido");
 		}
 	}
-
-	protected void do_btnBuscarxNombre_actionPerformed(ActionEvent e) {
+	protected void do_cboProd_actionPerformed(ActionEvent e) {
+		if (!comboBoxInitialized) {
+	        comboBoxInitialized = true;
+	        return;
+	    }
 		
+		try {
+			List<Producto> productos = pDAO.readProdsByProd(getProd());
 
-	}
+			Object[][] datos = new Object[productos.size()][14];
 
-	private String LeerID() {
-		return txtID.getText();
-	}
+			for (int i = 0; i < productos.size(); i++) {
+			    Producto p = productos.get(i);
+			    datos[i][0]  = p.getCodigoProducto();
+				datos[i][1]  = p.getProd();
+				datos[i][2]  = p.getMarca();
+				datos[i][3]  = p.getPresentacion();
+				datos[i][4]  = p.getUnidadMedida();
+				datos[i][5]  = String.valueOf(p.getCantidadMedida());
+				datos[i][6]  = String.valueOf(p.getStock());
+				datos[i][7]  = String.valueOf(p.getStockMin());
+				datos[i][8]  = String.valueOf(p.getCostoBase());
+				datos[i][9]  = String.valueOf(p.getPorcentMargen());
+				datos[i][10] = p.getFechaFabricacion() != null ? p.getFechaFabricacion().toString() : "";
+				datos[i][11] = p.getFechaVencimiento() != null ? p.getFechaVencimiento().toString() : "";
+				datos[i][12] = p.getCreatedAt();
+				datos[i][13] = p.getUpdatedAt();
+			}
 
-	private String LeerNombre() {
-		return txtNom.getText();
+			table.setModel(new DefaultTableModel(datos, columnas));
+		} catch (Exception e2) {
+			JOptionPane.showMessageDialog(this, "Ingrese un código válido");
+		}
+		
+		
 	}
 }

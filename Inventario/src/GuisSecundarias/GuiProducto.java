@@ -49,10 +49,10 @@ public class GuiProducto extends JDialog implements ActionListener {
 	private PresentacionDAO prDAO = new PresentacionDAO();
 	private UnidadMedidaDAO uDAO = new UnidadMedidaDAO();
 	private MarcaDAO mDAO = new MarcaDAO();
-	List<ProductoGeneral> pg = pgDAO.listarProductosGenerales();
-	List<Marca> m = mDAO.listarMarcas();
-	List<Presentacion> pr = prDAO.listarPresentaciones();
-	List<UnidadMedida> u = uDAO.listarUnidadesMedidas();
+	private List<ProductoGeneral> pg = pgDAO.listarProductosGenerales();
+	private List<Marca> m = mDAO.listarMarcas();
+	private List<Presentacion> pr = prDAO.listarPresentaciones();
+	private List<UnidadMedida> u = uDAO.listarUnidadesMedidas();
 
 	/**
 	 * Launch the application.
@@ -427,7 +427,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 				return;
 			} else {
 
-				if (pDAO.leerProductoPorCodigo(getCod()) != null) {
+				if (pDAO.readProdByCod(getCod()) != null) {
 					JOptionPane.showMessageDialog(this, "El código del producto ya existe");
 					return;
 				}
@@ -446,7 +446,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 				p.setFechaFabricacion(getFechFabri());
 				p.setFechaVencimiento(getFechVenci());
 
-				Boolean isCreated = pDAO.crearProducto(p);
+				Boolean isCreated = pDAO.createProd(p);
 				if (isCreated) {
 					JOptionPane.showMessageDialog(this, "El producto fue registrado con éxito.");
 					limpiarCampos();
