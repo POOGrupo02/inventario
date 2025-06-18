@@ -12,8 +12,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import ClasePadre.Producto;
-import ClasesHijo.ControlStock;
-import ClasesHijo.ProductSingleton;
 import ClasesHijo.ProductoGeneral;
 import mysql.ProductoDAO;
 import mysql.ProductoGeneralDAO;
@@ -43,28 +41,15 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 	private final JLabel lblNewLabel = new JLabel("Código de producto:");
 	private final JTextField txtCodProd = new JTextField();
 	private final JLabel lblNewLabel_1 = new JLabel("Buscar por nombre:");
+	private final JComboBox<String> cboProd = new JComboBox<>();
 	private ProductoDAO pDAO = new ProductoDAO();
 	private ProductoGeneralDAO pgDAO = new ProductoGeneralDAO();
-	private final JComboBox<String> cboProd = new JComboBox<>();
+	private List<Producto> productos = pDAO.readProds();
 	private List<ProductoGeneral> pg = pgDAO.listarProductosGenerales();
 	private boolean comboBoxInitialized = false;
-	private String[] columnas = {
-		    "CÓDIGO_PRODUCTO",
-		    "NOMBRE",
-		    "MARCA",
-		    "PRESENTACIÓN",
-		    "UNIDAD DE MEDIDA",
-		    "CANTIDAD_MEDIDA",
-		    "STOCK",
-		    "STOCK_MIN",
-		    "COSTO_BASE",
-		    "PORCENT_MARGEN",
-		    "FECHA_FABRICACION",
-		    "FECHA_VENCIMIENTO",
-		    "CREATED_AT",
-		    "UPDATED_AT"
-		};
-
+	private String[] columnas = { "CÓDIGO_PRODUCTO", "NOMBRE", "MARCA", "PRESENTACIÓN", "UNIDAD DE MEDIDA",
+			"CANTIDAD_MEDIDA", "STOCK", "STOCK_MIN", "COSTO_BASE", "PORCENT_MARGEN", "FECHA_FABRICACION",
+			"FECHA_VENCIMIENTO", "CREATED_AT", "UPDATED_AT" };
 
 	/**
 	 * Launch the application.
@@ -92,23 +77,21 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 		{
 			scrollPane.setBounds(54, 166, 813, 297);
 			contentPanel.add(scrollPane);
-			
-			List<Producto> productos = pDAO.readProds();
 
 			Object[][] datos = new Object[productos.size()][14];
 
 			for (int i = 0; i < productos.size(); i++) {
-			    Producto p = productos.get(i);
-			    datos[i][0]  = p.getCodigoProducto();
-				datos[i][1]  = p.getProd();
-				datos[i][2]  = p.getMarca();
-				datos[i][3]  = p.getPresentacion();
-				datos[i][4]  = p.getUnidadMedida();
-				datos[i][5]  = String.valueOf(p.getCantidadMedida());
-				datos[i][6]  = String.valueOf(p.getStock());
-				datos[i][7]  = String.valueOf(p.getStockMin());
-				datos[i][8]  = String.valueOf(p.getCostoBase());
-				datos[i][9]  = String.valueOf(p.getPorcentMargen());
+				Producto p = productos.get(i);
+				datos[i][0] = p.getCodigoProducto();
+				datos[i][1] = p.getProd();
+				datos[i][2] = p.getMarca();
+				datos[i][3] = p.getPresentacion();
+				datos[i][4] = p.getUnidadMedida();
+				datos[i][5] = String.valueOf(p.getCantidadMedida());
+				datos[i][6] = String.valueOf(p.getStock());
+				datos[i][7] = String.valueOf(p.getStockMin());
+				datos[i][8] = String.valueOf(p.getCostoBase());
+				datos[i][9] = String.valueOf(p.getPorcentMargen());
 				datos[i][10] = p.getFechaFabricacion() != null ? p.getFechaFabricacion().toString() : "";
 				datos[i][11] = p.getFechaVencimiento() != null ? p.getFechaVencimiento().toString() : "";
 				datos[i][12] = p.getCreatedAt();
@@ -149,20 +132,19 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 			cboProd.setBounds(512, 31, 119, 22);
 			contentPanel.add(cboProd);
 		}
-		
+
 		cboProd.addItem("");
-		
+
 		for (int i = 0; i < pg.size(); i++) {
 			cboProd.addItem(pg.get(i).getName());
 		}
-		
-		
+
 	}
-	
+
 	private String getCodProd() {
 		return txtCodProd.getText();
 	}
-	
+
 	private String getProd() {
 		return String.valueOf(getIdProd());
 	}
@@ -178,6 +160,33 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 		return id;
 	}
 
+	public void guardarCsv() {
+		File archivo = new File("productos.csv");
+		try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(archivo), "UTF-8");
+				PrintWriter pw = new PrintWriter(writer)) {
+
+			writer.write('\uFEFF');
+
+			pw.println(
+					"CÓDIGO_PRODUCTO;NOMBRE;MARCA;PRESENTACIÓN;UNIDAD DE MEDIDA;CANTIDAD_MEDIDA;STOCK;STOCK_MIN;COSTO_BASE;PORCENT_MARGEN;FECHA_FABRICACION;FECHA_VENCIMIENTO;CREATED_AT;UPDATED_AT");
+
+			for (int i = 0; i < productos.size(); i++) {
+				Producto p = productos.get(i);
+				pw.println(p.getCodigoProducto() + ";" + p.getProd() + ";" + p.getMarca() + ";" + p.getPresentacion()
+						+ ";" + p.getUnidadMedida() + ";" + p.getCantidadMedida() + ";" + p.getStock() + ";"
+						+ p.getStockMin() + ";" + p.getCostoBase() + ";" + p.getPorcentMargen() + ";"
+						+ p.getFechaFabricacion() + ";" + p.getFechaVencimiento() + ";" + p.getCreatedAt() + ";"
+						+ p.getUpdatedAt());
+
+			}
+
+			JOptionPane.showMessageDialog(null, "Archivo guardado correctamente en la carpeta del proyecto");
+
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(null, "Error al guardar el archivo");
+		}
+	}
+
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == cboProd) {
 			do_cboProd_actionPerformed(e);
@@ -191,7 +200,7 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 	}
 
 	protected void do_btnGuardarLista_actionPerformed(ActionEvent e) {
-		//pS.guardarCsv();
+		guardarCsv();
 	}
 
 	protected void do_btnBuscarxCod_actionPerformed(ActionEvent e) {
@@ -205,16 +214,16 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(this, "Producto encontrado");
 				table.setModel(new DefaultTableModel());
 				Object[][] datos = new Object[1][14];
-				datos[0][0]  = p.getCodigoProducto();
-				datos[0][1]  = p.getProd();
-				datos[0][2]  = p.getMarca();
-				datos[0][3]  = p.getPresentacion();
-				datos[0][4]  = p.getUnidadMedida();
-				datos[0][5]  = String.valueOf(p.getCantidadMedida());
-				datos[0][6]  = String.valueOf(p.getStock());
-				datos[0][7]  = String.valueOf(p.getStockMin());
-				datos[0][8]  = String.valueOf(p.getCostoBase());
-				datos[0][9]  = String.valueOf(p.getPorcentMargen());
+				datos[0][0] = p.getCodigoProducto();
+				datos[0][1] = p.getProd();
+				datos[0][2] = p.getMarca();
+				datos[0][3] = p.getPresentacion();
+				datos[0][4] = p.getUnidadMedida();
+				datos[0][5] = String.valueOf(p.getCantidadMedida());
+				datos[0][6] = String.valueOf(p.getStock());
+				datos[0][7] = String.valueOf(p.getStockMin());
+				datos[0][8] = String.valueOf(p.getCostoBase());
+				datos[0][9] = String.valueOf(p.getPorcentMargen());
 				datos[0][10] = p.getFechaFabricacion() != null ? p.getFechaFabricacion().toString() : "";
 				datos[0][11] = p.getFechaVencimiento() != null ? p.getFechaVencimiento().toString() : "";
 				datos[0][12] = p.getCreatedAt();
@@ -229,29 +238,30 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 			JOptionPane.showMessageDialog(this, "Ingrese un código válido");
 		}
 	}
+
 	protected void do_cboProd_actionPerformed(ActionEvent e) {
 		if (!comboBoxInitialized) {
-	        comboBoxInitialized = true;
-	        return;
-	    }
-		
+			comboBoxInitialized = true;
+			return;
+		}
+
 		try {
 			List<Producto> productos = pDAO.readProdsByProd(getProd());
 
 			Object[][] datos = new Object[productos.size()][14];
 
 			for (int i = 0; i < productos.size(); i++) {
-			    Producto p = productos.get(i);
-			    datos[i][0]  = p.getCodigoProducto();
-				datos[i][1]  = p.getProd();
-				datos[i][2]  = p.getMarca();
-				datos[i][3]  = p.getPresentacion();
-				datos[i][4]  = p.getUnidadMedida();
-				datos[i][5]  = String.valueOf(p.getCantidadMedida());
-				datos[i][6]  = String.valueOf(p.getStock());
-				datos[i][7]  = String.valueOf(p.getStockMin());
-				datos[i][8]  = String.valueOf(p.getCostoBase());
-				datos[i][9]  = String.valueOf(p.getPorcentMargen());
+				Producto p = productos.get(i);
+				datos[i][0] = p.getCodigoProducto();
+				datos[i][1] = p.getProd();
+				datos[i][2] = p.getMarca();
+				datos[i][3] = p.getPresentacion();
+				datos[i][4] = p.getUnidadMedida();
+				datos[i][5] = String.valueOf(p.getCantidadMedida());
+				datos[i][6] = String.valueOf(p.getStock());
+				datos[i][7] = String.valueOf(p.getStockMin());
+				datos[i][8] = String.valueOf(p.getCostoBase());
+				datos[i][9] = String.valueOf(p.getPorcentMargen());
 				datos[i][10] = p.getFechaFabricacion() != null ? p.getFechaFabricacion().toString() : "";
 				datos[i][11] = p.getFechaVencimiento() != null ? p.getFechaVencimiento().toString() : "";
 				datos[i][12] = p.getCreatedAt();
@@ -262,7 +272,6 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 		} catch (Exception e2) {
 			JOptionPane.showMessageDialog(this, "Ingrese un código válido");
 		}
-		
-		
+
 	}
 }

@@ -7,9 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import GuisSecundarias.GuiControlStock;
 import GuisSecundarias.GuiListaProductos;
-import GuisSecundarias.GuiMovimientos;
 import GuisSecundarias.GuiProducto;
 
 import javax.swing.JMenuBar;
@@ -29,15 +27,13 @@ public class GuiInventario extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JButton btnIrMovimientos;
-	private JButton btnIrRegistrarProducto;
-	private JButton btnIrControlStock;
-	private final JButton btnIrListarProductos = new JButton("");
-	private final JLabel lblNewLabel_1_1_1_1 = new JLabel("Listar productos");
-	private JButton btnIrVenta;
-	private JLabel lbl_ventas;
-	private final JLabel lbl_comprar = new JLabel("Comprar");
-	private final JButton btnIrCompra = new JButton("");
+	private final JLabel lblNewLabel_1_1_1_1 = new JLabel("Productos");
+	private final JLabel Entradas = new JLabel("Entradas");
+	private final JButton btnProductos = new JButton("");
+	private final JButton btnEntradas = new JButton("");
+	private final JButton btnProveedores = new JButton("");
+	private final JButton btnSalidas = new JButton("");
+
 	/**
 	 * Launch the application.
 	 */
@@ -66,121 +62,87 @@ public class GuiInventario extends JFrame implements ActionListener {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		JLabel lbl_control_stock = new JLabel("Control de stock");
+
+		JLabel lbl_control_stock = new JLabel("Salidas");
 		lbl_control_stock.setForeground(new Color(0, 0, 0));
 		lbl_control_stock.setFont(new Font("Tahoma", Font.BOLD, 25));
-		lbl_control_stock.setBounds(72, 331, 216, 43);
+		lbl_control_stock.setBounds(383, 302, 99, 43);
 		contentPane.add(lbl_control_stock);
-		
-		JLabel lblNewLabel_1_1 = new JLabel("Registrar producto");
-		lblNewLabel_1_1.setForeground(new Color(0, 0, 0));
-		lblNewLabel_1_1.setFont(new Font("Tahoma", Font.BOLD, 25));
-		lblNewLabel_1_1.setBounds(37, 79, 243, 43);
-		contentPane.add(lblNewLabel_1_1);
-		
-		JLabel lbl_movimientos = new JLabel("Movimientos");
-		lbl_movimientos.setForeground(new Color(0, 0, 0));
-		lbl_movimientos.setFont(new Font("Tahoma", Font.BOLD, 25));
-		lbl_movimientos.setBounds(416, 331, 163, 43);
-		contentPane.add(lbl_movimientos);
-		
-		
-		btnIrControlStock = new JButton("");
-		btnIrControlStock.addActionListener(this);
-		btnIrControlStock.setIcon(new ImageIcon(GuiInventario.class.getResource("/images/control_stock.jpg")));
-		btnIrControlStock.setBounds(10, 375, 344, 200);
-		contentPane.add(btnIrControlStock);
-		
-		btnIrRegistrarProducto = new JButton("");
-		btnIrRegistrarProducto.addActionListener(this);
-		btnIrRegistrarProducto.setIcon(new ImageIcon(GuiInventario.class.getResource("/images/registra_producto.png")));
-		btnIrRegistrarProducto.setBounds(10, 120, 296, 200);
-		contentPane.add(btnIrRegistrarProducto);
-		
-		btnIrMovimientos = new JButton("");
-		btnIrMovimientos.addActionListener(this);
-		btnIrMovimientos.setIcon(new ImageIcon(GuiInventario.class.getResource("/images/movimientos_productos.png")));
-		btnIrMovimientos.setBounds(384, 375, 224, 200);
-		contentPane.add(btnIrMovimientos);
-		{
-			btnIrListarProductos.addActionListener(this);
-			btnIrListarProductos.setIcon(new ImageIcon(GuiInventario.class.getResource("/images/produc_list.png")));
-			btnIrListarProductos.setBounds(395, 120, 198, 200);
-			contentPane.add(btnIrListarProductos);
-		}
+
+		JLabel lbl_prove = new JLabel("Proveedores");
+		lbl_prove.setForeground(new Color(0, 0, 0));
+		lbl_prove.setFont(new Font("Tahoma", Font.BOLD, 25));
+		lbl_prove.setBounds(42, 302, 163, 43);
+		contentPane.add(lbl_prove);
 		{
 			lblNewLabel_1_1_1_1.setForeground(Color.BLACK);
 			lblNewLabel_1_1_1_1.setFont(new Font("Tahoma", Font.BOLD, 25));
-			lblNewLabel_1_1_1_1.setBounds(384, 79, 216, 43);
+			lblNewLabel_1_1_1_1.setBounds(42, 24, 136, 43);
 			contentPane.add(lblNewLabel_1_1_1_1);
 		}
-		
-		btnIrVenta = new JButton("");
-		btnIrVenta.setIcon(new ImageIcon(GuiInventario.class.getResource("/images/venta.png")));
-		btnIrVenta.setBounds(645, 375, 224, 200);
-		contentPane.add(btnIrVenta);
-		
-		lbl_ventas = new JLabel("Venta");
-		lbl_ventas.setForeground(Color.BLACK);
-		lbl_ventas.setFont(new Font("Tahoma", Font.BOLD, 25));
-		lbl_ventas.setBounds(708, 331, 78, 43);
-		contentPane.add(lbl_ventas);
 		{
-			lbl_comprar.setForeground(Color.BLACK);
-			lbl_comprar.setFont(new Font("Tahoma", Font.BOLD, 25));
-			lbl_comprar.setBounds(699, 79, 109, 43);
-			contentPane.add(lbl_comprar);
+			Entradas.setForeground(Color.BLACK);
+			Entradas.setFont(new Font("Tahoma", Font.BOLD, 25));
+			Entradas.setBounds(350, 24, 118, 43);
+			contentPane.add(Entradas);
 		}
 		{
-			btnIrCompra.addActionListener(this);
-			btnIrCompra.setIcon(new ImageIcon(GuiInventario.class.getResource("/images/compra.png")));
-			btnIrCompra.setBounds(645, 120, 224, 200);
-			contentPane.add(btnIrCompra);
+			btnProductos.addActionListener(this);
+			btnProductos.setIcon(new ImageIcon(GuiInventario.class.getResource("/images/produc_list.png")));
+			btnProductos.setBounds(42, 78, 198, 200);
+			contentPane.add(btnProductos);
 		}
-		
-		lbl_comprar.setVisible(false);
-		lbl_ventas.setVisible(false);
+		btnEntradas.addActionListener(this);
+		btnEntradas.setIcon(new ImageIcon(GuiInventario.class.getResource("/images/compra.png")));
+		btnEntradas.setBounds(353, 78, 198, 200);
+
+		contentPane.add(btnEntradas);
+		btnProveedores.addActionListener(this);
+		btnProveedores.setIcon(new ImageIcon(GuiInventario.class.getResource("/images/movimientos_productos.png")));
+		btnProveedores.setBounds(52, 356, 198, 200);
+
+		contentPane.add(btnProveedores);
+		btnSalidas.addActionListener(this);
+		btnSalidas.setIcon(new ImageIcon(GuiInventario.class.getResource("/images/control_stock.jpg")));
+		btnSalidas.setBounds(350, 356, 198, 200);
+
+		contentPane.add(btnSalidas);
+
+		Entradas.setVisible(false);
 		lbl_control_stock.setVisible(false);
-		lbl_movimientos.setVisible(false);
-		btnIrCompra.setVisible(false);
-		btnIrControlStock.setVisible(false);
-		btnIrMovimientos.setVisible(false);
-		btnIrVenta.setVisible(false);
+		lbl_prove.setVisible(false);
 	}
+
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnIrCompra) {
-			do_btnIrCompra_actionPerformed(e);
+		if (e.getSource() == btnSalidas) {
+			do_btnSalidas_actionPerformed(e);
 		}
-		if (e.getSource() == btnIrListarProductos) {
-			do_btnIrListarProductos_actionPerformed(e);
+		if (e.getSource() == btnProveedores) {
+			do_btnProveedores_actionPerformed(e);
 		}
-		if (e.getSource() == btnIrControlStock) {
-			do_btnIrControlStock_actionPerformed(e);
+		if (e.getSource() == btnEntradas) {
+			do_btnEntradas_actionPerformed(e);
 		}
-		if (e.getSource() == btnIrRegistrarProducto) {
-			do_btnIrRegistrarProducto_actionPerformed(e);
-		}
-		if (e.getSource() == btnIrMovimientos) {
-			do_btnIrMovimientos_actionPerformed(e);
+		if (e.getSource() == btnProductos) {
+			do_btnProductos_actionPerformed(e);
 		}
 	}
-	protected void do_btnIrMovimientos_actionPerformed(ActionEvent e) {
-		GuiMovimientos mov = new GuiMovimientos();
-		mov.setVisible(true);
-	}
-	protected void do_btnIrRegistrarProducto_actionPerformed(ActionEvent e) {
+
+	protected void do_btnProductos_actionPerformed(ActionEvent e) {
+		// Registrar producto
 		GuiProducto product = new GuiProducto();
 		product.setVisible(true);
+
+		// listar productos
+		// GuiListaProductos lP = new GuiListaProductos();
 	}
-	protected void do_btnIrControlStock_actionPerformed(ActionEvent e) {
-		GuiControlStock conStk = new GuiControlStock();
-		conStk.setVisible(true);
+
+	protected void do_btnEntradas_actionPerformed(ActionEvent e) {
 	}
-	protected void do_btnIrListarProductos_actionPerformed(ActionEvent e) {
-		GuiListaProductos lP = new GuiListaProductos();
-		lP.setVisible(true);
+
+	protected void do_btnProveedores_actionPerformed(ActionEvent e) {
 	}
-	protected void do_btnIrCompra_actionPerformed(ActionEvent e) {
+
+	protected void do_btnSalidas_actionPerformed(ActionEvent e) {
 	}
 }

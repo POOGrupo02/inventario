@@ -12,7 +12,6 @@ import javax.swing.text.MaskFormatter;
 import ClasePadre.Producto;
 import ClasesHijo.Marca;
 import ClasesHijo.Presentacion;
-import ClasesHijo.ProductSingleton;
 import ClasesHijo.ProductoGeneral;
 import ClasesHijo.UnidadMedida;
 import mysql.MarcaDAO;
