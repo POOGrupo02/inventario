@@ -14,6 +14,7 @@ import javax.swing.table.DefaultTableModel;
 import ClasePadre.Producto;
 import ClasesHijo.ControlStock;
 import ClasesHijo.ProductSingleton;
+import mysql.ProductoDAO;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -41,8 +42,24 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 	private final JTextField txtID = new JTextField();
 	private final JLabel lblNewLabel_1 = new JLabel("Nombre:");
 	private final JTextField txtNom = new JTextField();
-	private ProductSingleton pS = ProductSingleton.getInstance();
-	private String[] columnas = { "ID_PRODUCTO", "NOMBRE", "PRECIO", "CATEGORÍA", "STOCK" };
+	private ProductoDAO pDAO = new ProductoDAO();
+	private String[] columnas = {
+		    "CÓDIGO_PRODUCTO",
+		    "NOMBRE",
+		    "MARCA",
+		    "PRESENTACIÓN",
+		    "UNIDAD DE MEDIDA",
+		    "CANTIDAD_MEDIDA",
+		    "STOCK",
+		    "STOCK_MIN",
+		    "COSTO_BASE",
+		    "PORCENT_MARGEN",
+		    "FECHA_FABRICACION",
+		    "FECHA_VENCIMIENTO",
+		    "CREATED_AT",
+		    "UPDATED_AT"
+		};
+
 
 	/**
 	 * Launch the application.
@@ -68,20 +85,33 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		{
-			scrollPane.setBounds(72, 183, 795, 345);
+			scrollPane.setBounds(72, 190, 619, 297);
 			contentPanel.add(scrollPane);
+			
+			List<Producto> productos = pDAO.listarProductos();
 
-			Object[][] datos = new Object[pS.getSize()][5];
+			Object[][] datos = new Object[productos.size()][14];
 
-			for (int i = 0; i < pS.getSize(); i++) {
-				Producto p = pS.getProducto(i);
-				datos[i][0] = p.getCodigo();
-				datos[i][1] = p.getNombre();
-				datos[i][2] = p.getPrecio();
-				datos[i][3] = p.getCategoría();
-				datos[i][4] = p.getStock();
+			for (int i = 0; i < productos.size(); i++) {
+			    Producto p = productos.get(i);
+			    datos[i][0]  = p.getCodigoProducto();
+				datos[i][1]  = p.getProd();
+				datos[i][2]  = p.getMarca();
+				datos[i][3]  = p.getPresentacion();
+				datos[i][4]  = p.getUnidadMedida();
+				datos[i][5]  = String.valueOf(p.getCantidadMedida());
+				datos[i][6]  = String.valueOf(p.getStock());
+				datos[i][7]  = String.valueOf(p.getStockMin());
+				datos[i][8]  = String.valueOf(p.getCostoBase());
+				datos[i][9]  = String.valueOf(p.getPorcentMargen());
+				datos[i][10] = p.getFechaFabricacion() != null ? p.getFechaFabricacion().toString() : "";
+				datos[i][11] = p.getFechaVencimiento() != null ? p.getFechaVencimiento().toString() : "";
+				datos[i][12] = p.getCreatedAt();
+				datos[i][13] = p.getUpdatedAt();
 			}
+
 			table.setModel(new DefaultTableModel(datos, columnas));
+			table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		}
 		{
 			scrollPane.setViewportView(table);
@@ -134,7 +164,7 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 	}
 
 	protected void do_btnGuardarLista_actionPerformed(ActionEvent e) {
-		pS.guardarCsv();
+		//pS.guardarCsv();
 	}
 
 	protected void do_btnBuscarxCod_actionPerformed(ActionEvent e) {
@@ -143,16 +173,26 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(this, "El campo está vacío.");
 				return;
 			}
-			Producto p = pS.buscarPorId(LeerID());
+			Producto p = pDAO.leerProductoPorCodigo(LeerID());
 			if (p != null) {
 				JOptionPane.showMessageDialog(this, "Producto encontrado");
 				table.setModel(new DefaultTableModel());
-				Object[][] datos = new Object[1][5];
-				datos[0][0] = p.getCodigo();
-				datos[0][1] = p.getNombre();
-				datos[0][2] = p.getPrecio();
-				datos[0][3] = p.getCategoría();
-				datos[0][4] = p.getStock();
+				Object[][] datos = new Object[1][14];
+				datos[0][0]  = p.getCodigoProducto();
+				datos[0][1]  = p.getProd();
+				datos[0][2]  = p.getMarca();
+				datos[0][3]  = p.getPresentacion();
+				datos[0][4]  = p.getUnidadMedida();
+				datos[0][5]  = String.valueOf(p.getCantidadMedida());
+				datos[0][6]  = String.valueOf(p.getStock());
+				datos[0][7]  = String.valueOf(p.getStockMin());
+				datos[0][8]  = String.valueOf(p.getCostoBase());
+				datos[0][9]  = String.valueOf(p.getPorcentMargen());
+				datos[0][10] = p.getFechaFabricacion() != null ? p.getFechaFabricacion().toString() : "";
+				datos[0][11] = p.getFechaVencimiento() != null ? p.getFechaVencimiento().toString() : "";
+				datos[0][12] = p.getCreatedAt();
+				datos[0][13] = p.getUpdatedAt();
+
 				table.setModel(new DefaultTableModel(datos, columnas));
 			} else {
 				JOptionPane.showMessageDialog(this, "Producto no encontrado.");
@@ -164,28 +204,7 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 	}
 
 	protected void do_btnBuscarxNombre_actionPerformed(ActionEvent e) {
-		try {
-			if (LeerNombre().isBlank()) {
-				JOptionPane.showMessageDialog(this, "El campo está vacío.");
-				return;
-			}
-			Producto p = pS.buscarPorNombre(LeerNombre());
-			if (p != null) {
-				JOptionPane.showMessageDialog(this, "Producto encontrado");
-				table.setModel(new DefaultTableModel());
-				Object[][] datos = new Object[1][5];
-				datos[0][0] = p.getCodigo();
-				datos[0][1] = p.getNombre();
-				datos[0][2] = p.getPrecio();
-				datos[0][3] = p.getCategoría();
-				datos[0][4] = p.getStock();
-				table.setModel(new DefaultTableModel(datos, columnas));
-			} else {
-				JOptionPane.showMessageDialog(this, "Producto no encontrado.");
-			}
-		} catch (Exception e2) {
-			JOptionPane.showMessageDialog(this, "Ingrese un código válido");
-		}
+		
 
 	}
 

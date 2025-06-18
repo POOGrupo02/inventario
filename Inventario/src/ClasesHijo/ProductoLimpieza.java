@@ -4,7 +4,7 @@ import java.util.Date;
 
 import ClasePadre.Producto;
 
-public class ProductoLimpieza extends Producto {
+public class ProductoLimpieza {
 	
 	private String descripcion, instruciones;
 
@@ -24,8 +24,6 @@ public class ProductoLimpieza extends Producto {
 			Date fechaVencimiento, 
 			String descripcion, 
 			String instruciones) {
-		super(codigo, nombre, categoría, marca, proveedor, unidadVenta, unidadMedida, precio, cantidadPorUnidad, stock,
-				stockMin, fechaFabricacion, fechaVencimiento);
 		this.descripcion = descripcion;
 		this.instruciones = instruciones;
 	}

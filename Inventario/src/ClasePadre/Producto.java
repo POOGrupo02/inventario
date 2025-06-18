@@ -4,157 +4,160 @@ import java.util.Date;
 
 public class Producto {
 
-	private String codigo, nombre, categoría, marca, proveedor, unidadVenta, unidadMedida;
-	private double precio, cantidadPorUnidad;
-	private int stock, stockMin;
-	private Date fechaFabricacion, fechaVencimiento;
-	
-	
-	public Producto(String codigo, String nombre, String categoría, String marca, String proveedor, String unidadVenta,
-			String unidadMedida, double precio, double cantidadPorUnidad, int stock, int stockMin,
-			Date fechaFabricacion, Date fechaVencimiento) {
-		this.codigo = codigo;
-		this.nombre = nombre;
-		this.categoría = categoría;
-		this.marca = marca;
-		this.proveedor = proveedor;
-		this.unidadVenta = unidadVenta;
-		this.unidadMedida = unidadMedida;
-		this.precio = precio;
-		this.cantidadPorUnidad = cantidadPorUnidad;
-		this.stock = stock;
-		this.stockMin = stockMin;
-		this.fechaFabricacion = fechaFabricacion;
-		this.fechaVencimiento = fechaVencimiento;
-	}
+    private int idProducto;
+    private String codigoProducto;
+    private String producto;
+    private String unidadMedida;
+    private String presentacion;
+    private String marca;
+    private int stock;
+    private int stockMin;
+    private double costoBase;
+    private double porcentMargen;
+    private double cantidadMedida;
+    private Date fechaFabricacion;
+    private Date fechaVencimiento;
+    private String createdAt;
+    private String updatedAt;
 
-	public String getCodigo() {
-		return codigo;
-	}
+    public Producto() {
+    }
 
+    public Producto(int idProducto, String codigoProducto, String producto, String unidadMedida, String presentacion,
+                    String marca, int stock, int stockMin, double costoBase, double porcentMargen, double cantidadMedida,
+                    Date fechaFabricacion, Date fechaVencimiento) {
+        this.idProducto = idProducto;
+        this.codigoProducto = codigoProducto;
+        this.producto = producto;
+        this.unidadMedida = unidadMedida;
+        this.presentacion = presentacion;
+        this.marca = marca;
+        this.stock = stock;
+        this.stockMin = stockMin;
+        this.costoBase = costoBase;
+        this.porcentMargen = porcentMargen;
+        this.cantidadMedida = cantidadMedida;
+        this.fechaFabricacion = fechaFabricacion;
+        this.fechaVencimiento = fechaVencimiento;
+    }
 
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
-	}
+    public int getIdProducto() {
+        return idProducto;
+    }
 
+    public void setIdProducto(int idProducto) {
+        this.idProducto = idProducto;
+    }
 
-	public String getNombre() {
-		return nombre;
-	}
+    public String getCodigoProducto() {
+        return codigoProducto;
+    }
 
+    public void setCodigoProducto(String codigoProducto) {
+        this.codigoProducto = codigoProducto;
+    }
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
+    public String getProd() {
+        return producto;
+    }
 
+    public void setProd(String nombreProdGen) {
+        this.producto = nombreProdGen;
+    }
 
-	public String getCategoría() {
-		return categoría;
-	}
+    public String getUnidadMedida() {
+        return unidadMedida;
+    }
 
+    public void setUnidadMedida(String unidadMedida) {
+        this.unidadMedida = unidadMedida;
+    }
 
-	public void setCategoría(String categoría) {
-		this.categoría = categoría;
-	}
+    public String getPresentacion() {
+        return presentacion;
+    }
 
+    public void setPresentacion(String presentacion) {
+        this.presentacion = presentacion;
+    }
 
-	public String getMarca() {
-		return marca;
-	}
+    public String getMarca() {
+        return marca;
+    }
 
+    public void setMarca(String marca) {
+        this.marca = marca;
+    }
 
-	public void setMarca(String marca) {
-		this.marca = marca;
-	}
+    public int getStock() {
+        return stock;
+    }
 
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
 
-	public String getProveedor() {
-		return proveedor;
-	}
+    public int getStockMin() {
+        return stockMin;
+    }
 
+    public void setStockMin(int stockMin) {
+        this.stockMin = stockMin;
+    }
 
-	public void setProveedor(String proveedor) {
-		this.proveedor = proveedor;
-	}
+    public double getCostoBase() {
+        return costoBase;
+    }
 
+    public void setCostoBase(double costoBase) {
+        this.costoBase = costoBase;
+    }
 
-	public String getUnidadVenta() {
-		return unidadVenta;
-	}
+    public double getPorcentMargen() {
+        return porcentMargen;
+    }
 
+    public void setPorcentMargen(double porcentMargen) {
+        this.porcentMargen = porcentMargen;
+    }
 
-	public void setUnidadVenta(String unidadVenta) {
-		this.unidadVenta = unidadVenta;
-	}
+    public double getCantidadMedida() {
+        return cantidadMedida;
+    }
 
+    public void setCantidadMedida(double cantidadMedida) {
+        this.cantidadMedida = cantidadMedida;
+    }
 
-	public String getUnidadMedida() {
-		return unidadMedida;
-	}
+    public Date getFechaFabricacion() {
+        return fechaFabricacion;
+    }
 
+    public void setFechaFabricacion(Date fechaFabricacion) {
+        this.fechaFabricacion = fechaFabricacion;
+    }
 
-	public void setUnidadMedida(String unidadMedida) {
-		this.unidadMedida = unidadMedida;
-	}
+    public Date getFechaVencimiento() {
+        return fechaVencimiento;
+    }
 
+    public void setFechaVencimiento(Date fechaVencimiento) {
+        this.fechaVencimiento = fechaVencimiento;
+    }
 
-	public double getPrecio() {
-		return precio;
-	}
+    public String getCreatedAt() {
+        return createdAt;
+    }
 
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
 
-	public void setPrecio(double precio) {
-		this.precio = precio;
-	}
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
 
-
-	public double getCantidadPorUnidad() {
-		return cantidadPorUnidad;
-	}
-
-
-	public void setCantidadPorUnidad(double cantidadPorUnidad) {
-		this.cantidadPorUnidad = cantidadPorUnidad;
-	}
-
-
-	public int getStock() {
-		return stock;
-	}
-
-
-	public void setStock(int stock) {
-		this.stock = stock;
-	}
-
-
-	public int getStockMin() {
-		return stockMin;
-	}
-
-
-	public void setStockMin(int stockMin) {
-		this.stockMin = stockMin;
-	}
-
-
-	public Date getFechaFabricacion() {
-		return fechaFabricacion;
-	}
-
-
-	public void setFechaFabricacion(Date fechaFabricacion) {
-		this.fechaFabricacion = fechaFabricacion;
-	}
-
-
-	public Date getFechaVencimiento() {
-		return fechaVencimiento;
-	}
-
-
-	public void setFechaVencimiento(Date fechaVencimiento) {
-		this.fechaVencimiento = fechaVencimiento;
-	}
-
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }

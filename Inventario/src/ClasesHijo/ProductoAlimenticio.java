@@ -26,8 +26,6 @@ public class ProductoAlimenticio extends Producto {
 			List<InformacionNutricional> informacionNutricional
 			) 
 	{
-		super(codigo, nombre, categoría, marca, proveedor, unidadVenta, unidadMedida, precio, cantidadPorUnidad, stock,
-				stockMin, fechaFabricacion, fechaVencimiento);
 		this.informacionNutricional = informacionNutricional;
 	}
 

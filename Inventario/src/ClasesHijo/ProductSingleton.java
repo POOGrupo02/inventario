@@ -45,36 +45,9 @@ public class ProductSingleton {
 		return listProducts.size();
 	}
 
-	public Producto buscarPorId(String id) {
-		for (int i = 0; i < listProducts.size(); i++) {
-			if (getProducto(i).getCodigo().equals(id)) {
-				return getProducto(i);
-			}
-		}
-		return null;
-	}
-
-	public Producto buscarPorNombre(String nombre) {
-		for (int i = 0; i < listProducts.size(); i++) {
-			if (getProducto(i).getNombre().equalsIgnoreCase(nombre)) {
-				return getProducto(i);
-			}
-		}
-		return null;
-	}
-
-	public boolean eliminarProductoPorId(String id) {
-		for (int i = 0; i < listProducts.size(); i++) {
-			if (id.equals(listProducts.get(i).getCodigo())) {
-				listProducts.remove(i);
-				return true;
-			}
-		}
-		return false;
-	}
-
+	
 	public void guardarCsv() {
-		File archivo = new File("productos.csv");
+		/*File archivo = new File("productos.csv");
 		try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(archivo), "UTF-8");
 				PrintWriter pw = new PrintWriter(writer)) {
 
@@ -92,6 +65,6 @@ public class ProductSingleton {
 
 		} catch (Exception e1) {
 			JOptionPane.showMessageDialog(null, "Error al guardar el archivo");
-		}
+		}*/
 	}
 }
