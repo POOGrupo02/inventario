@@ -246,7 +246,7 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 		}
 
 		try {
-			List<Producto> productos = pDAO.readProdsByProd(getProd());
+			List<Producto> productos = pDAO.readProdsByProd(Integer.parseInt(getProd()));
 
 			Object[][] datos = new Object[productos.size()][14];
 

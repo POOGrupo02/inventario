@@ -8,25 +8,38 @@ import ClasePadre.Producto;
 public class ProductoDAO {
 	ConexionMySQL conexion = new ConexionMySQL();
 
-	String sqlCreate = "INSERT INTO productos (codigo_producto, id_prod_gen, id_uni_medi, id_present, id_marca, stock, "
-			+ "stock_min, costo_base, porcent_margen, cantidad_medida, fecha_fabricacion, fecha_vencimiento) "
-			+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-	String sqlSelect = "SELECT\r\n" + "p.id_producto,\r\n" + "p.codigo_producto,\r\n" + "pg.nombre AS nombre,\r\n"
-			+ "u.nombre AS unidad_medida,\r\n" + "pr.nombre AS presentacion,\r\n" + "m.nombre AS marca,\r\n"
-			+ "p.stock,\r\n" + "p.stock_min,\r\n" + "p.costo_base,\r\n" + "p.porcent_margen,\r\n"
-			+ "p.cantidad_medida,\r\n" + "p.fecha_fabricacion,\r\n" + "p.fecha_vencimiento,\r\n" + "p.created_at,\r\n"
-			+ "p.updated_at\r\n" + "FROM productos p\r\n"
-			+ "JOIN productos_generales pg ON p.id_prod_gen = pg.id_prod_gen\r\n"
-			+ "JOIN unidades_medidas u ON p.id_uni_medi = u.id_uni_medi\r\n"
-			+ "JOIN presentaciones pr ON p.id_present = pr.id_present\r\n"
-			+ "JOIN marcas m ON p.id_marca = m.id_marca\r\n";
+	private static final String SQL_SELECT =
+		    "SELECT p.id_producto, p.codigo_producto, pg.nombre AS nombre, " +
+		    "u.nombre AS unidad_medida, pr.nombre AS presentacion, m.nombre AS marca, " +
+		    "p.stock, p.stock_min, p.costo_base, p.porcent_margen, p.cantidad_medida, " +
+		    "p.fecha_fabricacion, p.fecha_vencimiento, p.created_at, p.updated_at " +
+		    "FROM productos p " +
+		    "JOIN productos_generales pg ON p.id_prod_gen = pg.id_prod_gen " +
+		    "JOIN unidades_medidas u ON p.id_uni_medi = u.id_uni_medi " +
+		    "JOIN presentaciones pr ON p.id_present = pr.id_present " +
+		    "JOIN marcas m ON p.id_marca = m.id_marca ";
 
 	public Boolean createProd(Producto p) {
 		Boolean isCreated = true;
+		
+		String sqlCreate =
+			    "INSERT INTO productos (" +
+			        "codigo_producto, " +
+			        "id_prod_gen, " +
+			        "id_uni_medi, " +
+			        "id_present, " +
+			        "id_marca, " +
+			        "stock, " +
+			        "stock_min, " +
+			        "costo_base, " +
+			        "porcent_margen, " +
+			        "cantidad_medida, " +
+			        "fecha_fabricacion, " +
+			        "fecha_vencimiento" +
+			    ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		try (Connection con = conexion.getConnection();
-				PreparedStatement ps = con.prepareStatement(sqlCreate);) {
+				PreparedStatement ps = con.prepareStatement(sqlCreate)) {
 			ps.setString(1, p.getCodigoProducto());
 			ps.setInt(2, Integer.parseInt(p.getProd()));
 			ps.setInt(3, Integer.parseInt(p.getUnidadMedida()));
@@ -52,27 +65,11 @@ public class ProductoDAO {
 		List<Producto> productos = new ArrayList<>();
 
 		try (Connection con = conexion.getConnection();
-				PreparedStatement ps = con.prepareStatement(sqlSelect);
-				ResultSet rs = ps.executeQuery();) {
+				PreparedStatement ps = con.prepareStatement(SQL_SELECT);
+				ResultSet rs = ps.executeQuery()) {
 
 			while (rs.next()) {
-				Producto p = new Producto();
-				p.setIdProducto(rs.getInt("id_producto"));
-				p.setCodigoProducto(rs.getString("codigo_producto"));
-				p.setProd(rs.getString("nombre"));
-				p.setUnidadMedida(rs.getString("unidad_medida"));
-				p.setPresentacion(rs.getString("presentacion"));
-				p.setMarca(rs.getString("marca"));
-				p.setStock(rs.getInt("stock"));
-				p.setStockMin(rs.getInt("stock_min"));
-				p.setCostoBase(rs.getDouble("costo_base"));
-				p.setPorcentMargen(rs.getDouble("porcent_margen"));
-				p.setCantidadMedida(rs.getDouble("cantidad_medida"));
-				p.setFechaFabricacion(rs.getDate("fecha_fabricacion"));
-				p.setFechaVencimiento(rs.getDate("fecha_vencimiento"));
-				p.setCreatedAt(String.valueOf(rs.getTimestamp("created_at")));
-				p.setUpdatedAt(String.valueOf(rs.getTimestamp("updated_at")));
-				productos.add(p);
+				productos.add(mapProducto(rs));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -82,32 +79,17 @@ public class ProductoDAO {
 
 	public Producto readProdByCod(String codigo) {
 		Producto producto = null;
-		String sqlRead = sqlSelect + "WHERE codigo_producto = ?";
+		String sqlRead = SQL_SELECT + "WHERE codigo_producto = ?";
 
 		try (Connection con = conexion.getConnection(); 
-				PreparedStatement ps = con.prepareStatement(sqlRead);) {
+				PreparedStatement ps = con.prepareStatement(sqlRead)) {
 
 			ps.setString(1, codigo);
 			
-			try(ResultSet rs = ps.executeQuery();){
+			try(ResultSet rs = ps.executeQuery()){
 				if (rs.next()) {
-					producto = new Producto();
-					producto.setIdProducto(rs.getInt("id_producto"));
-					producto.setCodigoProducto(rs.getString("codigo_producto"));
-					producto.setProd(rs.getString("nombre"));
-					producto.setUnidadMedida(rs.getString("unidad_medida"));
-					producto.setPresentacion(rs.getString("presentacion"));
-					producto.setMarca(rs.getString("marca"));
-					producto.setStock(rs.getInt("stock"));
-					producto.setStockMin(rs.getInt("stock_min"));
-					producto.setCostoBase(rs.getDouble("costo_base"));
-					producto.setPorcentMargen(rs.getDouble("porcent_margen"));
-					producto.setCantidadMedida(rs.getDouble("cantidad_medida"));
-					producto.setFechaFabricacion(rs.getDate("fecha_fabricacion"));
-					producto.setFechaVencimiento(rs.getDate("fecha_vencimiento"));
-					producto.setCreatedAt(String.valueOf(rs.getTimestamp("created_at")));
-					producto.setUpdatedAt(String.valueOf(rs.getTimestamp("updated_at")));
-					}
+					producto = mapProducto(rs);
+				}
 			}
 			
 		} catch (SQLException e) {
@@ -116,35 +98,18 @@ public class ProductoDAO {
 		return producto;
 	}
 
-	public List<Producto> readProdsByProd(String prod) {
+	public List<Producto> readProdsByProd(int idProduct) {
 		List<Producto> productos = new ArrayList<>();
 
-		String sqlFilt = sqlSelect + (prod.equals("-1")? "" : "WHERE p.id_prod_gen = ?");
+		String sqlFilt = SQL_SELECT + (idProduct> 0? "WHERE p.id_prod_gen = ?" : "");
 		try (Connection con = conexion.getConnection(); 
-				PreparedStatement ps = con.prepareStatement(sqlFilt);
-				) {
+				PreparedStatement ps = con.prepareStatement(sqlFilt)) {
 			
-			if(!prod.equals("-1")) ps.setInt(1, Integer.parseInt(prod));
+			if(idProduct> 0) ps.setInt(1,idProduct);
 			
 			try(ResultSet rs = ps.executeQuery();){
 				while (rs.next()) {
-					Producto p = new Producto();
-					p.setIdProducto(rs.getInt("id_producto"));
-					p.setCodigoProducto(rs.getString("codigo_producto"));
-					p.setProd(rs.getString("nombre"));
-					p.setUnidadMedida(rs.getString("unidad_medida"));
-					p.setPresentacion(rs.getString("presentacion"));
-					p.setMarca(rs.getString("marca"));
-					p.setStock(rs.getInt("stock"));
-					p.setStockMin(rs.getInt("stock_min"));
-					p.setCostoBase(rs.getDouble("costo_base"));
-					p.setPorcentMargen(rs.getDouble("porcent_margen"));
-					p.setCantidadMedida(rs.getDouble("cantidad_medida"));
-					p.setFechaFabricacion(rs.getDate("fecha_fabricacion"));
-					p.setFechaVencimiento(rs.getDate("fecha_vencimiento"));
-					p.setCreatedAt(String.valueOf(rs.getTimestamp("created_at")));
-					p.setUpdatedAt(String.valueOf(rs.getTimestamp("updated_at")));
-					productos.add(p);
+					productos.add(mapProducto(rs));
 				}
 			}
 		} catch (SQLException e) {
@@ -171,7 +136,7 @@ public class ProductoDAO {
 	            "WHERE id_producto = ?";
 
 	    try (Connection con = conexion.getConnection();
-	    		PreparedStatement ps = con.prepareStatement(sqlUpdate);) {
+	    		PreparedStatement ps = con.prepareStatement(sqlUpdate)) {
 	        ps.setString(1, p.getCodigoProducto());
 	        ps.setInt(2, Integer.parseInt(p.getProd()));
 	        ps.setInt(3, Integer.parseInt(p.getUnidadMedida()));
@@ -194,14 +159,14 @@ public class ProductoDAO {
 	    return isUpdated;
 	}
 
-	public Boolean deleteProd(String prod) {
+	public Boolean deleteProd(int idProd) {
 		Boolean isDeleted = true;
 		
 		String sqlDelete = "DELETE FROM productos WHERE id_producto = ?";
 
 		try (Connection con = conexion.getConnection();
-				PreparedStatement ps = con.prepareStatement(sqlDelete);) {
-			ps.setInt(1, Integer.parseInt(prod));
+				PreparedStatement ps = con.prepareStatement(sqlDelete)) {
+			ps.setInt(1, idProd);
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -210,4 +175,26 @@ public class ProductoDAO {
 		
 		return isDeleted;
 	}
+	
+	
+	private Producto mapProducto(ResultSet rs) throws SQLException {
+	    Producto p = new Producto();
+	    p.setIdProducto(rs.getInt("id_producto"));
+	    p.setCodigoProducto(rs.getString("codigo_producto"));
+	    p.setProd(rs.getString("nombre"));
+	    p.setUnidadMedida(rs.getString("unidad_medida"));
+	    p.setPresentacion(rs.getString("presentacion"));
+	    p.setMarca(rs.getString("marca"));
+	    p.setStock(rs.getInt("stock"));
+	    p.setStockMin(rs.getInt("stock_min"));
+	    p.setCostoBase(rs.getDouble("costo_base"));
+	    p.setPorcentMargen(rs.getDouble("porcent_margen"));
+	    p.setCantidadMedida(rs.getDouble("cantidad_medida"));
+	    p.setFechaFabricacion(rs.getDate("fecha_fabricacion"));
+	    p.setFechaVencimiento(rs.getDate("fecha_vencimiento"));
+	    p.setCreatedAt(String.valueOf(rs.getTimestamp("created_at")));
+	    p.setUpdatedAt(String.valueOf(rs.getTimestamp("updated_at")));
+	    return p;
+	}
+
 }
