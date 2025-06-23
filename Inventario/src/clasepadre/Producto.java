@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Producto {
 
-    private int idProducto;
+    private int id;
     private String codigoProducto;
     private String producto;
     private String unidadMedida;
@@ -23,10 +23,10 @@ public class Producto {
     public Producto() {
     }
 
-    public Producto(int idProducto, String codigoProducto, String producto, String unidadMedida, String presentacion,
+    public Producto(int id, String codigoProducto, String producto, String unidadMedida, String presentacion,
                     String marca, int stock, int stockMin, double costoBase, double porcentMargen, double cantidadMedida,
                     Date fechaFabricacion, Date fechaVencimiento) {
-        this.idProducto = idProducto;
+        this.id = id;
         this.codigoProducto = codigoProducto;
         this.producto = producto;
         this.unidadMedida = unidadMedida;
@@ -42,11 +42,11 @@ public class Producto {
     }
 
     public int getIdProducto() {
-        return idProducto;
+        return id;
     }
 
-    public void setIdProducto(int idProducto) {
-        this.idProducto = idProducto;
+    public void setIdProducto(int id) {
+        this.id = id;
     }
 
     public String getCodigoProducto() {

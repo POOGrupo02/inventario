@@ -18,7 +18,7 @@ public class ProductoDAO {
 		    "JOIN productos_generales pg ON p.id_prod_gen = pg.id_prod_gen " +
 		    "JOIN unidades_medidas u ON p.id_uni_medi = u.id_uni_medi " +
 		    "JOIN presentaciones pr ON p.id_present = pr.id_present " +
-		    "JOIN marcas m ON p.id_marca = m.id_marca ";
+		    "JOIN marcas m ON p.id_marca = m.id_marca WHERE estado = TRUE ";
 
 	public Boolean createProd(Producto p) {
 		Boolean isCreated = true;
@@ -80,7 +80,7 @@ public class ProductoDAO {
 
 	public Producto readProdByCod(String codigo) {
 		Producto producto = null;
-		String sqlRead = SQL_SELECT + "WHERE codigo_producto = ?";
+		String sqlRead = SQL_SELECT + "AND codigo_producto = ?";
 
 		try (Connection con = conexion.getConnection(); 
 				PreparedStatement ps = con.prepareStatement(sqlRead)) {
@@ -102,8 +102,8 @@ public class ProductoDAO {
 	public List<Producto> readProdsByProd(int idProduct) {
 		List<Producto> productos = new ArrayList<>();
 
-		String sqlFilt = SQL_SELECT + (idProduct> 0? "WHERE p.id_prod_gen = ?" : "");
-		try (Connection con = conexion.getConnection(); 
+		String sqlFilt = SQL_SELECT + (idProduct> 0? "AND p.id_prod_gen = ?" : "");
+		try (Connection con = conexion.getConnection();
 				PreparedStatement ps = con.prepareStatement(sqlFilt)) {
 			
 			if(idProduct> 0) ps.setInt(1,idProduct);
