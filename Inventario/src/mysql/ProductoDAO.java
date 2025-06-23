@@ -161,20 +161,17 @@ public class ProductoDAO {
 	}
 
 	public Boolean deleteProd(int idProd) {
-		Boolean isDeleted = true;
-		
-		String sqlDelete = "DELETE FROM productos WHERE id_producto = ?";
+		String sqlDelete = "UPDATE productos SET estado = FALSE WHERE id_producto = ?";
 
 		try (Connection con = conexion.getConnection();
 				PreparedStatement ps = con.prepareStatement(sqlDelete)) {
 			ps.setInt(1, idProd);
 			ps.executeUpdate();
+			return false;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			isDeleted = false;
+			return false;
 		}
-		
-		return isDeleted;
 	}
 	
 	

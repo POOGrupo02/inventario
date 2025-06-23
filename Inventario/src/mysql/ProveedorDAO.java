@@ -52,13 +52,13 @@ public class ProveedorDAO {
         return proveedores;
     }
 
-    public Proveedor readProveedorById(int id) {
+    public Proveedor readProveedorByRuc(String ruc) {
         Proveedor p = null;
-        String sql = SQL_SELECT + "AND id_proveedor = ?";
+        String sql = SQL_SELECT + "AND ruc = ?";
         try (Connection con = conexion.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setInt(1, id);
+            ps.setString(1, ruc);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     p = mapProveedor(rs);
