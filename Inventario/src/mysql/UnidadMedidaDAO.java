@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ClasesHijo.UnidadMedida;
+import claseshijo.UnidadMedida;
 
 public class UnidadMedidaDAO {
 	

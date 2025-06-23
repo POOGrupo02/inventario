@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ClasesHijo.Presentacion;
+import claseshijo.Presentacion;
 
 public class PresentacionDAO {
 	

@@ -1,14 +1,13 @@
-package ClasesHijo;
+package claseshijo;
 
-public class UnidadMedida {
-	
+public class Presentacion {
 	private int id;
 	private String name;
 	
-	public UnidadMedida() {
+	public Presentacion() {
 		
 	}
-	public UnidadMedida(int id, String name) {
+	public Presentacion(int id, String name) {
 		this.id = id;
 		this.name = name;
 	}
@@ -28,5 +27,6 @@ public class UnidadMedida {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
+	
 }

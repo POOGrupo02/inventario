@@ -1,13 +1,14 @@
-package ClasesHijo;
+package claseshijo;
 
-public class Marca {
+public class UnidadMedida {
+	
 	private int id;
 	private String name;
 	
-	public Marca() {
+	public UnidadMedida() {
 		
 	}
-	public Marca(int id, String name) {
+	public UnidadMedida(int id, String name) {
 		this.id = id;
 		this.name = name;
 	}
@@ -27,4 +28,5 @@ public class Marca {
 	public void setName(String name) {
 		this.name = name;
 	}
+
 }

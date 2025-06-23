@@ -1,13 +1,13 @@
-package ClasesHijo;
+package claseshijo;
 
-public class Presentacion {
+public class Marca {
 	private int id;
 	private String name;
 	
-	public Presentacion() {
+	public Marca() {
 		
 	}
-	public Presentacion(int id, String name) {
+	public Marca(int id, String name) {
 		this.id = id;
 		this.name = name;
 	}
@@ -27,6 +27,4 @@ public class Presentacion {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
 }

@@ -1,4 +1,4 @@
-package ClasesHijo;
+package claseshijo;
 
 public class ProductoGeneral {
 	

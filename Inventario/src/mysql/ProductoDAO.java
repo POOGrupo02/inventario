@@ -3,7 +3,8 @@ package mysql;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import ClasePadre.Producto;
+
+import clasepadre.Producto;
 
 public class ProductoDAO {
 	ConexionMySQL conexion = new ConexionMySQL();

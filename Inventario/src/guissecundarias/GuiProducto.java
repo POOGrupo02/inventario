@@ -1,4 +1,4 @@
-package GuisSecundarias;
+package guissecundarias;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -9,11 +9,11 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
 
-import ClasePadre.Producto;
-import ClasesHijo.Marca;
-import ClasesHijo.Presentacion;
-import ClasesHijo.ProductoGeneral;
-import ClasesHijo.UnidadMedida;
+import clasepadre.Producto;
+import claseshijo.Marca;
+import claseshijo.Presentacion;
+import claseshijo.ProductoGeneral;
+import claseshijo.UnidadMedida;
 import mysql.MarcaDAO;
 import mysql.PresentacionDAO;
 import mysql.ProductoDAO;

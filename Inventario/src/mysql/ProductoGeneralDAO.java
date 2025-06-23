@@ -3,7 +3,8 @@ package mysql;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import ClasesHijo.ProductoGeneral;
+
+import claseshijo.ProductoGeneral;
 
 public class ProductoGeneralDAO {
 	

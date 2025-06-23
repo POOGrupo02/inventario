@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ClasesHijo.Marca;
+import claseshijo.Marca;
 
 public class MarcaDAO {
 	ConexionMySQL conexion = new ConexionMySQL();
