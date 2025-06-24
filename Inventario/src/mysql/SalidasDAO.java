@@ -29,7 +29,7 @@ public class SalidasDAO {
 		    "JOIN productos p ON sp.id_producto = p.id_producto " +
 		    "JOIN productos_generales pg ON p.id_prod_gen = pg.id_prod_gen;";
 
-	public List<SalidaProducto> readEntradas() {
+	public List<SalidaProducto> readSalidas() {
 		List<SalidaProducto> salidasProductos = new ArrayList<>();
 
 		try (Connection con = conexion.getConnection();

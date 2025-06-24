@@ -120,7 +120,6 @@ public class ProductoDAO {
 	}
 
 	public Boolean updateProd(Producto p) {
-	    Boolean isUpdated = true;
 	    String sqlUpdate = "UPDATE productos SET " +
 	            "codigo_producto = ?, " +
 	            "id_prod_gen = ?, " +
@@ -152,12 +151,11 @@ public class ProductoDAO {
 	        ps.setDate(12, new Date(p.getFechaVencimiento().getTime()));
 	        ps.setInt(13, p.getIdProducto());
 	        ps.executeUpdate();
+	        return true;
 	    } catch (SQLException e) {
 	        e.printStackTrace();
-	        isUpdated = false;
+	        return false;
 	    }
-
-	    return isUpdated;
 	}
 
 	public Boolean deleteProd(int idProd) {

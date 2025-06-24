@@ -1,36 +1,75 @@
 package mysql;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import claseshijo.UnidadMedida;
 
 public class UnidadMedidaDAO {
-	
-	ConexionMySQL conexion = new ConexionMySQL();
-	
-	public List<UnidadMedida> readUnidadesMedidas() {
-        List<UnidadMedida> unidadMedida = new ArrayList<>();
-        String sql = "SELECT * from unidades_medidas";
+    
+    ConexionMySQL conexion = new ConexionMySQL();
+    
+    public Boolean createUnidadMedida(UnidadMedida unidadMedida) {
+        String sqlCreate = "INSERT INTO unidades_medidas (nombre) VALUES (?)";
+
+        try (Connection con = conexion.getConnection();
+             PreparedStatement ps = con.prepareStatement(sqlCreate)) {
+            ps.setString(1, unidadMedida.getName());
+            ps.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<UnidadMedida> readUnidadesMedidas() {
+        List<UnidadMedida> unidadesMedidas = new ArrayList<>();
+        String sql = "SELECT * from unidades_medidas WHERE estado = TRUE";
 
         try (Connection con = conexion.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-            	UnidadMedida pr = new UnidadMedida();
-            	pr.setId(rs.getInt("id_uni_medi"));
-            	pr.setName(rs.getString("nombre"));
-            	unidadMedida.add(pr);
+                UnidadMedida um = new UnidadMedida();
+                um.setId(rs.getInt("id_uni_medi"));
+                um.setName(rs.getString("nombre"));
+                unidadesMedidas.add(um);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return unidadMedida;
+        return unidadesMedidas;
     }
 
+    public Boolean updateUnidadMedida(UnidadMedida unidadMedida) {
+        String sqlUpdate = "UPDATE unidades_medidas SET nombre = ? WHERE id_uni_medi = ?";
+
+        try (Connection con = conexion.getConnection();
+             PreparedStatement ps = con.prepareStatement(sqlUpdate)) {
+            ps.setString(1, unidadMedida.getName());
+            ps.setInt(2, unidadMedida.getId());
+            ps.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Boolean deleteUnidadMedida(int id) {
+        String sqlDelete = "UPDATE unidades_medidas SET estado = FALSE WHERE id_uni_medi = ?";
+
+        try (Connection con = conexion.getConnection();
+             PreparedStatement ps = con.prepareStatement(sqlDelete)) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

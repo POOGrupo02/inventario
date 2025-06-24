@@ -12,9 +12,22 @@ import claseshijo.Marca;
 public class MarcaDAO {
 	ConexionMySQL conexion = new ConexionMySQL();
 
+	public Boolean createMarca(Marca marca) {
+		String sqlCreate = "INSERT INTO marcas (nombre) VALUES (?)";
+
+		try (Connection con = conexion.getConnection(); PreparedStatement ps = con.prepareStatement(sqlCreate)) {
+			ps.setString(1, marca.getName());
+			ps.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 	public List<Marca> readMarcas() {
-		List<Marca> marca = new ArrayList<>();
-		String sql = "SELECT * from marcas";
+		List<Marca> marcas = new ArrayList<>();
+		String sql = "SELECT * from marcas WHERE estado = TRUE";
 
 		try (Connection con = conexion.getConnection();
 				PreparedStatement ps = con.prepareStatement(sql);
@@ -24,12 +37,38 @@ public class MarcaDAO {
 				Marca m = new Marca();
 				m.setId(rs.getInt("id_marca"));
 				m.setName(rs.getString("nombre"));
-				marca.add(m);
+				marcas.add(m);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return marca;
+		return marcas;
 	}
 
+	public Boolean updateMarca(Marca marca) {
+		String sqlUpdate = "UPDATE marcas SET nombre = ? WHERE id_marca = ?";
+
+		try (Connection con = conexion.getConnection(); PreparedStatement ps = con.prepareStatement(sqlUpdate)) {
+			ps.setString(1, marca.getName());
+			ps.setInt(2, marca.getId());
+			ps.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public Boolean deleteMarca(int id) {
+		String sqlDelete = "UPDATE marcas SET estado = FALSE WHERE id_marca = ?";
+
+		try (Connection con = conexion.getConnection(); PreparedStatement ps = con.prepareStatement(sqlDelete)) {
+			ps.setInt(1, id);
+			ps.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 }
