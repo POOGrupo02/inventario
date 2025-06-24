@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 import claseshijo.FormaPago;
 
@@ -26,8 +25,8 @@ public class FormaPagoDAO {
         }
     }
 
-	public List<FormaPago> readFormasPagos() {
-        List<FormaPago> formasPagos = new ArrayList<>();
+	public ArrayList<FormaPago> readFormasPagos() {
+		ArrayList<FormaPago> formasPagos = new ArrayList<>();
         String sql = "SELECT * from formas_pago WHERE estado = TRUE";
 
         try (Connection con = conexion.getConnection();

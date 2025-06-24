@@ -2,7 +2,6 @@ package mysql;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 import claseshijo.UnidadMedida;
 
@@ -24,9 +23,9 @@ public class UnidadMedidaDAO {
         }
     }
 
-    public List<UnidadMedida> readUnidadesMedidas() {
-        List<UnidadMedida> unidadesMedidas = new ArrayList<>();
-        String sql = "SELECT * from unidades_medidas WHERE estado = TRUE";
+    public ArrayList<UnidadMedida> readUnidadesMedidas() {
+    	ArrayList<UnidadMedida> unidadesMedidas = new ArrayList<>();
+        String sql = "SELECT * from unidades_medidas";
 
         try (Connection con = conexion.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
@@ -51,20 +50,6 @@ public class UnidadMedidaDAO {
              PreparedStatement ps = con.prepareStatement(sqlUpdate)) {
             ps.setString(1, unidadMedida.getName());
             ps.setInt(2, unidadMedida.getId());
-            ps.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public Boolean deleteUnidadMedida(int id) {
-        String sqlDelete = "UPDATE unidades_medidas SET estado = FALSE WHERE id_uni_medi = ?";
-
-        try (Connection con = conexion.getConnection();
-             PreparedStatement ps = con.prepareStatement(sqlDelete)) {
-            ps.setInt(1, id);
             ps.executeUpdate();
             return true;
         } catch (SQLException e) {

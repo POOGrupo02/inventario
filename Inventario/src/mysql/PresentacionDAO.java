@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 import claseshijo.Presentacion;
 
@@ -26,9 +25,9 @@ public class PresentacionDAO {
 		}
 	}
 
-	public List<Presentacion> readPresentaciones() {
-		List<Presentacion> presentaciones = new ArrayList<>();
-		String sql = "SELECT * from presentaciones WHERE estado = TRUE";
+	public ArrayList<Presentacion> readPresentaciones() {
+		ArrayList<Presentacion> presentaciones = new ArrayList<>();
+		String sql = "SELECT * from presentaciones";
 
 		try (Connection con = conexion.getConnection();
 				PreparedStatement ps = con.prepareStatement(sql);
@@ -52,19 +51,6 @@ public class PresentacionDAO {
 		try (Connection con = conexion.getConnection(); PreparedStatement ps = con.prepareStatement(sqlUpdate)) {
 			ps.setString(1, presentacion.getName());
 			ps.setInt(2, presentacion.getId());
-			ps.executeUpdate();
-			return true;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	public Boolean deletePresentacion(int id) {
-		String sqlDelete = "UPDATE presentaciones SET estado = FALSE WHERE id_present = ?";
-
-		try (Connection con = conexion.getConnection(); PreparedStatement ps = con.prepareStatement(sqlDelete)) {
-			ps.setInt(1, id);
 			ps.executeUpdate();
 			return true;
 		} catch (SQLException e) {

@@ -2,7 +2,7 @@ package mysql;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
+
 import claseshijo.Proveedor;
 
 public class ProveedorDAO {
@@ -37,8 +37,8 @@ public class ProveedorDAO {
         }
     }
 
-    public List<Proveedor> readProveedores() {
-        List<Proveedor> proveedores = new ArrayList<>();
+    public ArrayList<Proveedor> readProveedores() {
+    	ArrayList<Proveedor> proveedores = new ArrayList<>();
         try (Connection con = conexion.getConnection();
              PreparedStatement ps = con.prepareStatement(SQL_SELECT);
              ResultSet rs = ps.executeQuery()) {

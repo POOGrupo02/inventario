@@ -2,7 +2,6 @@ package mysql;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 import clasepadre.Producto;
 
@@ -18,7 +17,8 @@ public class ProductoDAO {
 		    "JOIN productos_generales pg ON p.id_prod_gen = pg.id_prod_gen " +
 		    "JOIN unidades_medidas u ON p.id_uni_medi = u.id_uni_medi " +
 		    "JOIN presentaciones pr ON p.id_present = pr.id_present " +
-		    "JOIN marcas m ON p.id_marca = m.id_marca WHERE estado = TRUE ";
+		    "JOIN marcas m ON p.id_marca = m.id_marca " +
+			"WHERE p.estado = TRUE ";
 
 	public Boolean createProd(Producto p) {
 		Boolean isCreated = true;
@@ -62,8 +62,8 @@ public class ProductoDAO {
 		return isCreated;
 	}
 
-	public List<Producto> readProds() {
-		List<Producto> productos = new ArrayList<>();
+	public ArrayList<Producto> readProds() {
+		ArrayList<Producto> productos = new ArrayList<>();
 
 		try (Connection con = conexion.getConnection();
 				PreparedStatement ps = con.prepareStatement(SQL_SELECT);
@@ -99,8 +99,8 @@ public class ProductoDAO {
 		return producto;
 	}
 
-	public List<Producto> readProdsByProd(int idProduct) {
-		List<Producto> productos = new ArrayList<>();
+	public ArrayList<Producto> readProdsByProd(int idProduct) {
+		ArrayList<Producto> productos = new ArrayList<>();
 
 		String sqlFilt = SQL_SELECT + (idProduct> 0? "AND p.id_prod_gen = ?" : "");
 		try (Connection con = conexion.getConnection();

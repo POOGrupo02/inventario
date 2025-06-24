@@ -2,7 +2,6 @@ package mysql;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 import claseshijo.ProductoGeneral;
 
@@ -24,9 +23,9 @@ public class ProductoGeneralDAO {
         }
     }
 
-    public List<ProductoGeneral> readProductosGenerales() {
-        List<ProductoGeneral> productosGen = new ArrayList<>();
-        String sql = "SELECT * from productos_generales WHERE estado = TRUE";
+    public ArrayList<ProductoGeneral> readProductosGenerales() {
+    	ArrayList<ProductoGeneral> productosGen = new ArrayList<>();
+        String sql = "SELECT * from productos_generales";
 
         try (Connection con = conexion.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
@@ -51,20 +50,6 @@ public class ProductoGeneralDAO {
              PreparedStatement ps = con.prepareStatement(sqlUpdate)) {
             ps.setString(1, productoGeneral.getName());
             ps.setInt(2, productoGeneral.getId());
-            ps.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public Boolean deleteProductoGeneral(int id) {
-        String sqlDelete = "UPDATE productos_generales SET estado = FALSE WHERE id_prod_gen = ?";
-
-        try (Connection con = conexion.getConnection();
-             PreparedStatement ps = con.prepareStatement(sqlDelete)) {
-            ps.setInt(1, id);
             ps.executeUpdate();
             return true;
         } catch (SQLException e) {

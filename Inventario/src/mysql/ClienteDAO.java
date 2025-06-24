@@ -2,7 +2,6 @@ package mysql;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 import claseshijo.Cliente;
 
 public class ClienteDAO {
@@ -29,8 +28,8 @@ public class ClienteDAO {
         }
     }
 
-    public List<Cliente> readClientes() {
-        List<Cliente> clientes = new ArrayList<>();
+    public ArrayList<Cliente> readClientes() {
+    	ArrayList<Cliente> clientes = new ArrayList<>();
         try (Connection con = conexion.getConnection();
              PreparedStatement ps = con.prepareStatement(SQL_SELECT);
              ResultSet rs = ps.executeQuery()) {

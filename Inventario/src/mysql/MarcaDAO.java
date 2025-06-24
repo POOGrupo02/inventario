@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 import claseshijo.Marca;
 
@@ -25,9 +24,9 @@ public class MarcaDAO {
 		}
 	}
 
-	public List<Marca> readMarcas() {
-		List<Marca> marcas = new ArrayList<>();
-		String sql = "SELECT * from marcas WHERE estado = TRUE";
+	public ArrayList<Marca> readMarcas() {
+		ArrayList<Marca> marcas = new ArrayList<>();
+		String sql = "SELECT * from marcas";
 
 		try (Connection con = conexion.getConnection();
 				PreparedStatement ps = con.prepareStatement(sql);
@@ -51,19 +50,6 @@ public class MarcaDAO {
 		try (Connection con = conexion.getConnection(); PreparedStatement ps = con.prepareStatement(sqlUpdate)) {
 			ps.setString(1, marca.getName());
 			ps.setInt(2, marca.getId());
-			ps.executeUpdate();
-			return true;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	public Boolean deleteMarca(int id) {
-		String sqlDelete = "UPDATE marcas SET estado = FALSE WHERE id_marca = ?";
-
-		try (Connection con = conexion.getConnection(); PreparedStatement ps = con.prepareStatement(sqlDelete)) {
-			ps.setInt(1, id);
 			ps.executeUpdate();
 			return true;
 		} catch (SQLException e) {

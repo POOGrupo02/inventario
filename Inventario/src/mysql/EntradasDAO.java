@@ -4,8 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
 
 import claseshijo.EntradaProducto;
 
@@ -18,22 +18,38 @@ public class EntradasDAO {
 			+ "JOIN proveedores pv ON e.id_proveedor = pv.id_proveedor "
 			+ "JOIN entradas_productos ep ON e.id_entrada = ep.id_entrada "
 			+ "JOIN productos p ON ep.id_producto = p.id_producto "
-			+ "JOIN productos_generales pg ON p.id_prod_gen = pg.id_prod_gen;";
+			+ "JOIN productos_generales pg ON p.id_prod_gen = pg.id_prod_gen "
+			+ "ORDER BY e.id_entrada;";
 
-	public Boolean createEntradas(int idProveedor, List<EntradaProducto> entradas) {
+	public Boolean createEntradas(ArrayList<EntradaProducto> entradas) {
 		String sqlCreate = "INSERT INTO entradas (id_proveedor) VALUES (?)";
 		String sqlCreateMany = "INSERT INTO entradas_productos (id_entrada, id_producto, cantidad, monto) VALUES (?, ?, ?, ?)";
 
 		try (Connection con = conexion.getConnection();
-				PreparedStatement ps = con.prepareStatement(sqlCreate);
+				PreparedStatement ps = con.prepareStatement(sqlCreate, Statement.RETURN_GENERATED_KEYS);
 				PreparedStatement psMany = con.prepareStatement(sqlCreateMany)) {
-			ps.setInt(1, idProveedor);
+			ps.setInt(1, Integer.parseInt(entradas.get(0).getProveedor()));
 			ps.executeUpdate();
 			
-			for (int i = 0; i < entradas.size(); i++) {
-				
-			}
-			return true;
+			int idEntrada = -1;
+	        try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+	            if (generatedKeys.next()) {
+	                idEntrada = generatedKeys.getInt(1);
+	            } else {
+	                throw new SQLException("No se pudo obtener el ID generado para la entrada.");
+	            }
+	        }
+
+	        for (EntradaProducto ep : entradas) {
+	            psMany.setInt(1, idEntrada);
+	            psMany.setInt(2, Integer.parseInt(ep.getProducto()));
+	            psMany.setInt(3, ep.getCantidad());
+	            psMany.setDouble(4, ep.getMonto());
+	            psMany.addBatch();
+	        }
+
+	        psMany.executeBatch();
+	        return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -41,8 +57,8 @@ public class EntradasDAO {
 
 	}
 
-	public List<EntradaProducto> readEntradas() {
-		List<EntradaProducto> entradasProductos = new ArrayList<>();
+	public ArrayList<EntradaProducto> readEntradas() {
+		ArrayList<EntradaProducto> entradasProductos = new ArrayList<>();
 
 		try (Connection con = conexion.getConnection();
 				PreparedStatement ps = con.prepareStatement(SQL_SELECT);
