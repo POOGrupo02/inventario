@@ -13,13 +13,20 @@ public class EntradasDAO {
 
 	ConexionMySQL conexion = new ConexionMySQL();
 
-	private static final String SQL_SELECT = "SELECT " + "e.id_entrada, " + "pv.nombre_empresa AS proveedor, "
-			+ "pg.nombre AS producto, " + "ep.cantidad, " + "ep.monto " + "FROM entradas e "
-			+ "JOIN proveedores pv ON e.id_proveedor = pv.id_proveedor "
-			+ "JOIN entradas_productos ep ON e.id_entrada = ep.id_entrada "
-			+ "JOIN productos p ON ep.id_producto = p.id_producto "
-			+ "JOIN productos_generales pg ON p.id_prod_gen = pg.id_prod_gen "
-			+ "ORDER BY e.id_entrada;";
+	private static final String SQL_SELECT = "SELECT "
+	        + "e.id_entrada, "
+	        + "pv.nombre_empresa AS proveedor, "
+	        + "p.codigo_producto, "
+	        + "pg.nombre AS producto, "
+	        + "ep.cantidad, "
+	        + "ep.monto "
+	        + "FROM entradas e "
+	        + "JOIN proveedores pv ON e.id_proveedor = pv.id_proveedor "
+	        + "JOIN entradas_productos ep ON e.id_entrada = ep.id_entrada "
+	        + "JOIN productos p ON ep.id_producto = p.id_producto "
+	        + "JOIN productos_generales pg ON p.id_prod_gen = pg.id_prod_gen "
+	        + "ORDER BY e.id_entrada;";
+
 
 	public Boolean createEntradas(ArrayList<EntradaProducto> entradas) {
 		String sqlCreate = "INSERT INTO entradas (id_proveedor) VALUES (?)";

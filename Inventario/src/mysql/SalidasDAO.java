@@ -14,51 +14,62 @@ public class SalidasDAO {
 
 	ConexionMySQL conexion = new ConexionMySQL();
 
-	private static final String SQL_SELECT = 
-		    "SELECT " +
-		    "s.id_salida, " +
-		    "CONCAT(c.nombre, ' ', c.apellido) AS cliente, " +
-		    "pg.nombre AS producto, " +
-		    "sp.cantidad, " +
-		    "sp.monto, " +
-		    "fp.nombre AS forma_pago " +
-		    "FROM salidas s " +
-		    "JOIN clientes c ON s.id_cliente = c.id_cliente " +
-		    "JOIN salidas_formas_pagos sfp ON s.id_salida = sfp.id_salida " +
-		    "JOIN formas_pago fp ON sfp.id_form_pag = fp.id_form_pag " +
-		    "JOIN salidas_productos sp ON s.id_salida = sp.id_salida " +
-		    "JOIN productos p ON sp.id_producto = p.id_producto " +
-		    "JOIN productos_generales pg ON p.id_prod_gen = pg.id_prod_gen "+
-		    "ORDER BY s.id_salida;";
+	private static final String SQL_SELECT = "SELECT "
+	        + "s.id_salida, "
+	        + "CONCAT(c.nombre, ' ', c.apellido) AS cliente, "
+	        + "p.codigo_producto, "
+	        + "pg.nombre AS producto, "
+	        + "sp.cantidad, "
+	        + "sp.monto, "
+	        + "GROUP_CONCAT(fp.nombre SEPARATOR ', ') AS forma_pago "
+	        + "FROM salidas s "
+	        + "JOIN clientes c ON s.id_cliente = c.id_cliente "
+	        + "JOIN salidas_formas_pagos sfp ON s.id_salida = sfp.id_salida "
+	        + "JOIN formas_pago fp ON sfp.id_form_pag = fp.id_form_pag "
+	        + "JOIN salidas_productos sp ON s.id_salida = sp.id_salida "
+	        + "JOIN productos p ON sp.id_producto = p.id_producto "
+	        + "JOIN productos_generales pg ON p.id_prod_gen = pg.id_prod_gen "
+	        + "GROUP BY s.id_salida, p.codigo_producto, pg.nombre, sp.cantidad, sp.monto "
+	        + "ORDER BY s.id_salida;";
 	
-	public Boolean createSalidas(ArrayList<SalidaProducto> salidas) {
-		String sqlCreate = "INSERT INTO entradas (id_cliente) VALUES (?)";
-		String sqlCreateMany = "INSERT INTO entradas_productos (id_salida, id_producto, cantidad, monto) VALUES (?, ?, ?, ?)";
+	public Boolean createSalidas(ArrayList<SalidaProducto> salidas, ArrayList<Integer> formasPago) {
+		String sqlCreate = "INSERT INTO salidas (id_cliente) VALUES (?)";
+		String sqlCreateMany = "INSERT INTO salidas_productos (id_salida, id_producto, cantidad, monto) VALUES (?, ?, ?, ?)";
+		String sqlCreateFormPag = "INSERT INTO salidas_formas_pagos (id_salida, id_form_pag) VALUES (?,?)";
 
 		try (Connection con = conexion.getConnection();
 				PreparedStatement ps = con.prepareStatement(sqlCreate, Statement.RETURN_GENERATED_KEYS);
-				PreparedStatement psMany = con.prepareStatement(sqlCreateMany)) {
+				PreparedStatement psMany = con.prepareStatement(sqlCreateMany);
+				PreparedStatement psFormPag = con.prepareStatement(sqlCreateFormPag)) {
 			ps.setInt(1, Integer.parseInt(salidas.get(0).getCliente()));
 			ps.executeUpdate();
 			
-			int idEntrada = -1;
+			int idSalida = -1;
 	        try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
 	            if (generatedKeys.next()) {
-	                idEntrada = generatedKeys.getInt(1);
+	                idSalida = generatedKeys.getInt(1);
 	            } else {
-	                throw new SQLException("No se pudo obtener el ID generado para la entrada.");
+	                throw new SQLException("No se pudo obtener el ID generado para la salida.");
 	            }
 	        }
 
 	        for (SalidaProducto sp : salidas) {
-	            psMany.setInt(1, idEntrada);
+	            psMany.setInt(1, idSalida);
 	            psMany.setInt(2, Integer.parseInt(sp.getProducto()));
 	            psMany.setInt(3, sp.getCantidad());
 	            psMany.setDouble(4, sp.getMonto());
 	            psMany.addBatch();
 	        }
-
 	        psMany.executeBatch();
+	        
+	        for(int fP : formasPago) {
+	        	psFormPag.setInt(1, idSalida);
+	        	psFormPag.setInt(2, fP);
+	        	psFormPag.addBatch();
+	        }
+	        
+	        psFormPag.executeBatch();
+	        
 	        return true;
 		} catch (Exception e) {
 			e.printStackTrace();
