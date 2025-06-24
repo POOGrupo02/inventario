@@ -45,7 +45,7 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 	private ProductoDAO pDAO = new ProductoDAO();
 	private ProductoGeneralDAO pgDAO = new ProductoGeneralDAO();
 	private List<Producto> productos = pDAO.readProds();
-	private List<ProductoGeneral> pg = pgDAO.listarProductosGenerales();
+	private List<ProductoGeneral> pg = pgDAO.readProductosGenerales();
 	private boolean comboBoxInitialized = false;
 	private String[] columnas = { "CÓDIGO_PRODUCTO", "NOMBRE", "MARCA", "PRESENTACIÓN", "UNIDAD DE MEDIDA",
 			"CANTIDAD_MEDIDA", "STOCK", "STOCK_MIN", "COSTO_BASE", "PORCENT_MARGEN", "FECHA_FABRICACION",

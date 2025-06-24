@@ -7,29 +7,28 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import claseshijo.Marca;
+import claseshijo.FormaPago;
 
-public class MarcaDAO {
+public class FormaPagoDAO {
 	ConexionMySQL conexion = new ConexionMySQL();
 
-	public List<Marca> readMarcas() {
-		List<Marca> marca = new ArrayList<>();
-		String sql = "SELECT * from marcas";
+	public List<FormaPago> readFormasPagos() {
+		List<FormaPago> formasPagos = new ArrayList<>();
+		String sql = "SELECT * from formas_pago";
 
 		try (Connection con = conexion.getConnection();
 				PreparedStatement ps = con.prepareStatement(sql);
 				ResultSet rs = ps.executeQuery()) {
 
 			while (rs.next()) {
-				Marca m = new Marca();
-				m.setId(rs.getInt("id_marca"));
-				m.setName(rs.getString("nombre"));
-				marca.add(m);
+				FormaPago fP = new FormaPago();
+				fP.setId(rs.getInt("id_form_pag"));
+				fP.setNombre(rs.getString("nombre"));
+				formasPagos.add(fP);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return marca;
+		return formasPagos;
 	}
-
 }

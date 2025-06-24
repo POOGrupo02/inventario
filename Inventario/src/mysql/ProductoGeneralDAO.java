@@ -10,7 +10,7 @@ public class ProductoGeneralDAO {
 	
 	ConexionMySQL conexion = new ConexionMySQL();
 	
-	public List<ProductoGeneral> listarProductosGenerales() {
+	public List<ProductoGeneral> readProductosGenerales() {
         List<ProductoGeneral> productosGen = new ArrayList<>();
         String sql = "SELECT * from productos_generales";
 

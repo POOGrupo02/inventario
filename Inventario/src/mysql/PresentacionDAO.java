@@ -13,7 +13,7 @@ public class PresentacionDAO {
 	
 	ConexionMySQL conexion = new ConexionMySQL();
 	
-	public List<Presentacion> listarPresentaciones() {
+	public List<Presentacion> readPresentaciones() {
         List<Presentacion> presentacion = new ArrayList<>();
         String sql = "SELECT * from presentaciones";
 

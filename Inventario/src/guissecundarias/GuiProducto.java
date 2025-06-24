@@ -48,10 +48,10 @@ public class GuiProducto extends JDialog implements ActionListener {
 	private PresentacionDAO prDAO = new PresentacionDAO();
 	private UnidadMedidaDAO uDAO = new UnidadMedidaDAO();
 	private MarcaDAO mDAO = new MarcaDAO();
-	private List<ProductoGeneral> pg = pgDAO.listarProductosGenerales();
-	private List<Marca> m = mDAO.listarMarcas();
-	private List<Presentacion> pr = prDAO.listarPresentaciones();
-	private List<UnidadMedida> u = uDAO.listarUnidadesMedidas();
+	private List<ProductoGeneral> pg = pgDAO.readProductosGenerales();
+	private List<Marca> m = mDAO.readMarcas();
+	private List<Presentacion> pr = prDAO.readPresentaciones();
+	private List<UnidadMedida> u = uDAO.readUnidadesMedidas();
 
 	/**
 	 * Launch the application.

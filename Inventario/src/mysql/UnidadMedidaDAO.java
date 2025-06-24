@@ -13,7 +13,7 @@ public class UnidadMedidaDAO {
 	
 	ConexionMySQL conexion = new ConexionMySQL();
 	
-	public List<UnidadMedida> listarUnidadesMedidas() {
+	public List<UnidadMedida> readUnidadesMedidas() {
         List<UnidadMedida> unidadMedida = new ArrayList<>();
         String sql = "SELECT * from unidades_medidas";
 
