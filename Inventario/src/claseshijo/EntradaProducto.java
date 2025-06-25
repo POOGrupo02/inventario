@@ -4,6 +4,7 @@ public class EntradaProducto {
 	private int id;
 	private String proveedor;
 	private String producto;
+	private String codProd;
 	private int cantidad;
 	private double monto;
 
@@ -11,9 +12,10 @@ public class EntradaProducto {
 
 	}
 
-	public EntradaProducto(int id, String proveedor, String producto, int cantidad, double monto) {
+	public EntradaProducto(int id, String proveedor, String codProd , String producto, int cantidad, double monto) {
 		this.id = id;
 		this.proveedor = proveedor;
+		this.codProd = codProd;
 		this.producto = producto;
 		this.cantidad = cantidad;
 		this.monto = monto;
@@ -34,6 +36,14 @@ public class EntradaProducto {
 	public void setProveedor(String proveedor) {
 		this.proveedor = proveedor;
 	}
+	
+	public String getCodProd() {
+    	return codProd;
+    }
+    
+    public void setCodProd(String codProd) {
+    	this.codProd = codProd;
+    }
 
 	public String getProducto() {
 		return producto;

@@ -75,6 +75,7 @@ public class EntradasDAO {
 				EntradaProducto eP = new EntradaProducto();
 				eP.setIdEntrada(rs.getInt("id_entrada"));
 				eP.setProveedor(rs.getString("proveedor"));
+				eP.setCodProd(rs.getString("codigo_producto"));
 				eP.setProducto(rs.getString("producto"));
 				eP.setCantidad(rs.getInt("cantidad"));
 				eP.setMonto(rs.getDouble("monto"));

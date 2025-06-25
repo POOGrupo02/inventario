@@ -89,6 +89,7 @@ public class SalidasDAO {
 				SalidaProducto sP = new SalidaProducto();
 				sP.setId(rs.getInt("id_salida"));
                 sP.setCliente(rs.getString("cliente"));
+                sP.setCodProd(rs.getString("codigo_producto"));
                 sP.setProducto(rs.getString("producto"));
                 sP.setCantidad(rs.getInt("cantidad"));
                 sP.setMonto(rs.getDouble("monto"));

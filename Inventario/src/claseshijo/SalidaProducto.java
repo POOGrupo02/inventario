@@ -4,6 +4,7 @@ public class SalidaProducto {
     private int id;
     private String cliente;
     private String producto;
+    private String codProd;
     private int cantidad;
     private double monto;
     private String formaPago;
@@ -11,9 +12,10 @@ public class SalidaProducto {
     public SalidaProducto() {
     	
     }
-    public SalidaProducto(int id, String cliente, String producto, int cantidad, double monto, String formaPago) {
+    public SalidaProducto(int id, String cliente, String codProd ,String producto, int cantidad, double monto, String formaPago) {
         this.id = id;
         this.cliente = cliente;
+        this.codProd = codProd;
         this.producto = producto;
         this.cantidad = cantidad;
         this.monto = monto;
@@ -34,6 +36,14 @@ public class SalidaProducto {
 
     public void setCliente(String cliente) {
         this.cliente = cliente;
+    }
+    
+    public String getCodProd() {
+    	return codProd;
+    }
+    
+    public void setCodProd(String codProd) {
+    	this.codProd = codProd;
     }
 
     public String getProducto() {
