@@ -8,11 +8,12 @@ public class SalidaProducto {
     private int cantidad;
     private double monto;
     private String formaPago;
+    private String createdAt;
 
     public SalidaProducto() {
     	
     }
-    public SalidaProducto(int id, String cliente, String codProd ,String producto, int cantidad, double monto, String formaPago) {
+    public SalidaProducto(int id, String cliente, String codProd ,String producto, int cantidad, double monto, String formaPago, String createdAt) {
         this.id = id;
         this.cliente = cliente;
         this.codProd = codProd;
@@ -20,6 +21,7 @@ public class SalidaProducto {
         this.cantidad = cantidad;
         this.monto = monto;
         this.formaPago = formaPago;
+        this.createdAt = createdAt;
     }
 
     public int getId() {
@@ -77,4 +79,12 @@ public class SalidaProducto {
     public void setFormaPago(String formaPago) {
         this.formaPago = formaPago;
     }
+    
+    public String getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(String createdAt) {
+		this.createdAt = createdAt;
+	}
 }

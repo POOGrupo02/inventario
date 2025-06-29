@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import claseshijo.Cliente;
 import claseshijo.EntradaProducto;
 import claseshijo.SalidaProducto;
 
@@ -21,7 +22,8 @@ public class SalidasDAO {
 	        + "pg.nombre AS producto, "
 	        + "sp.cantidad, "
 	        + "sp.monto, "
-	        + "GROUP_CONCAT(fp.nombre SEPARATOR ', ') AS forma_pago "
+	        + "GROUP_CONCAT(fp.nombre SEPARATOR ', ') AS forma_pago, "
+	        + "s.created_at "
 	        + "FROM salidas s "
 	        + "JOIN clientes c ON s.id_cliente = c.id_cliente "
 	        + "JOIN salidas_formas_pagos sfp ON s.id_salida = sfp.id_salida "
@@ -32,7 +34,7 @@ public class SalidasDAO {
 	        + "GROUP BY s.id_salida, p.codigo_producto, pg.nombre, sp.cantidad, sp.monto "
 	        + "ORDER BY s.id_salida;";
 	
-	public Boolean createSalidas(ArrayList<SalidaProducto> salidas, ArrayList<Integer> formasPago) {
+	public Boolean createSalidas(ArrayList<SalidaProducto> listSalida, ArrayList<Integer> formasPago, Cliente cliente) {
 		String sqlCreate = "INSERT INTO salidas (id_cliente) VALUES (?)";
 		String sqlCreateMany = "INSERT INTO salidas_productos (id_salida, id_producto, cantidad, monto) VALUES (?, ?, ?, ?)";
 		String sqlCreateFormPag = "INSERT INTO salidas_formas_pagos (id_salida, id_form_pag) VALUES (?,?)";
@@ -41,7 +43,19 @@ public class SalidasDAO {
 				PreparedStatement ps = con.prepareStatement(sqlCreate, Statement.RETURN_GENERATED_KEYS);
 				PreparedStatement psMany = con.prepareStatement(sqlCreateMany);
 				PreparedStatement psFormPag = con.prepareStatement(sqlCreateFormPag)) {
-			ps.setInt(1, Integer.parseInt(salidas.get(0).getCliente()));
+			
+			int idCliente = -1;
+			
+			ClienteDAO cDAO = new ClienteDAO();
+			Cliente clienteExistente = cDAO.readClienteByDni(cliente.getDni());
+			if(clienteExistente != null){
+				cDAO.updateCliente(cliente);
+				idCliente = clienteExistente.getId();
+			}else {
+				idCliente = cDAO.createCliente(cliente);
+			}
+			
+			ps.setInt(1, idCliente);
 			ps.executeUpdate();
 			
 			int idSalida = -1;
@@ -53,7 +67,7 @@ public class SalidasDAO {
 	            }
 	        }
 
-	        for (SalidaProducto sp : salidas) {
+	        for (SalidaProducto sp : listSalida) {
 	            psMany.setInt(1, idSalida);
 	            psMany.setInt(2, Integer.parseInt(sp.getProducto()));
 	            psMany.setInt(3, sp.getCantidad());
@@ -93,7 +107,8 @@ public class SalidasDAO {
                 sP.setProducto(rs.getString("producto"));
                 sP.setCantidad(rs.getInt("cantidad"));
                 sP.setMonto(rs.getDouble("monto"));
-                sP.setFormaPago(rs.getString("forma_pago"));   
+                sP.setFormaPago(rs.getString("forma_pago")); 
+                sP.setCreatedAt(rs.getString("created_at"));
 				salidasProductos.add(sP);
 			}
 		} catch (SQLException e) {

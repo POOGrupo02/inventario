@@ -24,7 +24,7 @@ public class GuiListaSalidas extends JFrame {
 	private SalidasDAO sDAO = new SalidasDAO();
 	private ArrayList<SalidaProducto> salidas = sDAO.readSalidas();
 	private String[] columnas = { "ID", "CLIENTE", "CODIGO PRODUCTO", "PRODUCTO", "CANTIDAD",
-			"MONTO", "FORMA DE PAGO"};
+			"MONTO", "FORMA DE PAGO", "CREATED_AT"};
 
 	/**
 	 * Launch the application.
@@ -57,7 +57,7 @@ public class GuiListaSalidas extends JFrame {
 			scrollPane.setBounds(56, 192, 872, 265);
 			contentPane.add(scrollPane);
 			
-			Object[][] datos = new Object[salidas.size()][7];
+			Object[][] datos = new Object[salidas.size()][8];
 
 			for (int i = 0; i < salidas.size(); i++) {
 				SalidaProducto sP = salidas.get(i);
@@ -68,10 +68,10 @@ public class GuiListaSalidas extends JFrame {
 				datos[i][4] = sP.getCantidad();
 				datos[i][5] = String.valueOf(sP.getMonto());
 				datos[i][6] = sP.getFormaPago();
+				datos[i][7] = sP.getCreatedAt();
 			}
 
 			table.setModel(new DefaultTableModel(datos, columnas));
-			table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		}
 		{
 			scrollPane.setViewportView(table);

@@ -10,21 +10,30 @@ public class ClienteDAO {
     private static final String SQL_SELECT =
         "SELECT id_cliente, dni, nombre, apellido, sexo, celular, created_at, updated_at FROM clientes";
 
-    public boolean createCliente(Cliente c) {
+    public int createCliente(Cliente c) {
+    	int idCliente = -1;
         String sql = "INSERT INTO clientes (dni, nombre, apellido, sexo, celular) VALUES (?, ?, ?, ?, ?)";
         try (Connection con = conexion.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
+             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        	
             ps.setString(1, c.getDni());
             ps.setString(2, c.getNombre());
             ps.setString(3, c.getApellido());
             ps.setString(4, c.getSexo());
             ps.setString(5, c.getCelular());
             ps.executeUpdate();
-            return true;
+            
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+	            if (generatedKeys.next()) {
+	            	idCliente = generatedKeys.getInt(1);
+	            } else {
+	                throw new SQLException("No se pudo obtener el ID generado para la salida.");
+	            }
+	        }
+            return idCliente;
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return idCliente;
         }
     }
 
@@ -63,16 +72,15 @@ public class ClienteDAO {
 
 
     public boolean updateCliente(Cliente c) {
-        String sql = "UPDATE clientes SET dni = ?, nombre = ?, apellido = ?, sexo = ?, celular = ? WHERE id_cliente = ?";
+        String sql = "UPDATE clientes SET nombre = ?, apellido = ?, sexo = ?, celular = ? WHERE dni = ?";
         try (Connection con = conexion.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setString(1, c.getDni());
-            ps.setString(2, c.getNombre());
-            ps.setString(3, c.getApellido());
-            ps.setString(4, c.getSexo());
-            ps.setString(5, c.getCelular());
-            ps.setInt(6, c.getId());
+            ps.setString(1, c.getNombre());
+            ps.setString(2, c.getApellido());
+            ps.setString(3, c.getSexo());
+            ps.setString(4, c.getCelular());
+            ps.setString(5, c.getDni());
             ps.executeUpdate();
             return true;
         } catch (SQLException e) {
