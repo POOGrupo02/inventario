@@ -23,6 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
@@ -53,8 +54,8 @@ public class GuiSalida extends JFrame implements ActionListener {
 	private final JTextField txtCelular = new JTextField();
 	private final JLabel lblNewLabel_2_1_2_1 = new JLabel("(opcional)");
 	private ProductoDAO pDAO = new ProductoDAO();
-	private ArrayList<Producto> products = new ArrayList<Producto>();
-	private String[] columnas = { "CODIGO PRODUCTO", "NOMBRE", "PRECIO", "CANTIDAD" ,"TOTAL"};
+	private ArrayList<Producto> productosCarrito = new ArrayList<Producto>();
+	private String[] columnas = { "CODIGO PRODUCTO", "NOMBRE", "PRECIO", "CANTIDAD" , "TOTAL"};
 	private final JButton btnPlus = new JButton("");
 	private final JButton btnMinus = new JButton("");
 	private final JTextField txtCantProd = new JTextField();
@@ -73,6 +74,10 @@ public class GuiSalida extends JFrame implements ActionListener {
 	private final JComboBox<String> cboFormPag = new JComboBox<>();
 	private final JButton btnAgregarFormPag = new JButton("Agregar forma de pago");
 	private final JLabel lblFormPag = new JLabel("Formas de pago seleccionadas:");
+	private final JComboBox<String> cboProducto = new JComboBox<>();
+	private final JLabel lblNewLabel_1_3 = new JLabel("Buscar código");
+	private final JButton btnBuscar = new JButton("Buscar");
+	private ArrayList<Producto> productos = pDAO.readProds();
 	
 	/**
 	 * Launch the application.
@@ -94,11 +99,12 @@ public class GuiSalida extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public GuiSalida() {
-		txtCantProd.setBounds(315, 64, 39, 20);
+		txtCantProd.setEditable(false);
+		txtCantProd.setBounds(378, 64, 39, 20);
 		txtCantProd.setColumns(10);
 		txtDni.setBounds(83, 125, 126, 20);
 		txtDni.setColumns(10);
-		txtCodProd.setBounds(10, 58, 86, 20);
+		txtCodProd.setBounds(154, 64, 86, 20);
 		txtCodProd.setColumns(10);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 939, 523);
@@ -110,7 +116,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 		{
 			scrollPane.setBounds(566, 60, 347, 335);
 			wqe.add(scrollPane);
-			datos = new Object[products.size()][columnas.length];
+			datos = new Object[productosCarrito.size()][columnas.length];
 
 			table.setModel(new DefaultTableModel(datos, columnas));
 			table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -140,7 +146,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 		}
 		{
 			btnAgregarProd.addActionListener(this);
-			btnAgregarProd.setBounds(114, 57, 157, 23);
+			btnAgregarProd.setBounds(338, 89, 148, 23);
 			wqe.add(btnAgregarProd);
 		}
 		{
@@ -193,13 +199,13 @@ public class GuiSalida extends JFrame implements ActionListener {
 		{
 			btnPlus.addActionListener(this);
 			btnPlus.setIcon(new ImageIcon(GuiSalida.class.getResource("/images/mas.png")));
-			btnPlus.setBounds(368, 60, 24, 23);
+			btnPlus.setBounds(427, 60, 24, 23);
 			wqe.add(btnPlus);
 		}
 		{
 			btnMinus.addActionListener(this);
 			btnMinus.setIcon(new ImageIcon(GuiSalida.class.getResource("/images/menos.png")));
-			btnMinus.setBounds(281, 60, 24, 23);
+			btnMinus.setBounds(338, 61, 24, 23);
 			wqe.add(btnMinus);
 		}
 		{
@@ -242,18 +248,36 @@ public class GuiSalida extends JFrame implements ActionListener {
 			lblFormPag.setBounds(10, 361, 504, 14);
 			wqe.add(lblFormPag);
 		}
-		
+		{
+			cboProducto.setBounds(10, 63, 126, 22);
+			wqe.add(cboProducto);
+		}
+		{
+			lblNewLabel_1_3.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			lblNewLabel_1_3.setBounds(154, 37, 97, 14);
+			wqe.add(lblNewLabel_1_3);
+		}
+		{
+			btnBuscar.addActionListener(this);
+			btnBuscar.setBounds(250, 63, 78, 23);
+			wqe.add(btnBuscar);
+		}
+		cboProducto.addItem("");
 		cboFormPag.addItem("");
 		
 		for (int i = 0; i < fPg.size(); i++) {
 			cboFormPag.addItem(fPg.get(i).getNombre());
 		}
+		
+		for (int i = 0; i < productos.size(); i++) {
+			cboProducto.addItem(productos.get(i).getCodigoProducto());
+		}
 	}
 	
 	private void showTable() {
-		datos = new Object[products.size()][columnas.length];
-		for(int i = 0; i < products.size(); i++) {
-			Producto p = products.get(i);
+		datos = new Object[productosCarrito.size()][columnas.length];
+		for(int i = 0; i < productosCarrito.size(); i++) {
+			Producto p = productosCarrito.get(i);
 			datos[i][0] = p.getCodigoProducto();
 			datos[i][1] = p.getProd();
 			datos[i][2] = p.getCostoBase() + p.getCostoBase() * (p.getPorcentMargen()/100);
@@ -275,7 +299,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 	}
 	
 	private void limpiarGui() {
-		products.clear();
+		productosCarrito.clear();
 		listCantProd.clear();
 		formasPago.clear();
 		txtCodProd.setText("");
@@ -285,11 +309,15 @@ public class GuiSalida extends JFrame implements ActionListener {
 		cboSexo.setSelectedIndex(0);
 		txtCelular.setText("");
 		cboFormPag.setSelectedIndex(0);
+		cboProducto.setSelectedIndex(0);
 		lblFormPag.setText("Formas de pago seleccionadas:");
 		showTable();
 	}
 	
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnBuscar) {
+			do_btnBuscar_actionPerformed(e);
+		}
 		if (e.getSource() == btnAgregarFormPag) {
 			do_btnAgregarFormPag_actionPerformed(e);
 		}
@@ -311,14 +339,15 @@ public class GuiSalida extends JFrame implements ActionListener {
 	}
 	protected void do_btnNewButton_actionPerformed(ActionEvent e) {
 		try {
-			if(txtCodProd.getText().isBlank()) {
-				JOptionPane.showMessageDialog(this, "El campo de código producto está vacío.");
+			
+			if(cboProducto.getSelectedIndex()== 0) {
+				JOptionPane.showMessageDialog(this, "Seleccione un producto.");
 				return;
 			}
 			
 			boolean isAgregado = false;
-			for (int i = 0; i < products.size(); i++) {
-				if(products.get(i).getCodigoProducto().equalsIgnoreCase(txtCodProd.getText())) {
+			for (int i = 0; i < productosCarrito.size(); i++) {
+				if(productosCarrito.get(i).getCodigoProducto().equals(cboProducto.getSelectedItem().toString())) {
 					isAgregado = true;
 				}
 			}
@@ -328,21 +357,23 @@ public class GuiSalida extends JFrame implements ActionListener {
 				return;
 			}
 			
-			Producto producto = pDAO.readProdByCod(txtCodProd.getText());
+			Producto producto = pDAO.readProdByCod(cboProducto.getSelectedItem().toString());
 			
-			if(producto == null) {
-				JOptionPane.showMessageDialog(this, "Producto no encontrado.");
+			if(producto.getStock() < cantProd) {
+				int sobrePasa = cantProd - producto.getStock();
+				JOptionPane.showMessageDialog(this, "La cantidad requerida para este producto sobrepasa en "+sobrePasa);
 				return;
 			}
 			
-			products.add(producto);
+			productosCarrito.add(producto);
 			listCantProd.add(cantProd);
 			showTable();
 			cantProd = 1;
 			txtCantProd.setText(cantProd+"");
 			txtCodProd.setText("");
+			cboProducto.setSelectedIndex(0);
 		}catch (Exception e1) {
-			JOptionPane.showMessageDialog(this, "Producto no encontrado.");
+			JOptionPane.showMessageDialog(this, "Error al registrar producto."+e1);
 		}
 	}
 	protected void do_btnPlus_actionPerformed(ActionEvent e) {
@@ -366,9 +397,9 @@ public class GuiSalida extends JFrame implements ActionListener {
 		String prodElim = txtCodProdElim.getText().trim();
 		
 		boolean isDeleted = false;
-		for (int i = 0; i < products.size(); i++) {
-			if(products.get(i).getCodigoProducto().equalsIgnoreCase(prodElim)) {
-				products.remove(i);
+		for (int i = 0; i < productosCarrito.size(); i++) {
+			if(productosCarrito.get(i).getCodigoProducto().equalsIgnoreCase(prodElim)) {
+				productosCarrito.remove(i);
 				listCantProd.remove(i);
 				isDeleted = true;
 			}
@@ -384,7 +415,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 	}
 	protected void do_btnRegistrarVenta_actionPerformed(ActionEvent e) {
 		ArrayList<SalidaProducto> listSalida = new ArrayList<>();
-		if(products.isEmpty()) {
+		if(productosCarrito.isEmpty()) {
 			JOptionPane.showMessageDialog(this, "No se encuentra ningún producto en el carrito.");
 			return;
 		}
@@ -403,9 +434,9 @@ public class GuiSalida extends JFrame implements ActionListener {
 			return;
 		}
 		
-		for (int i = 0; i < products.size(); i++) {
+		for (int i = 0; i < productosCarrito.size(); i++) {
 			SalidaProducto sP = new SalidaProducto();
-			sP.setProducto(String.valueOf(products.get(i).getIdProducto()));
+			sP.setProducto(String.valueOf(productosCarrito.get(i).getIdProducto()));
 			sP.setCantidad(Integer.parseInt(datos[i][3].toString()));
 			sP.setMonto(Double.parseDouble(datos[i][4].toString()));
 			listSalida.add(sP);
@@ -451,5 +482,23 @@ public class GuiSalida extends JFrame implements ActionListener {
 		lblFormPag.setText("Formas de pago seleccionadas: "+t);
 		
 		cboFormPag.setSelectedIndex(0);
+	}
+	protected void do_btnBuscar_actionPerformed(ActionEvent e) {
+		
+		if(txtCodProd.getText().isBlank()) {
+			JOptionPane.showMessageDialog(this, "El campo de código producto está vacío.");
+			return;
+		}
+		
+		for (int i = 0; i < productos.size(); i++) {
+			if(productos.get(i).getCodigoProducto().equalsIgnoreCase(txtCodProd.getText())) {
+				cboProducto.setSelectedItem(productos.get(i).getCodigoProducto());
+				txtCodProd.setText("");
+				return;
+			}
+		}
+		
+		JOptionPane.showMessageDialog(this, "No se encontró el código.");
+		
 	}
 }
