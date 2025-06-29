@@ -274,7 +274,20 @@ public class GuiSalida extends JFrame implements ActionListener {
 		return id;
 	}
 	
-	
+	private void limpiarGui() {
+		products.clear();
+		listCantProd.clear();
+		formasPago.clear();
+		txtCodProd.setText("");
+		txtDni.setText("");
+		txtNombre.setText("");
+		txtApellido.setText("");
+		cboSexo.setSelectedIndex(0);
+		txtCelular.setText("");
+		cboFormPag.setSelectedIndex(0);
+		lblFormPag.setText("Formas de pago seleccionadas:");
+		showTable();
+	}
 	
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnAgregarFormPag) {
@@ -406,6 +419,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 		
 		 if (sDAO.createSalidas(listSalida, formasPago, cliente)) {
 			 JOptionPane.showMessageDialog(this, "Venta registrada con éxito.");
+			 limpiarGui();
 		 }else {
 			 JOptionPane.showMessageDialog(this, "Hubo un error al momento de registrar le venta.");
 		 }
