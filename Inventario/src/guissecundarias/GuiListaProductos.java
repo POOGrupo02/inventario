@@ -40,7 +40,7 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 	private final JButton btnBuscarxCod = new JButton("Buscar por código");
 	private final JLabel lblNewLabel = new JLabel("Código de producto:");
 	private final JTextField txtCodProd = new JTextField();
-	private final JLabel lblNewLabel_1 = new JLabel("Buscar por nombre:");
+	private final JLabel lblNewLabel_1 = new JLabel("Filtrar por nombre:");
 	private final JComboBox<String> cboProd = new JComboBox<>();
 	private ProductoDAO pDAO = new ProductoDAO();
 	private ProductoGeneralDAO pgDAO = new ProductoGeneralDAO();
@@ -160,7 +160,7 @@ public class GuiListaProductos extends JDialog implements ActionListener {
 		return id;
 	}
 
-	public void guardarCsv() {
+	private void guardarCsv() {
 		File archivo = new File("productos.csv");
 		try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(archivo), "UTF-8");
 				PrintWriter pw = new PrintWriter(writer)) {

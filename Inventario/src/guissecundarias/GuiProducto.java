@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 
 import clasepadre.Producto;
@@ -26,8 +27,13 @@ import javax.swing.JTextField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -35,6 +41,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFormattedTextField;
+import javax.swing.JTable;
 
 public class GuiProducto extends JDialog implements ActionListener {
 
@@ -48,10 +55,14 @@ public class GuiProducto extends JDialog implements ActionListener {
 	private PresentacionDAO prDAO = new PresentacionDAO();
 	private UnidadMedidaDAO uDAO = new UnidadMedidaDAO();
 	private MarcaDAO mDAO = new MarcaDAO();
-	private List<ProductoGeneral> pg = pgDAO.readProductosGenerales();
-	private List<Marca> m = mDAO.readMarcas();
-	private List<Presentacion> pr = prDAO.readPresentaciones();
-	private List<UnidadMedida> u = uDAO.readUnidadesMedidas();
+	private ArrayList<Producto> productos = pDAO.readProds();
+	private ArrayList<ProductoGeneral> pg = pgDAO.readProductosGenerales();
+	private ArrayList<Marca> m = mDAO.readMarcas();
+	private ArrayList<Presentacion> pr = prDAO.readPresentaciones();
+	private ArrayList<UnidadMedida> u = uDAO.readUnidadesMedidas();
+	private String[] columnas = { "CÓDIGO_PRODUCTO", "NOMBRE", "MARCA", "PRESENTACIÓN", "UNIDAD DE MEDIDA",
+			"CANTIDAD_MEDIDA", "STOCK", "STOCK_MIN", "COSTO_BASE", "PORCENT_MARGEN", "FECHA_FABRICACION",
+			"FECHA_VENCIMIENTO", "CREATED_AT", "UPDATED_AT" };
 
 	/**
 	 * Launch the application.
@@ -74,11 +85,35 @@ public class GuiProducto extends JDialog implements ActionListener {
 		txtDiaFab.setColumns(10);
 		setModal(true);
 		setTitle("Producto");
-		setBounds(100, 100, 824, 614);
+		setBounds(100, 100, 1087, 614);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
+		{
+			Object[][] datos = new Object[productos.size()][14];
+
+			for (int i = 0; i < productos.size(); i++) {
+				Producto p = productos.get(i);
+				datos[i][0] = p.getCodigoProducto();
+				datos[i][1] = p.getProd();
+				datos[i][2] = p.getMarca();
+				datos[i][3] = p.getPresentacion();
+				datos[i][4] = p.getUnidadMedida();
+				datos[i][5] = String.valueOf(p.getCantidadMedida());
+				datos[i][6] = String.valueOf(p.getStock());
+				datos[i][7] = String.valueOf(p.getStockMin());
+				datos[i][8] = String.valueOf(p.getCostoBase());
+				datos[i][9] = String.valueOf(p.getPorcentMargen());
+				datos[i][10] = p.getFechaFabricacion() != null ? p.getFechaFabricacion().toString() : "";
+				datos[i][11] = p.getFechaVencimiento() != null ? p.getFechaVencimiento().toString() : "";
+				datos[i][12] = p.getCreatedAt();
+				datos[i][13] = p.getUpdatedAt();
+			}
+
+			table.setModel(new DefaultTableModel(datos, columnas));
+			table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		}
 
 		JLabel lblNewLabel = new JLabel("Código:");
 		lblNewLabel.setBounds(25, 17, 89, 14);
@@ -111,11 +146,6 @@ public class GuiProducto extends JDialog implements ActionListener {
 			txtStockMin.setBounds(187, 280, 86, 20);
 			contentPanel.add(txtStockMin);
 		}
-
-		btnLimpiar = new JButton("Limpiar");
-		btnLimpiar.addActionListener(this);
-		btnLimpiar.setBounds(341, 13, 146, 23);
-		contentPanel.add(btnLimpiar);
 
 		lblNewLabel_5 = new JLabel("Fecha de fabricación");
 		lblNewLabel_5.setBounds(25, 393, 152, 14);
@@ -221,14 +251,51 @@ public class GuiProducto extends JDialog implements ActionListener {
 			txtPorceMarg.setBounds(187, 355, 86, 20);
 			contentPanel.add(txtPorceMarg);
 		}
+		{
+			scrollPane.setBounds(405, 97, 631, 357);
+			contentPanel.add(scrollPane);
+		}
+		{
+			scrollPane.setViewportView(table);
+		}
+		{
+			lblNewLabel_1.setBounds(405, 17, 140, 14);
+			contentPanel.add(lblNewLabel_1);
+		}
+		{
+			txtCodFilt.setColumns(10);
+			txtCodFilt.setBounds(553, 17, 86, 20);
+			contentPanel.add(txtCodFilt);
+		}
+		{
+			btnBuscarxCod.addActionListener(this);
+			btnBuscarxCod.setBounds(405, 47, 153, 23);
+			contentPanel.add(btnBuscarxCod);
+		}
+		{
+			lblNewLabel_1_1.setBounds(649, 20, 119, 14);
+			contentPanel.add(lblNewLabel_1_1);
+		}
+		{
+			cboProdFilt.addActionListener(this);
+			cboProdFilt.setBounds(774, 17, 119, 22);
+			contentPanel.add(cboProdFilt);
+		}
+		{
+			btnGuardarLista.addActionListener(this);
+			btnGuardarLista.setBounds(917, 16, 119, 23);
+			contentPanel.add(btnGuardarLista);
+		}
 
 		cboProd.addItem("");
 		cboMarca.addItem("");
 		cboPresen.addItem("");
 		cboUniMedi.addItem("");
+		cboProdFilt.addItem("");
 
 		for (int i = 0; i < pg.size(); i++) {
 			cboProd.addItem(pg.get(i).getName());
+			cboProdFilt.addItem(pg.get(i).getName());
 		}
 		for (int i = 0; i < m.size(); i++) {
 			cboMarca.addItem(m.get(i).getName());
@@ -242,8 +309,14 @@ public class GuiProducto extends JDialog implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnLimpiar) {
-			do_btnLimpiar_actionPerformed(e);
+		if (e.getSource() == btnGuardarLista) {
+			do_btnGuardarLista_actionPerformed(e);
+		}
+		if (e.getSource() == cboProdFilt) {
+			do_cboProdFilt_actionPerformed(e);
+		}
+		if (e.getSource() == btnBuscarxCod) {
+			do_btnBuscarxCod_actionPerformed(e);
 		}
 		if (e.getSource() == btnAgregar) {
 			do_btnAgregar_actionPerformed(e);
@@ -252,7 +325,6 @@ public class GuiProducto extends JDialog implements ActionListener {
 
 	private JLabel lblNewLabel_4;
 	private final JTextField txtStockMin = new JTextField();
-	private JButton btnLimpiar;
 	private JLabel lblNewLabel_5;
 	private JLabel lblNewLabel_6;
 	Date fechaActual = new Date();
@@ -279,6 +351,14 @@ public class GuiProducto extends JDialog implements ActionListener {
 	private final JLabel lblNewLabel_4_1 = new JLabel("Costo base:");
 	private final JLabel lblNewLabel_4_1_1 = new JLabel("Porcentaje de margen:");
 	private final JTextField txtPorceMarg = new JTextField();
+	private final JScrollPane scrollPane = new JScrollPane();
+	private final JTable table = new JTable();
+	private final JLabel lblNewLabel_1 = new JLabel("Código de producto:");
+	private final JTextField txtCodFilt = new JTextField();
+	private final JButton btnBuscarxCod = new JButton("Buscar por código");
+	private final JLabel lblNewLabel_1_1 = new JLabel("Filtrar por nombre:");
+	private final JComboBox<String> cboProdFilt = new JComboBox<String>();
+	private final JButton btnGuardarLista = new JButton("Guardar Lista");
 
 	private String getCod() {
 		return txtCod.getText().trim();
@@ -385,6 +465,44 @@ public class GuiProducto extends JDialog implements ActionListener {
 		}
 		return id;
 	}
+	
+	private int getIdProdFilt() {
+		String product = cboProdFilt.getSelectedItem().toString();
+		int id = -1;
+		for (int i = 0; i < pg.size(); i++) {
+			if (pg.get(i).getName().equals(product)) {
+				id = pg.get(i).getId();
+			}
+		}
+		return id;
+	}
+	
+	private void guardarCsv() {
+		File archivo = new File("productos.csv");
+		try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(archivo), "UTF-8");
+				PrintWriter pw = new PrintWriter(writer)) {
+
+			writer.write('\uFEFF');
+
+			pw.println(
+					"CÓDIGO_PRODUCTO;NOMBRE;MARCA;PRESENTACIÓN;UNIDAD DE MEDIDA;CANTIDAD_MEDIDA;STOCK;STOCK_MIN;COSTO_BASE;PORCENT_MARGEN;FECHA_FABRICACION;FECHA_VENCIMIENTO;CREATED_AT;UPDATED_AT");
+
+			for (int i = 0; i < productos.size(); i++) {
+				Producto p = productos.get(i);
+				pw.println(p.getCodigoProducto() + ";" + p.getProd() + ";" + p.getMarca() + ";" + p.getPresentacion()
+						+ ";" + p.getUnidadMedida() + ";" + p.getCantidadMedida() + ";" + p.getStock() + ";"
+						+ p.getStockMin() + ";" + p.getCostoBase() + ";" + p.getPorcentMargen() + ";"
+						+ p.getFechaFabricacion() + ";" + p.getFechaVencimiento() + ";" + p.getCreatedAt() + ";"
+						+ p.getUpdatedAt());
+
+			}
+
+			JOptionPane.showMessageDialog(null, "Archivo guardado correctamente en la carpeta del proyecto");
+
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(null, "Error al guardar el archivo");
+		}
+	}
 
 	private void limpiarCampos() {
 		// Limpiar los JTextField
@@ -459,8 +577,73 @@ public class GuiProducto extends JDialog implements ActionListener {
 			// TODO: handle exception
 		}
 	}
+	protected void do_btnBuscarxCod_actionPerformed(ActionEvent e) {
+		try {
+			if (txtCodFilt.getText().isBlank()) {
+				JOptionPane.showMessageDialog(this, "El campo está vacío.");
+				return;
+			}
+			Producto p = pDAO.readProdByCod(txtCodFilt.getText());
+			if (p != null) {
+				JOptionPane.showMessageDialog(this, "Producto encontrado");
+				table.setModel(new DefaultTableModel());
+				Object[][] datos = new Object[1][14];
+				datos[0][0] = p.getCodigoProducto();
+				datos[0][1] = p.getProd();
+				datos[0][2] = p.getMarca();
+				datos[0][3] = p.getPresentacion();
+				datos[0][4] = p.getUnidadMedida();
+				datos[0][5] = String.valueOf(p.getCantidadMedida());
+				datos[0][6] = String.valueOf(p.getStock());
+				datos[0][7] = String.valueOf(p.getStockMin());
+				datos[0][8] = String.valueOf(p.getCostoBase());
+				datos[0][9] = String.valueOf(p.getPorcentMargen());
+				datos[0][10] = p.getFechaFabricacion() != null ? p.getFechaFabricacion().toString() : "";
+				datos[0][11] = p.getFechaVencimiento() != null ? p.getFechaVencimiento().toString() : "";
+				datos[0][12] = p.getCreatedAt();
+				datos[0][13] = p.getUpdatedAt();
 
-	protected void do_btnLimpiar_actionPerformed(ActionEvent e) {
-		limpiarCampos();
+				table.setModel(new DefaultTableModel(datos, columnas));
+			} else {
+				JOptionPane.showMessageDialog(this, "Producto no encontrado.");
+				return;
+			}
+		} catch (Exception e2) {
+			JOptionPane.showMessageDialog(this, "Ingrese un código válido");
+		}
+	}
+	
+	
+	protected void do_cboProdFilt_actionPerformed(ActionEvent e) {
+		try {
+			productos = pDAO.readProdsByProd(getIdProdFilt());
+
+			Object[][] datos = new Object[productos.size()][14];
+
+			for (int i = 0; i < productos.size(); i++) {
+				Producto p = productos.get(i);
+				datos[i][0] = p.getCodigoProducto();
+				datos[i][1] = p.getProd();
+				datos[i][2] = p.getMarca();
+				datos[i][3] = p.getPresentacion();
+				datos[i][4] = p.getUnidadMedida();
+				datos[i][5] = String.valueOf(p.getCantidadMedida());
+				datos[i][6] = String.valueOf(p.getStock());
+				datos[i][7] = String.valueOf(p.getStockMin());
+				datos[i][8] = String.valueOf(p.getCostoBase());
+				datos[i][9] = String.valueOf(p.getPorcentMargen());
+				datos[i][10] = p.getFechaFabricacion() != null ? p.getFechaFabricacion().toString() : "";
+				datos[i][11] = p.getFechaVencimiento() != null ? p.getFechaVencimiento().toString() : "";
+				datos[i][12] = p.getCreatedAt();
+				datos[i][13] = p.getUpdatedAt();
+			}
+
+			table.setModel(new DefaultTableModel(datos, columnas));
+		} catch (Exception e2) {
+			JOptionPane.showMessageDialog(this, "Ingrese un código válido");
+		}
+	}
+	protected void do_btnGuardarLista_actionPerformed(ActionEvent e) {
+		guardarCsv();
 	}
 }
