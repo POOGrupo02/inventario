@@ -30,6 +30,8 @@ public class registrocolab extends JFrame implements ActionListener {
 	private JPasswordField jpassClave;
 	private JButton btnNewButton;
 	private JLabel lblNewLabel_2;
+	private int intentos = 0;
+    private final int MAX_INTENTOS = 3;
 
 	/**
 	 * Launch the application.
@@ -51,13 +53,14 @@ public class registrocolab extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public registrocolab() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(128, 255, 255));
 		contentPane.setForeground(SystemColor.activeCaption);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
+		
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		{
@@ -94,9 +97,18 @@ public class registrocolab extends JFrame implements ActionListener {
 			lblNewLabel_2.setBounds(139, 23, 165, 14);
 			contentPane.add(lblNewLabel_2);
 		}
+		
+		JButton btnSalir = new JButton("SALIR");
+		btnSalir.setBounds(273, 135, 89, 23);
+		btnSalir.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        System.exit(0);
+		    }
+		});
+		contentPane.add(btnSalir);
 	}
-	
-	
+		   
+
 	
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnNewButton) {
@@ -105,26 +117,39 @@ public class registrocolab extends JFrame implements ActionListener {
 	}
 	protected void do_btnNewButton_actionPerformed(ActionEvent e) {
 		char [] clave = jpassClave.getPassword();
-		String clavefinal= new String (clave);
-		
-		if(txtUsuario.getText().isBlank() || clavefinal.isBlank()) {
-			JOptionPane.showMessageDialog(this, "Los campos no pueden estar vacíos.");
-			return;
-		}
-		
-		if(txtUsuario.getText().equals("Piero")&& clavefinal.equals("123")) {
-			dispose();
-			JOptionPane.showMessageDialog(null, "Bienvenido al sistema", "Ingresaste",JOptionPane.INFORMATION_MESSAGE);
-			
-			GuiInventario gi=new GuiInventario();
-			gi.setVisible(true);
-		} 
-		else {
-			JOptionPane.showMessageDialog(null, "Usuario o Contraseña incorrectos!!","Error",JOptionPane.ERROR_MESSAGE);
-		}
-		
+	    String clavefinal= new String(clave);
+
+	    if(txtUsuario.getText().isBlank() || clavefinal.isBlank()) {
+	        JOptionPane.showMessageDialog(this, "Los campos no pueden estar vacíos.");
+	        return;
+	    }
+	    if(txtUsuario.getText().equals("Piero") && clavefinal.equals("123")) {
+	        dispose();
+	        JOptionPane.showMessageDialog(null, "Bienvenido al sistema", "Ingresaste", JOptionPane.INFORMATION_MESSAGE);
+
+	        GuiInventario gi = new GuiInventario();
+	        gi.setVisible(true);
+
+	      
+	        intentos = 0;
+	    } 
+	    else {
+	        intentos++;
+	        if (intentos >= MAX_INTENTOS) {
+	            JOptionPane.showMessageDialog(this, "¡Sistema bloqueado! Has superado los " + MAX_INTENTOS + " intentos.", "Bloqueado", JOptionPane.ERROR_MESSAGE);
+	           
+	            txtUsuario.setEnabled(false);
+	            jpassClave.setEnabled(false);
+	            btnNewButton.setEnabled(false);
+	        } else {
+	            JOptionPane.showMessageDialog(this, "Usuario o Contraseña incorrectos. Intento " + intentos + " de " + MAX_INTENTOS, "Error", JOptionPane.ERROR_MESSAGE);
+	        }
+	        
+	    }
 	}
-	//asdadad
-	
 }
+
+
+
+
 
