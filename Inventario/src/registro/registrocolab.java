@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import guiprincipal.GuiInventario;
+import mysql.UsuarioDAO;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -32,10 +33,9 @@ public class registrocolab extends JFrame implements ActionListener {
 	private JLabel lblNewLabel_2;
 	private int intentos = 0;
     private final int MAX_INTENTOS = 3;
+    private JButton btnNewButton_1;
 
-	/**
-	 * Launch the application.
-	 */
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -49,9 +49,7 @@ public class registrocolab extends JFrame implements ActionListener {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
+	
 	public registrocolab() {
 		
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -97,55 +95,60 @@ public class registrocolab extends JFrame implements ActionListener {
 			lblNewLabel_2.setBounds(139, 23, 165, 14);
 			contentPane.add(lblNewLabel_2);
 		}
-		
+		{
 		JButton btnSalir = new JButton("SALIR");
 		btnSalir.setBounds(273, 135, 89, 23);
-		btnSalir.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        System.exit(0);
-		    }
-		});
+		btnSalir.addActionListener(e -> dispose());
 		contentPane.add(btnSalir);
+		}
+		{
+			btnNewButton_1 = new JButton("CREAR CUENTA");
+			btnNewButton_1.addActionListener(this);
+			btnNewButton_1.setBounds(158, 203, 126, 23);
+			contentPane.add(btnNewButton_1);
+		}
 	}
 		   
 
 	
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnNewButton_1) {
+			do_btnNewButton_1_actionPerformed(e);
+		}
 		if (e.getSource() == btnNewButton) {
 			do_btnNewButton_actionPerformed(e);
 		}
 	}
 	protected void do_btnNewButton_actionPerformed(ActionEvent e) {
-		char [] clave = jpassClave.getPassword();
-	    String clavefinal= new String(clave);
+		String usuario = txtUsuario.getText().trim();
+        String clavefinal = new String(jpassClave.getPassword()).trim();
 
-	    if(txtUsuario.getText().isBlank() || clavefinal.isBlank()) {
-	        JOptionPane.showMessageDialog(this, "Los campos no pueden estar vacíos.");
-	        return;
-	    }
-	    if(txtUsuario.getText().equals("Piero") && clavefinal.equals("123")) {
-	        dispose();
-	        JOptionPane.showMessageDialog(null, "Bienvenido al sistema", "Ingresaste", JOptionPane.INFORMATION_MESSAGE);
-
-	        GuiInventario gi = new GuiInventario();
-	        gi.setVisible(true);
-
-	      
-	        intentos = 0;
-	    } 
-	    else {
-	        intentos++;
-	        if (intentos >= MAX_INTENTOS) {
-	            JOptionPane.showMessageDialog(this, "¡Sistema bloqueado! Has superado los " + MAX_INTENTOS + " intentos.", "Bloqueado", JOptionPane.ERROR_MESSAGE);
-	           
-	            txtUsuario.setEnabled(false);
-	            jpassClave.setEnabled(false);
-	            btnNewButton.setEnabled(false);
-	        } else {
-	            JOptionPane.showMessageDialog(this, "Usuario o Contraseña incorrectos. Intento " + intentos + " de " + MAX_INTENTOS, "Error", JOptionPane.ERROR_MESSAGE);
-	        }
-	        
-	    }
+        if (usuario.isEmpty() || clavefinal.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Los campos no pueden estar vacíos.");
+            return;
+        }
+        UsuarioDAO dao = new UsuarioDAO();
+        if (dao.validarUsuario(usuario, clavefinal)) {
+            dispose();
+            JOptionPane.showMessageDialog(null, "Bienvenido al sistema", "Ingresaste", JOptionPane.INFORMATION_MESSAGE);
+            GuiInventario gi = new GuiInventario();
+            gi.setVisible(true);
+            intentos = 0;
+        } else {
+            intentos++;
+            if (intentos >= MAX_INTENTOS) {
+                JOptionPane.showMessageDialog(this, "¡Sistema bloqueado! Has superado los " + MAX_INTENTOS + " intentos.", "Bloqueado", JOptionPane.ERROR_MESSAGE);
+                txtUsuario.setEnabled(false);
+                jpassClave.setEnabled(false);
+                btnNewButton.setEnabled(false);
+            } else {
+                JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos. Intento " + intentos + " de " + MAX_INTENTOS, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+	}
+	protected void do_btnNewButton_1_actionPerformed(ActionEvent e) {
+		GuiRegistro reg = new GuiRegistro();
+        reg.setVisible(true);
 	}
 }
 
