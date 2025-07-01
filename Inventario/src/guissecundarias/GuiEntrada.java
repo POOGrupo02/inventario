@@ -64,8 +64,8 @@ public class GuiEntrada extends JFrame implements ActionListener {
 	private ArrayList<Integer> listCantProd = new ArrayList<Integer>();
 	private ArrayList<Producto> productosEntrada = new ArrayList<Producto>();
 	private String[] columnas = { "CODIGO PRODUCTO", "NOMBRE", "PRECIO", "CANTIDAD", "TOTAL" };
-	private String[] columnasEntrada = { "ID", "PROVEEDOR", "CODIGO PRODUCTO", "PRODUCTO", "CANTIDAD",
-			"MONTO", "CREATED_AT"};
+	private String[] columnasEntrada = { "ID", "CODIGO PRODUCTO", "PRODUCTO", "CANTIDAD",
+			"MONTO", "PROVEEDOR", "CREATED_AT"};
 	private Object[][] datos = null;
 	private Object[][] datosEntrada = null;
 	private int cantProd = 1;
@@ -116,11 +116,11 @@ public class GuiEntrada extends JFrame implements ActionListener {
 			for (int i = 0; i < entradas.size(); i++) {
 				EntradaProducto sP = entradas.get(i);
 				datosEntrada[i][0] = sP.getId();
-				datosEntrada[i][1] = sP.getProveedor();
-				datosEntrada[i][2] = sP.getCodProd();
-				datosEntrada[i][3] = sP.getProducto();
-				datosEntrada[i][4] = sP.getCantidad();
-				datosEntrada[i][5] = sP.getMonto();
+				datosEntrada[i][1] = sP.getCodProd();
+				datosEntrada[i][2] = sP.getProducto();
+				datosEntrada[i][3] = sP.getCantidad();
+				datosEntrada[i][4] = sP.getMonto();
+				datosEntrada[i][5] = sP.getProveedor();
 				datosEntrada[i][6] = sP.getCreatedAt();
 			}
 
