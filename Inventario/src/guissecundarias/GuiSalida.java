@@ -30,6 +30,7 @@ import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
+import java.awt.Color;
 
 public class GuiSalida extends JFrame implements ActionListener {
 
@@ -86,6 +87,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 	private final JTable table1 = new JTable();
 	private final JLabel lblNewLabel_1_4 = new JLabel("Salidas");
 	private final JButton btnSalir = new JButton("SALIR");
+	private JLabel lblNewLabel_3;
 	
 	/**
 	 * Launch the application.
@@ -117,6 +119,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 939, 754);
 		wqe = new JPanel();
+		wqe.setBackground(new Color(128, 255, 255));
 		wqe.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(wqe);
@@ -158,7 +161,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 		}
 		{
 			lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			lblNewLabel_1.setBounds(10, 11, 140, 14);
+			lblNewLabel_1.setBounds(10, 11, 140, 17);
 			wqe.add(lblNewLabel_1);
 		}
 		{
@@ -279,7 +282,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 		}
 		{
 			lblNewLabel_1_3.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			lblNewLabel_1_3.setBounds(154, 13, 97, 14);
+			lblNewLabel_1_3.setBounds(154, 13, 97, 16);
 			wqe.add(lblNewLabel_1_3);
 		}
 		{
@@ -303,6 +306,12 @@ public class GuiSalida extends JFrame implements ActionListener {
 			btnSalir.addActionListener(this);
 			btnSalir.setBounds(338, 391, 148, 23);
 			wqe.add(btnSalir);
+		}
+		{
+			lblNewLabel_3 = new JLabel("New label");
+			lblNewLabel_3.setIcon(new ImageIcon(GuiSalida.class.getResource("/images/venta.png")));
+			lblNewLabel_3.setBounds(307, 108, 217, 167);
+			wqe.add(lblNewLabel_3);
 		}
 		cboProducto.addItem("");
 		cboFormPag.addItem("");

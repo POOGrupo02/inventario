@@ -30,6 +30,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
 
 public class GuiEntrada extends JFrame implements ActionListener {
 
@@ -74,6 +75,7 @@ public class GuiEntrada extends JFrame implements ActionListener {
 	private final JTable table1 = new JTable();
 	private final JLabel lblNewLabel_1_4 = new JLabel("Entradas");
 	private JButton btnSalir;
+	private final JLabel lblNewLabel_2 = new JLabel("New label");
 
 	/**
 	 * Launch the application.
@@ -100,6 +102,7 @@ public class GuiEntrada extends JFrame implements ActionListener {
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 1003, 748);
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(128, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
@@ -225,7 +228,7 @@ public class GuiEntrada extends JFrame implements ActionListener {
 			contentPane.add(btnBuscarRuc);
 		}
 		{
-			scrollPane_1.setBounds(10, 367, 694, 295);
+			scrollPane_1.setBounds(10, 396, 694, 295);
 			contentPane.add(scrollPane_1);
 		}
 		{
@@ -233,14 +236,19 @@ public class GuiEntrada extends JFrame implements ActionListener {
 		}
 		{
 			lblNewLabel_1_4.setFont(new Font("Tahoma", Font.BOLD, 16));
-			lblNewLabel_1_4.setBounds(10, 332, 140, 14);
+			lblNewLabel_1_4.setBounds(10, 361, 140, 14);
 			contentPane.add(lblNewLabel_1_4);
 		}
 		
 		btnSalir = new JButton("SALIR");
 		btnSalir.addActionListener(this);
-		btnSalir.setBounds(181, 253, 148, 23);
+		btnSalir.setBounds(735, 399, 148, 23);
 		contentPane.add(btnSalir);
+		{
+			lblNewLabel_2.setIcon(new ImageIcon(GuiEntrada.class.getResource("/images/Stock.jpg")));
+			lblNewLabel_2.setBounds(10, 209, 200, 133);
+			contentPane.add(lblNewLabel_2);
+		}
 		
 		cboProveedor.addItem("");
 		cboProducto.addItem("");

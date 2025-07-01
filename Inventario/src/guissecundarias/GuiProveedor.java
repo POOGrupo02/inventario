@@ -9,12 +9,16 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
+import javax.swing.JLabel;
+import javax.swing.ImageIcon;
 
 public class GuiProveedor extends JDialog implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private JButton btnSalir;
+	private JLabel lblNewLabel;
 
 	/**
 	 * Launch the application.
@@ -36,6 +40,7 @@ public class GuiProveedor extends JDialog implements ActionListener {
 		setModal(true);
 		setBounds(100, 100, 931, 615);
 		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBackground(new Color(128, 255, 255));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
@@ -44,6 +49,12 @@ public class GuiProveedor extends JDialog implements ActionListener {
 			btnSalir.addActionListener(this);
 			btnSalir.setBounds(520, 419, 89, 23);
 			contentPanel.add(btnSalir);
+		}
+		{
+			lblNewLabel = new JLabel("New label");
+			lblNewLabel.setIcon(new ImageIcon(GuiProveedor.class.getResource("/images/proveedor .jpg")));
+			lblNewLabel.setBounds(498, 242, 239, 150);
+			contentPanel.add(lblNewLabel);
 		}
 	}
 

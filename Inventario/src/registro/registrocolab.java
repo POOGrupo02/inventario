@@ -20,6 +20,7 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import java.awt.SystemColor;
 import java.awt.Color;
+import javax.swing.ImageIcon;
 
 public class registrocolab extends JFrame implements ActionListener {
 
@@ -34,6 +35,8 @@ public class registrocolab extends JFrame implements ActionListener {
 	private int intentos = 0;
     private final int MAX_INTENTOS = 3;
     private JButton btnNewButton_1;
+    private JLabel lblNewLabel_3;
+    private JLabel lblNewLabel_4;
 
 	
 	public static void main(String[] args) {
@@ -53,7 +56,7 @@ public class registrocolab extends JFrame implements ActionListener {
 	public registrocolab() {
 		
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 776, 367);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(128, 255, 255));
 		contentPane.setForeground(SystemColor.activeCaption);
@@ -84,28 +87,41 @@ public class registrocolab extends JFrame implements ActionListener {
 		}
 		{
 			btnNewButton = new JButton("INICIO");
-			btnNewButton.setBounds(273, 106, 89, 23);
+			btnNewButton.setBounds(273, 103, 89, 23);
 			btnNewButton.addActionListener(this);
 			contentPane.add(btnNewButton);
 		}
 		{
 			lblNewLabel_2 = new JLabel("INICIO DE SESIÓN");
+			lblNewLabel_2.setBounds(0, 80, 165, 14);
 			lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
-			lblNewLabel_2.setFont(new Font("Tahoma", Font.BOLD, 15));
-			lblNewLabel_2.setBounds(139, 23, 165, 14);
+			lblNewLabel_2.setFont(new Font("Tahoma", Font.BOLD, 14));
 			contentPane.add(lblNewLabel_2);
 		}
 		{
 		JButton btnSalir = new JButton("SALIR");
-		btnSalir.setBounds(273, 135, 89, 23);
+		btnSalir.setBounds(273, 131, 89, 23);
 		btnSalir.addActionListener(e -> dispose());
 		contentPane.add(btnSalir);
 		}
 		{
 			btnNewButton_1 = new JButton("CREAR CUENTA");
-			btnNewButton_1.addActionListener(this);
 			btnNewButton_1.setBounds(158, 203, 126, 23);
+			btnNewButton_1.addActionListener(this);
 			contentPane.add(btnNewButton_1);
+		}
+		{
+			lblNewLabel_3 = new JLabel("TIENDA DE ABBARROTES");
+			lblNewLabel_3.setBounds(141, 21, 209, 20);
+			lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNewLabel_3.setFont(new Font("Tahoma", Font.BOLD, 16));
+			contentPane.add(lblNewLabel_3);
+		}
+		{
+			lblNewLabel_4 = new JLabel("New label");
+			lblNewLabel_4.setBounds(407, 50, 343, 267);
+			lblNewLabel_4.setIcon(new ImageIcon(registrocolab.class.getResource("/images/abarrotes.jpg")));
+			contentPane.add(lblNewLabel_4);
 		}
 	}
 		   

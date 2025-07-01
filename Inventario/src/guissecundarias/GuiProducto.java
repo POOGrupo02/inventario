@@ -44,6 +44,7 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFormattedTextField;
 import javax.swing.JTable;
+import java.awt.Color;
 
 public class GuiProducto extends JDialog implements ActionListener {
 
@@ -88,6 +89,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 		setTitle("Producto");
 		setBounds(100, 100, 1087, 614);
 		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBackground(new Color(128, 255, 255));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
