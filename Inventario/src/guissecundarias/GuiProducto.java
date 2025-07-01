@@ -76,9 +76,11 @@ public class GuiProducto extends JDialog implements ActionListener {
 			GuiProducto dialog = new GuiProducto();
 			dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 			dialog.setVisible(true);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	/**
