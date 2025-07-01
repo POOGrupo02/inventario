@@ -73,6 +73,7 @@ public class GuiEntrada extends JFrame implements ActionListener {
 	private final JScrollPane scrollPane_1 = new JScrollPane();
 	private final JTable table1 = new JTable();
 	private final JLabel lblNewLabel_1_4 = new JLabel("Entradas");
+	private JButton btnSalir;
 
 	/**
 	 * Launch the application.
@@ -96,7 +97,7 @@ public class GuiEntrada extends JFrame implements ActionListener {
 	public GuiEntrada() {
 		txtRuc.setBounds(154, 111, 84, 20);
 		txtRuc.setColumns(10);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 1003, 748);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -236,6 +237,11 @@ public class GuiEntrada extends JFrame implements ActionListener {
 			contentPane.add(lblNewLabel_1_4);
 		}
 		
+		btnSalir = new JButton("SALIR");
+		btnSalir.addActionListener(this);
+		btnSalir.setBounds(181, 253, 148, 23);
+		contentPane.add(btnSalir);
+		
 		cboProveedor.addItem("");
 		cboProducto.addItem("");
 		
@@ -272,6 +278,9 @@ public class GuiEntrada extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnSalir) {
+			do_btnSalir_actionPerformed(e);
+		}
 		if (e.getSource() == btnBuscarRuc) {
 			do_btnBuscarRuc_actionPerformed(e);
 		}
@@ -432,5 +441,8 @@ public class GuiEntrada extends JFrame implements ActionListener {
 		}
 		
 		JOptionPane.showMessageDialog(this, "No se encontró el ruc.");
+	}
+	protected void do_btnSalir_actionPerformed(ActionEvent e) {
+		dispose();
 	}
 }

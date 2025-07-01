@@ -73,7 +73,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 	public static void main(String[] args) {
 		try {
 			GuiProducto dialog = new GuiProducto();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -244,6 +244,11 @@ public class GuiProducto extends JDialog implements ActionListener {
 			btnEliminar.setBounds(229, 514, 89, 23);
 			contentPanel.add(btnEliminar);
 		}
+		{
+			btnSalir.addActionListener(this);
+			btnSalir.setBounds(332, 514, 153, 23);
+			contentPanel.add(btnSalir);
+		}
 
 		cboProd.addItem("");
 		cboMarca.addItem("");
@@ -268,6 +273,9 @@ public class GuiProducto extends JDialog implements ActionListener {
 	
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnSalir) {
+			do_btnSalir_actionPerformed(e);
+		}
 		if (e.getSource() == btnEliminar) {
 			do_btnEliminar_actionPerformed(e);
 		}
@@ -317,6 +325,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 	private final JDateChooser dateChooserFeFab = new JDateChooser();
 	private final JButton btnModificar = new JButton("Modificar");
 	private final JButton btnEliminar = new JButton("Eliminar");
+	private final JButton btnSalir = new JButton("SALIR");
 	
 	private void showTable() {
 		Object[][] datos = new Object[productos.size()][14];
@@ -677,5 +686,8 @@ public class GuiProducto extends JDialog implements ActionListener {
 		}catch (Exception e1) {
 			JOptionPane.showMessageDialog(this, "Ingrese un código válido.");
 		}
+	}
+	protected void do_btnSalir_actionPerformed(ActionEvent e) {
+		dispose();
 	}
 }

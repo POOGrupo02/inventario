@@ -7,7 +7,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import guissecundarias.GuiEntrada;
 import guissecundarias.GuiProducto;
+import guissecundarias.GuiProveedor;
+import guissecundarias.GuiSalida;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -27,11 +30,14 @@ public class GuiInventario extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private final JLabel lblNewLabel_1_1_1_1 = new JLabel("Productos");
-	private final JLabel Entradas = new JLabel("Entradas");
 	private final JButton btnProductos = new JButton("");
 	private final JButton btnEntradas = new JButton("");
 	private final JButton btnProveedores = new JButton("");
 	private final JButton btnSalidas = new JButton("");
+	private JLabel lblNewLabel_1_1_1;
+	private JLabel lblNewLabel_1_1;
+	private JLabel lblNewLabel_1;
+	private final JButton btnSalir = new JButton("SALIR");
 
 	/**
 	 * Launch the application.
@@ -53,7 +59,7 @@ public class GuiInventario extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public GuiInventario() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 923, 625);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(128, 255, 255));
@@ -61,29 +67,11 @@ public class GuiInventario extends JFrame implements ActionListener {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
-		JLabel lbl_control_stock = new JLabel("Salidas");
-		lbl_control_stock.setForeground(new Color(0, 0, 0));
-		lbl_control_stock.setFont(new Font("Tahoma", Font.BOLD, 25));
-		lbl_control_stock.setBounds(383, 302, 99, 43);
-		contentPane.add(lbl_control_stock);
-
-		JLabel lbl_prove = new JLabel("Proveedores");
-		lbl_prove.setForeground(new Color(0, 0, 0));
-		lbl_prove.setFont(new Font("Tahoma", Font.BOLD, 25));
-		lbl_prove.setBounds(42, 302, 163, 43);
-		contentPane.add(lbl_prove);
 		{
 			lblNewLabel_1_1_1_1.setForeground(Color.BLACK);
 			lblNewLabel_1_1_1_1.setFont(new Font("Tahoma", Font.BOLD, 25));
 			lblNewLabel_1_1_1_1.setBounds(42, 24, 136, 43);
 			contentPane.add(lblNewLabel_1_1_1_1);
-		}
-		{
-			Entradas.setForeground(Color.BLACK);
-			Entradas.setFont(new Font("Tahoma", Font.BOLD, 25));
-			Entradas.setBounds(350, 24, 118, 43);
-			contentPane.add(Entradas);
 		}
 		{
 			btnProductos.addActionListener(this);
@@ -106,13 +94,38 @@ public class GuiInventario extends JFrame implements ActionListener {
 		btnSalidas.setBounds(350, 356, 198, 200);
 
 		contentPane.add(btnSalidas);
-
-		Entradas.setVisible(false);
-		lbl_control_stock.setVisible(false);
-		lbl_prove.setVisible(false);
+		{
+			lblNewLabel_1_1_1 = new JLabel("Entradas");
+			lblNewLabel_1_1_1.setForeground(Color.BLACK);
+			lblNewLabel_1_1_1.setFont(new Font("Tahoma", Font.BOLD, 25));
+			lblNewLabel_1_1_1.setBounds(353, 24, 136, 43);
+			contentPane.add(lblNewLabel_1_1_1);
+		}
+		{
+			lblNewLabel_1_1 = new JLabel("Proveedores");
+			lblNewLabel_1_1.setForeground(Color.BLACK);
+			lblNewLabel_1_1.setFont(new Font("Tahoma", Font.BOLD, 25));
+			lblNewLabel_1_1.setBounds(52, 302, 176, 43);
+			contentPane.add(lblNewLabel_1_1);
+		}
+		{
+			lblNewLabel_1 = new JLabel("Salidas");
+			lblNewLabel_1.setForeground(Color.BLACK);
+			lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 25));
+			lblNewLabel_1.setBounds(353, 302, 136, 43);
+			contentPane.add(lblNewLabel_1);
+		}
+		{
+			btnSalir.addActionListener(this);
+			btnSalir.setBounds(765, 536, 89, 23);
+			contentPane.add(btnSalir);
+		}
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnSalir) {
+			do_btnSalir_actionPerformed(e);
+		}
 		if (e.getSource() == btnSalidas) {
 			do_btnSalidas_actionPerformed(e);
 		}
@@ -137,11 +150,20 @@ public class GuiInventario extends JFrame implements ActionListener {
 	}
 
 	protected void do_btnEntradas_actionPerformed(ActionEvent e) {
+		GuiEntrada entrada=new GuiEntrada();
+		entrada.setVisible(true);
 	}
 
 	protected void do_btnProveedores_actionPerformed(ActionEvent e) {
+		GuiProveedor proveedor=new GuiProveedor();
+		proveedor.setVisible(true);
 	}
 
 	protected void do_btnSalidas_actionPerformed(ActionEvent e) {
+		GuiSalida salida=new GuiSalida();
+		salida.setVisible(true);
+	}
+	protected void do_btnSalir_actionPerformed(ActionEvent e) {
+		dispose();
 	}
 }

@@ -85,6 +85,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 	private final JScrollPane scrollPane_1 = new JScrollPane();
 	private final JTable table1 = new JTable();
 	private final JLabel lblNewLabel_1_4 = new JLabel("Salidas");
+	private final JButton btnSalir = new JButton("SALIR");
 	
 	/**
 	 * Launch the application.
@@ -113,7 +114,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 		txtDni.setColumns(10);
 		txtCodProd.setBounds(154, 40, 86, 20);
 		txtCodProd.setColumns(10);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 939, 754);
 		wqe = new JPanel();
 		wqe.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -298,6 +299,11 @@ public class GuiSalida extends JFrame implements ActionListener {
 			lblNewLabel_1_4.setBounds(10, 453, 140, 14);
 			wqe.add(lblNewLabel_1_4);
 		}
+		{
+			btnSalir.addActionListener(this);
+			btnSalir.setBounds(338, 391, 148, 23);
+			wqe.add(btnSalir);
+		}
 		cboProducto.addItem("");
 		cboFormPag.addItem("");
 		
@@ -351,6 +357,9 @@ public class GuiSalida extends JFrame implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnSalir) {
+			do_btnSalir_actionPerformed(e);
+		}
 		if (e.getSource() == btnBuscar) {
 			do_btnBuscar_actionPerformed(e);
 		}
@@ -536,5 +545,8 @@ public class GuiSalida extends JFrame implements ActionListener {
 		
 		JOptionPane.showMessageDialog(this, "No se encontró el código.");
 		
+	}
+	protected void do_btnSalir_actionPerformed(ActionEvent e) {
+		dispose();
 	}
 }
