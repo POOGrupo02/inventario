@@ -7,6 +7,7 @@ public class EntradaProducto {
 	private String codProd;
 	private int cantidad;
 	private double monto;
+	private String createdAt;
 
 	public EntradaProducto() {
 
@@ -67,5 +68,13 @@ public class EntradaProducto {
 
 	public void setMonto(double monto) {
 		this.monto = monto;
+	}
+	
+	public String getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(String createdAt) {
+		this.createdAt = createdAt;
 	}
 }

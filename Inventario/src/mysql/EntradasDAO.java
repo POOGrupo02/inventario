@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import claseshijo.EntradaProducto;
+import claseshijo.Proveedor;
 
 public class EntradasDAO {
 
@@ -19,7 +20,8 @@ public class EntradasDAO {
 	        + "p.codigo_producto, "
 	        + "pg.nombre AS producto, "
 	        + "ep.cantidad, "
-	        + "ep.monto "
+	        + "ep.monto, "
+	        + "e.created_at "
 	        + "FROM entradas e "
 	        + "JOIN proveedores pv ON e.id_proveedor = pv.id_proveedor "
 	        + "JOIN entradas_productos ep ON e.id_entrada = ep.id_entrada "
@@ -28,14 +30,14 @@ public class EntradasDAO {
 	        + "ORDER BY e.id_entrada;";
 
 
-	public Boolean createEntradas(ArrayList<EntradaProducto> entradas) {
+	public Boolean createEntradas(ArrayList<EntradaProducto> entradas, int idProveedor) {
 		String sqlCreate = "INSERT INTO entradas (id_proveedor) VALUES (?)";
 		String sqlCreateMany = "INSERT INTO entradas_productos (id_entrada, id_producto, cantidad, monto) VALUES (?, ?, ?, ?)";
 
 		try (Connection con = conexion.getConnection();
 				PreparedStatement ps = con.prepareStatement(sqlCreate, Statement.RETURN_GENERATED_KEYS);
 				PreparedStatement psMany = con.prepareStatement(sqlCreateMany)) {
-			ps.setInt(1, Integer.parseInt(entradas.get(0).getProveedor()));
+			ps.setInt(1, idProveedor);
 			ps.executeUpdate();
 			
 			int idEntrada = -1;
@@ -79,6 +81,7 @@ public class EntradasDAO {
 				eP.setProducto(rs.getString("producto"));
 				eP.setCantidad(rs.getInt("cantidad"));
 				eP.setMonto(rs.getDouble("monto"));
+				eP.setCreatedAt(rs.getString("created_at"));
 				entradasProductos.add(eP);
 			}
 		} catch (SQLException e) {

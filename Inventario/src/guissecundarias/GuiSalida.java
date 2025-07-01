@@ -55,16 +55,20 @@ public class GuiSalida extends JFrame implements ActionListener {
 	private final JLabel lblNewLabel_2_1_2_1 = new JLabel("(opcional)");
 	private ProductoDAO pDAO = new ProductoDAO();
 	private ArrayList<Producto> productosCarrito = new ArrayList<Producto>();
-	private String[] columnas = { "CODIGO PRODUCTO", "NOMBRE", "PRECIO", "CANTIDAD" , "TOTAL"};
+	private String[] columnasCarrito = { "CODIGO PRODUCTO", "NOMBRE", "PRECIO", "CANTIDAD" , "TOTAL"};
+	private String[] columnasSalidas = { "ID", "CLIENTE", "CODIGO PRODUCTO", "PRODUCTO", "CANTIDAD",
+			"MONTO", "FORMA DE PAGO", "CREATED_AT"};
 	private final JButton btnPlus = new JButton("");
 	private final JButton btnMinus = new JButton("");
 	private final JTextField txtCantProd = new JTextField();
 	private ArrayList<Integer> listCantProd = new ArrayList<Integer>();
 	private int cantProd = 1;
-	private Object[][] datos = null;
+	private Object[][] datosCarrito = null;
+	private Object[][] datosSalida = null;
 	private FormaPagoDAO fPgDAO = new FormaPagoDAO();
 	private ArrayList<FormaPago> fPg = fPgDAO.readFormasPagos();
 	private SalidasDAO sDAO = new SalidasDAO();
+	private ArrayList<SalidaProducto> salidas = sDAO.readSalidas();
 	ArrayList<Integer> formasPago = new ArrayList<>();
 	private final JTextField txtCodProdElim = new JTextField();
 	private final JLabel lblNewLabel_1_2 = new JLabel("Eliminar producto del carrito");
@@ -78,6 +82,9 @@ public class GuiSalida extends JFrame implements ActionListener {
 	private final JLabel lblNewLabel_1_3 = new JLabel("Buscar código");
 	private final JButton btnBuscar = new JButton("Buscar");
 	private ArrayList<Producto> productos = pDAO.readProds();
+	private final JScrollPane scrollPane_1 = new JScrollPane();
+	private final JTable table1 = new JTable();
+	private final JLabel lblNewLabel_1_4 = new JLabel("Salidas");
 	
 	/**
 	 * Launch the application.
@@ -100,14 +107,14 @@ public class GuiSalida extends JFrame implements ActionListener {
 	 */
 	public GuiSalida() {
 		txtCantProd.setEditable(false);
-		txtCantProd.setBounds(378, 64, 39, 20);
+		txtCantProd.setBounds(378, 40, 39, 20);
 		txtCantProd.setColumns(10);
-		txtDni.setBounds(83, 125, 126, 20);
+		txtDni.setBounds(83, 101, 126, 20);
 		txtDni.setColumns(10);
-		txtCodProd.setBounds(154, 64, 86, 20);
+		txtCodProd.setBounds(154, 40, 86, 20);
 		txtCodProd.setColumns(10);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 939, 523);
+		setBounds(100, 100, 939, 754);
 		wqe = new JPanel();
 		wqe.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -116,12 +123,29 @@ public class GuiSalida extends JFrame implements ActionListener {
 		{
 			scrollPane.setBounds(566, 60, 347, 335);
 			wqe.add(scrollPane);
-			datos = new Object[productosCarrito.size()][columnas.length];
+			datosCarrito = new Object[productosCarrito.size()][columnasCarrito.length];
 
-			table.setModel(new DefaultTableModel(datos, columnas));
+			table.setModel(new DefaultTableModel(datosCarrito, columnasCarrito));
 			table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 			
 			txtCantProd.setText(cantProd+"");
+			
+			
+			datosSalida = new Object[salidas.size()][8];
+
+			for (int i = 0; i < salidas.size(); i++) {
+				SalidaProducto sP = salidas.get(i);
+				datosSalida[i][0] = sP.getId();
+				datosSalida[i][1] = sP.getCliente();
+				datosSalida[i][2] = sP.getCodProd();
+				datosSalida[i][3] = sP.getProducto();
+				datosSalida[i][4] = sP.getCantidad();
+				datosSalida[i][5] = sP.getMonto();
+				datosSalida[i][6] = sP.getFormaPago();
+				datosSalida[i][7] = sP.getCreatedAt();
+			}
+
+			table1.setModel(new DefaultTableModel(datosSalida, columnasSalidas));
 		}
 		{
 			scrollPane.setViewportView(table);
@@ -133,7 +157,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 		}
 		{
 			lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			lblNewLabel_1.setBounds(10, 35, 140, 14);
+			lblNewLabel_1.setBounds(10, 11, 140, 14);
 			wqe.add(lblNewLabel_1);
 		}
 		{
@@ -141,71 +165,71 @@ public class GuiSalida extends JFrame implements ActionListener {
 		}
 		{
 			lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			lblNewLabel_1_1.setBounds(10, 89, 86, 14);
+			lblNewLabel_1_1.setBounds(10, 79, 86, 14);
 			wqe.add(lblNewLabel_1_1);
 		}
 		{
 			btnAgregarProd.addActionListener(this);
-			btnAgregarProd.setBounds(338, 89, 148, 23);
+			btnAgregarProd.setBounds(338, 65, 148, 23);
 			wqe.add(btnAgregarProd);
 		}
 		{
-			lblNewLabel_2.setBounds(10, 128, 46, 14);
+			lblNewLabel_2.setBounds(10, 104, 46, 14);
 			wqe.add(lblNewLabel_2);
 		}
 		{
 			wqe.add(txtDni);
 		}
 		{
-			lblNewLabel_2_1.setBounds(10, 169, 46, 14);
+			lblNewLabel_2_1.setBounds(10, 145, 46, 14);
 			wqe.add(lblNewLabel_2_1);
 		}
 		{
 			txtNombre.setColumns(10);
-			txtNombre.setBounds(83, 166, 126, 20);
+			txtNombre.setBounds(83, 142, 126, 20);
 			wqe.add(txtNombre);
 		}
 		{
-			lblNewLabel_2_1_1.setBounds(10, 208, 46, 14);
+			lblNewLabel_2_1_1.setBounds(10, 184, 46, 14);
 			wqe.add(lblNewLabel_2_1_1);
 		}
 		{
 			txtApellido.setColumns(10);
-			txtApellido.setBounds(83, 205, 126, 20);
+			txtApellido.setBounds(83, 181, 126, 20);
 			wqe.add(txtApellido);
 		}
 		{
-			lblNewLabel_2_1_1_1.setBounds(10, 247, 46, 14);
+			lblNewLabel_2_1_1_1.setBounds(10, 223, 46, 14);
 			wqe.add(lblNewLabel_2_1_1_1);
 		}
 		{
 			cboSexo.setModel(new DefaultComboBoxModel(new String[] {"", "Femenino", "Masculino"}));
-			cboSexo.setBounds(83, 243, 126, 22);
+			cboSexo.setBounds(83, 219, 126, 22);
 			wqe.add(cboSexo);
 		}
 		{
-			lblNewLabel_2_1_2.setBounds(10, 287, 46, 14);
+			lblNewLabel_2_1_2.setBounds(10, 263, 46, 14);
 			wqe.add(lblNewLabel_2_1_2);
 		}
 		{
 			txtCelular.setColumns(10);
-			txtCelular.setBounds(83, 284, 126, 20);
+			txtCelular.setBounds(83, 260, 126, 20);
 			wqe.add(txtCelular);
 		}
 		{
-			lblNewLabel_2_1_2_1.setBounds(219, 287, 78, 14);
+			lblNewLabel_2_1_2_1.setBounds(219, 263, 78, 14);
 			wqe.add(lblNewLabel_2_1_2_1);
 		}
 		{
 			btnPlus.addActionListener(this);
 			btnPlus.setIcon(new ImageIcon(GuiSalida.class.getResource("/images/mas.png")));
-			btnPlus.setBounds(427, 60, 24, 23);
+			btnPlus.setBounds(427, 36, 24, 23);
 			wqe.add(btnPlus);
 		}
 		{
 			btnMinus.addActionListener(this);
 			btnMinus.setIcon(new ImageIcon(GuiSalida.class.getResource("/images/menos.png")));
-			btnMinus.setBounds(338, 61, 24, 23);
+			btnMinus.setBounds(338, 37, 24, 23);
 			wqe.add(btnMinus);
 		}
 		{
@@ -213,54 +237,66 @@ public class GuiSalida extends JFrame implements ActionListener {
 		}
 		{
 			txtCodProdElim.setColumns(10);
-			txtCodProdElim.setBounds(10, 435, 86, 20);
+			txtCodProdElim.setBounds(10, 392, 86, 20);
 			wqe.add(txtCodProdElim);
 		}
 		{
 			lblNewLabel_1_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			lblNewLabel_1_2.setBounds(10, 409, 239, 14);
+			lblNewLabel_1_2.setBounds(10, 366, 239, 14);
 			wqe.add(lblNewLabel_1_2);
 		}
 		{
 			btnEliminarDelCarrito.addActionListener(this);
-			btnEliminarDelCarrito.setBounds(114, 434, 157, 23);
+			btnEliminarDelCarrito.setBounds(114, 391, 157, 23);
 			wqe.add(btnEliminarDelCarrito);
 		}
 		{
 			btnRegistrarVenta.addActionListener(this);
-			btnRegistrarVenta.setBounds(566, 434, 157, 23);
+			btnRegistrarVenta.setBounds(566, 406, 157, 23);
 			wqe.add(btnRegistrarVenta);
 		}
 		{
-			lblNewLabel_2_1_2_2.setBounds(10, 325, 105, 14);
+			lblNewLabel_2_1_2_2.setBounds(10, 301, 105, 14);
 			wqe.add(lblNewLabel_2_1_2_2);
 		}
 		{
-			cboFormPag.setBounds(114, 321, 126, 22);
+			cboFormPag.setBounds(114, 297, 126, 22);
 			wqe.add(cboFormPag);
 		}
 		{
 			btnAgregarFormPag.addActionListener(this);
-			btnAgregarFormPag.setBounds(250, 321, 157, 23);
+			btnAgregarFormPag.setBounds(250, 297, 201, 23);
 			wqe.add(btnAgregarFormPag);
 		}
 		{
-			lblFormPag.setBounds(10, 361, 504, 14);
+			lblFormPag.setBounds(10, 337, 504, 14);
 			wqe.add(lblFormPag);
 		}
 		{
-			cboProducto.setBounds(10, 63, 126, 22);
+			cboProducto.setBounds(10, 39, 126, 22);
 			wqe.add(cboProducto);
 		}
 		{
 			lblNewLabel_1_3.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			lblNewLabel_1_3.setBounds(154, 37, 97, 14);
+			lblNewLabel_1_3.setBounds(154, 13, 97, 14);
 			wqe.add(lblNewLabel_1_3);
 		}
 		{
 			btnBuscar.addActionListener(this);
-			btnBuscar.setBounds(250, 63, 78, 23);
+			btnBuscar.setBounds(250, 39, 78, 23);
 			wqe.add(btnBuscar);
+		}
+		{
+			scrollPane_1.setBounds(10, 478, 722, 212);
+			wqe.add(scrollPane_1);
+		}
+		{
+			scrollPane_1.setViewportView(table1);
+		}
+		{
+			lblNewLabel_1_4.setFont(new Font("Tahoma", Font.BOLD, 16));
+			lblNewLabel_1_4.setBounds(10, 453, 140, 14);
+			wqe.add(lblNewLabel_1_4);
 		}
 		cboProducto.addItem("");
 		cboFormPag.addItem("");
@@ -275,16 +311,16 @@ public class GuiSalida extends JFrame implements ActionListener {
 	}
 	
 	private void showTable() {
-		datos = new Object[productosCarrito.size()][columnas.length];
+		datosCarrito = new Object[productosCarrito.size()][columnasCarrito.length];
 		for(int i = 0; i < productosCarrito.size(); i++) {
 			Producto p = productosCarrito.get(i);
-			datos[i][0] = p.getCodigoProducto();
-			datos[i][1] = p.getProd();
-			datos[i][2] = p.getCostoBase() + p.getCostoBase() * (p.getPorcentMargen()/100);
-			datos[i][3] = listCantProd.get(i);
-			datos[i][4] = String.valueOf( (p.getCostoBase() + p.getCostoBase() * (p.getPorcentMargen()/100)) * listCantProd.get(i));
+			datosCarrito[i][0] = p.getCodigoProducto();
+			datosCarrito[i][1] = p.getProd();
+			datosCarrito[i][2] = p.getCostoBase() + p.getCostoBase() * (p.getPorcentMargen()/100);
+			datosCarrito[i][3] = listCantProd.get(i);
+			datosCarrito[i][4] = (p.getCostoBase() + p.getCostoBase() * (p.getPorcentMargen()/100)) * listCantProd.get(i);
 		}
-		table.setModel(new DefaultTableModel(datos, columnas));
+		table.setModel(new DefaultTableModel(datosCarrito, columnasCarrito));
 	}
 	
 	private int getIdFormPag() {
@@ -437,8 +473,8 @@ public class GuiSalida extends JFrame implements ActionListener {
 		for (int i = 0; i < productosCarrito.size(); i++) {
 			SalidaProducto sP = new SalidaProducto();
 			sP.setProducto(String.valueOf(productosCarrito.get(i).getIdProducto()));
-			sP.setCantidad(Integer.parseInt(datos[i][3].toString()));
-			sP.setMonto(Double.parseDouble(datos[i][4].toString()));
+			sP.setCantidad(Integer.parseInt(datosCarrito[i][3].toString()));
+			sP.setMonto(Double.parseDouble(datosCarrito[i][4].toString()));
 			listSalida.add(sP);
 		}
 		Cliente cliente = new Cliente();
