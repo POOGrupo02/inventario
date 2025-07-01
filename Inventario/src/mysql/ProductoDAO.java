@@ -133,7 +133,7 @@ public class ProductoDAO {
 	            "cantidad_medida = ?, " +
 	            "fecha_fabricacion = ?, " +
 	            "fecha_vencimiento = ? " +
-	            "WHERE id_producto = ?";
+	            "WHERE codigo_producto = ?";
 
 	    try (Connection con = conexion.getConnection();
 	    		PreparedStatement ps = con.prepareStatement(sqlUpdate)) {
@@ -149,7 +149,7 @@ public class ProductoDAO {
 	        ps.setDouble(10, p.getCantidadMedida());
 	        ps.setDate(11, new Date(p.getFechaFabricacion().getTime()));
 	        ps.setDate(12, new Date(p.getFechaVencimiento().getTime()));
-	        ps.setInt(13, p.getIdProducto());
+	        ps.setString(13, p.getCodigoProducto());
 	        ps.executeUpdate();
 	        return true;
 	    } catch (SQLException e) {
@@ -165,7 +165,7 @@ public class ProductoDAO {
 				PreparedStatement ps = con.prepareStatement(sqlDelete)) {
 			ps.setInt(1, idProd);
 			ps.executeUpdate();
-			return false;
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;

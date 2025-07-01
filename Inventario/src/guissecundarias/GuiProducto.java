@@ -10,6 +10,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 
+import com.toedter.calendar.JDateChooser;
+
 import clasepadre.Producto;
 import claseshijo.Marca;
 import claseshijo.Presentacion;
@@ -60,6 +62,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 	private ArrayList<Marca> m = mDAO.readMarcas();
 	private ArrayList<Presentacion> pr = prDAO.readPresentaciones();
 	private ArrayList<UnidadMedida> u = uDAO.readUnidadesMedidas();
+	private JDateChooser dateChooserFeVenc = new JDateChooser();
 	private String[] columnas = { "CÓDIGO_PRODUCTO", "NOMBRE", "MARCA", "PRESENTACIÓN", "UNIDAD DE MEDIDA",
 			"CANTIDAD_MEDIDA", "STOCK", "STOCK_MIN", "COSTO_BASE", "PORCENT_MARGEN", "FECHA_FABRICACION",
 			"FECHA_VENCIMIENTO", "CREATED_AT", "UPDATED_AT" };
@@ -81,8 +84,6 @@ public class GuiProducto extends JDialog implements ActionListener {
 	 * Create the dialog.
 	 */
 	public GuiProducto() {
-		txtDiaFab.setBounds(187, 390, 31, 20);
-		txtDiaFab.setColumns(10);
 		setModal(true);
 		setTitle("Producto");
 		setBounds(100, 100, 1087, 614);
@@ -91,28 +92,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		{
-			Object[][] datos = new Object[productos.size()][14];
-
-			for (int i = 0; i < productos.size(); i++) {
-				Producto p = productos.get(i);
-				datos[i][0] = p.getCodigoProducto();
-				datos[i][1] = p.getProd();
-				datos[i][2] = p.getMarca();
-				datos[i][3] = p.getPresentacion();
-				datos[i][4] = p.getUnidadMedida();
-				datos[i][5] = String.valueOf(p.getCantidadMedida());
-				datos[i][6] = String.valueOf(p.getStock());
-				datos[i][7] = String.valueOf(p.getStockMin());
-				datos[i][8] = String.valueOf(p.getCostoBase());
-				datos[i][9] = String.valueOf(p.getPorcentMargen());
-				datos[i][10] = p.getFechaFabricacion() != null ? p.getFechaFabricacion().toString() : "";
-				datos[i][11] = p.getFechaVencimiento() != null ? p.getFechaVencimiento().toString() : "";
-				datos[i][12] = p.getCreatedAt();
-				datos[i][13] = p.getUpdatedAt();
-			}
-
-			table.setModel(new DefaultTableModel(datos, columnas));
-			table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+			showTable();
 		}
 
 		JLabel lblNewLabel = new JLabel("Código:");
@@ -152,48 +132,8 @@ public class GuiProducto extends JDialog implements ActionListener {
 		contentPanel.add(lblNewLabel_5);
 
 		lblNewLabel_6 = new JLabel("Fecha de vencimiento");
-		lblNewLabel_6.setBounds(25, 435, 152, 14);
+		lblNewLabel_6.setBounds(25, 440, 152, 14);
 		contentPanel.add(lblNewLabel_6);
-		{
-			contentPanel.add(txtDiaFab);
-		}
-		{
-			txtMesFab.setColumns(10);
-			txtMesFab.setBounds(228, 390, 31, 20);
-			contentPanel.add(txtMesFab);
-		}
-		{
-			txtAnioFab.setColumns(10);
-			txtAnioFab.setBounds(269, 390, 46, 20);
-			contentPanel.add(txtAnioFab);
-		}
-		{
-			txtDiaVenc.setColumns(10);
-			txtDiaVenc.setBounds(187, 432, 31, 20);
-			contentPanel.add(txtDiaVenc);
-		}
-		{
-			txtMesVenc.setColumns(10);
-			txtMesVenc.setBounds(228, 432, 31, 20);
-			contentPanel.add(txtMesVenc);
-		}
-		{
-			txtAnioVenc.setColumns(10);
-			txtAnioVenc.setBounds(269, 432, 46, 20);
-			contentPanel.add(txtAnioVenc);
-		}
-		{
-			lblNewLabel_7.setBounds(194, 463, 24, 14);
-			contentPanel.add(lblNewLabel_7);
-		}
-		{
-			lblNewLabel_7_1.setBounds(235, 463, 24, 14);
-			contentPanel.add(lblNewLabel_7_1);
-		}
-		{
-			lblNewLabel_7_1_1.setBounds(279, 463, 24, 14);
-			contentPanel.add(lblNewLabel_7_1_1);
-		}
 		lblNombre.setBounds(25, 51, 89, 14);
 
 		contentPanel.add(lblNombre);
@@ -286,6 +226,24 @@ public class GuiProducto extends JDialog implements ActionListener {
 			btnGuardarLista.setBounds(917, 16, 119, 23);
 			contentPanel.add(btnGuardarLista);
 		}
+		{
+			dateChooserFeVenc.setBounds(187,435,200,30);
+			contentPanel.add(dateChooserFeVenc);
+		}
+		{
+			dateChooserFeFab.setBounds(187, 393, 200, 30);
+			contentPanel.add(dateChooserFeFab);
+		}
+		{
+			btnModificar.addActionListener(this);
+			btnModificar.setBounds(130, 514, 89, 23);
+			contentPanel.add(btnModificar);
+		}
+		{
+			btnEliminar.addActionListener(this);
+			btnEliminar.setBounds(229, 514, 89, 23);
+			contentPanel.add(btnEliminar);
+		}
 
 		cboProd.addItem("");
 		cboMarca.addItem("");
@@ -307,8 +265,15 @@ public class GuiProducto extends JDialog implements ActionListener {
 			cboUniMedi.addItem(u.get(i).getName());
 		}
 	}
+	
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnEliminar) {
+			do_btnEliminar_actionPerformed(e);
+		}
+		if (e.getSource() == btnModificar) {
+			do_btnModificar_actionPerformed(e);
+		}
 		if (e.getSource() == btnGuardarLista) {
 			do_btnGuardarLista_actionPerformed(e);
 		}
@@ -327,16 +292,6 @@ public class GuiProducto extends JDialog implements ActionListener {
 	private final JTextField txtStockMin = new JTextField();
 	private JLabel lblNewLabel_5;
 	private JLabel lblNewLabel_6;
-	Date fechaActual = new Date();
-	private final JTextField txtDiaFab = new JTextField();
-	private final JTextField txtMesFab = new JTextField();
-	private final JTextField txtAnioFab = new JTextField();
-	private final JTextField txtDiaVenc = new JTextField();
-	private final JTextField txtMesVenc = new JTextField();
-	private final JTextField txtAnioVenc = new JTextField();
-	private final JLabel lblNewLabel_7 = new JLabel("Día");
-	private final JLabel lblNewLabel_7_1 = new JLabel("Mes");
-	private final JLabel lblNewLabel_7_1_1 = new JLabel("Año");
 	private final JLabel lblNombre = new JLabel("Producto:");
 	private final JLabel lblPresentacin = new JLabel("Marca:");
 	private final JComboBox<String> cboProd = new JComboBox<>();
@@ -359,7 +314,34 @@ public class GuiProducto extends JDialog implements ActionListener {
 	private final JLabel lblNewLabel_1_1 = new JLabel("Filtrar por nombre:");
 	private final JComboBox<String> cboProdFilt = new JComboBox<String>();
 	private final JButton btnGuardarLista = new JButton("Guardar Lista");
+	private final JDateChooser dateChooserFeFab = new JDateChooser();
+	private final JButton btnModificar = new JButton("Modificar");
+	private final JButton btnEliminar = new JButton("Eliminar");
+	
+	private void showTable() {
+		Object[][] datos = new Object[productos.size()][14];
 
+		for (int i = 0; i < productos.size(); i++) {
+			Producto p = productos.get(i);
+			datos[i][0] = p.getCodigoProducto();
+			datos[i][1] = p.getProd();
+			datos[i][2] = p.getMarca();
+			datos[i][3] = p.getPresentacion();
+			datos[i][4] = p.getUnidadMedida();
+			datos[i][5] = String.valueOf(p.getCantidadMedida());
+			datos[i][6] = String.valueOf(p.getStock());
+			datos[i][7] = String.valueOf(p.getStockMin());
+			datos[i][8] = String.valueOf(p.getCostoBase());
+			datos[i][9] = String.valueOf(p.getPorcentMargen());
+			datos[i][10] = p.getFechaFabricacion() != null ? p.getFechaFabricacion().toString() : "";
+			datos[i][11] = p.getFechaVencimiento() != null ? p.getFechaVencimiento().toString() : "";
+			datos[i][12] = p.getCreatedAt();
+			datos[i][13] = p.getUpdatedAt();
+		}
+
+		table.setModel(new DefaultTableModel(datos, columnas));
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+	}
 	private String getCod() {
 		return txtCod.getText().trim();
 	}
@@ -400,27 +382,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 		return Double.parseDouble(txtPorceMarg.getText());
 	}
 
-	private Date getFechFabri() throws ParseException {
-		String dia = txtDiaFab.getText().trim();
-		String mes = txtMesFab.getText().trim();
-		String anio = txtAnioFab.getText().trim();
-		String fechaTexto = anio + "-" + mes + "-" + dia;
-
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = format.parse(fechaTexto);
-		return date;
-	}
-
-	private Date getFechVenci() throws ParseException {
-		String dia = txtDiaVenc.getText().trim();
-		String mes = txtMesVenc.getText().trim();
-		String anio = txtAnioVenc.getText().trim();
-		String fechaTexto = anio + "-" + mes + "-" + dia;
-
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = format.parse(fechaTexto);
-		return date;
-	}
+	
 
 	private int getIdProd() {
 		String product = cboProd.getSelectedItem().toString();
@@ -503,6 +465,31 @@ public class GuiProducto extends JDialog implements ActionListener {
 			JOptionPane.showMessageDialog(null, "Error al guardar el archivo");
 		}
 	}
+	
+	private Boolean validarProd() {
+		Date fechaFab = dateChooserFeFab.getDate();
+		Date fechaVenc = dateChooserFeVenc.getDate();
+		
+		if (getCod().isBlank() || getIdProd() < 0 || getIdMarca() < 0 || getIdPresen() < 0 || getIdUniMedi() < 0
+				|| txtCantMedi.getText().isBlank() || txtStock.getText().isBlank()
+				|| txtStockMin.getText().isBlank() || txtCostBas.getText().isBlank()
+				|| txtPorceMarg.getText().isBlank() || fechaFab==null
+				|| fechaVenc==null) {
+			JOptionPane.showMessageDialog(this, "Los campos no pueden estar vacíos.");
+			return false;
+		}
+		else if (getCantMedi() < 0 || getStock() < 0 || getStockMin() < 0 || getCostBas() < 0
+				|| getPorceMarg() < 0) {
+			JOptionPane.showMessageDialog(this, "No se pueden registrar números negativos.");
+			return false;
+		}
+		
+		else if(fechaVenc.before(fechaFab)) {
+			JOptionPane.showMessageDialog(this, "La fecha de fabricación debe ser anterior a la fecha de vencimiento.");
+			return false;
+		} else return true;
+		
+	}
 
 	private void limpiarCampos() {
 		// Limpiar los JTextField
@@ -512,15 +499,8 @@ public class GuiProducto extends JDialog implements ActionListener {
 		txtStockMin.setText("");
 		txtCostBas.setText("");
 		txtPorceMarg.setText("");
-
-		txtDiaFab.setText("");
-		txtMesFab.setText("");
-		txtAnioFab.setText("");
-
-		txtDiaVenc.setText("");
-		txtMesVenc.setText("");
-		txtAnioVenc.setText("");
-
+		dateChooserFeFab.setDate(null);
+		dateChooserFeVenc.setDate(null);
 		// Reiniciar JComboBox al primer ítem
 		cboProd.setSelectedIndex(0);
 		cboMarca.setSelectedIndex(0);
@@ -530,47 +510,37 @@ public class GuiProducto extends JDialog implements ActionListener {
 
 	protected void do_btnAgregar_actionPerformed(ActionEvent e) {
 		try {
-			if (getCod().isBlank() || getIdProd() < 0 || getIdMarca() < 0 || getIdPresen() < 0 || getIdUniMedi() < 0
-					|| txtCantMedi.getText().isBlank() || txtStock.getText().isBlank()
-					|| txtStockMin.getText().isBlank() || txtCostBas.getText().isBlank()
-					|| txtPorceMarg.getText().isBlank() || txtAnioFab.getText().isBlank()
-					|| txtMesFab.getText().isBlank() || txtAnioVenc.getText().isBlank()
-					|| txtMesVenc.getText().isBlank()) {
-				JOptionPane.showMessageDialog(this, "Los campos no pueden estar vacíos.");
+			
+			if(!validarProd()) return;
+			
+			if (pDAO.readProdByCod(getCod()) != null) {
+				JOptionPane.showMessageDialog(this, "El código del producto ya existe.");
 				return;
-			} else if (getCantMedi() < 0 || getStock() < 0 || getStockMin() < 0 || getCostBas() < 0
-					|| getPorceMarg() < 0) {
-				JOptionPane.showMessageDialog(this, "No se pueden registrar números negativos.");
-				return;
-			} else {
-
-				if (pDAO.readProdByCod(getCod()) != null) {
-					JOptionPane.showMessageDialog(this, "El código del producto ya existe");
-					return;
-				}
-
-				Producto p = new Producto();
-				p.setCodigoProducto(getCod());
-				p.setProd(getProd());
-				p.setMarca(getMarca());
-				p.setPresentacion(getPresen());
-				p.setUnidadMedida(getUniMedi());
-				p.setCantidadMedida(getCantMedi());
-				p.setStock(getStock());
-				p.setStockMin(getStockMin());
-				p.setCostoBase(getCostBas());
-				p.setPorcentMargen(getPorceMarg());
-				p.setFechaFabricacion(getFechFabri());
-				p.setFechaVencimiento(getFechVenci());
-
-				Boolean isCreated = pDAO.createProd(p);
-				if (isCreated) {
-					JOptionPane.showMessageDialog(this, "El producto fue registrado con éxito.");
-					limpiarCampos();
-				} else
-					JOptionPane.showMessageDialog(this, "Error al registrar el producto.");
-
 			}
+			
+			Producto p = new Producto();
+			p.setCodigoProducto(getCod());
+			p.setProd(getProd());
+			p.setMarca(getMarca());
+			p.setPresentacion(getPresen());
+			p.setUnidadMedida(getUniMedi());
+			p.setCantidadMedida(getCantMedi());
+			p.setStock(getStock());
+			p.setStockMin(getStockMin());
+			p.setCostoBase(getCostBas());
+			p.setPorcentMargen(getPorceMarg());
+			p.setFechaFabricacion(dateChooserFeFab.getDate());
+			p.setFechaVencimiento(dateChooserFeVenc.getDate());
+			
+
+			Boolean isCreated = pDAO.createProd(p);
+			if (isCreated) {
+				JOptionPane.showMessageDialog(this, "El producto fue registrado con éxito.");
+				limpiarCampos();
+				productos = pDAO.readProds();
+				showTable();
+			} else
+				JOptionPane.showMessageDialog(this, "Error al registrar el producto.");
 		} catch (Exception e2) {
 			System.out.println(e2);
 			JOptionPane.showMessageDialog(this, "Error al registrar el producto, verifique los datos ingresados");
@@ -613,7 +583,6 @@ public class GuiProducto extends JDialog implements ActionListener {
 		}
 	}
 	
-	
 	protected void do_cboProdFilt_actionPerformed(ActionEvent e) {
 		try {
 			productos = pDAO.readProdsByProd(getIdProdFilt());
@@ -645,5 +614,68 @@ public class GuiProducto extends JDialog implements ActionListener {
 	}
 	protected void do_btnGuardarLista_actionPerformed(ActionEvent e) {
 		guardarCsv();
+	}
+	protected void do_btnModificar_actionPerformed(ActionEvent e) {
+		try {
+			if(!validarProd()) return;
+			
+			Producto productoMod = pDAO.readProdByCod(txtCod.getText());
+			if(productoMod==null) {
+				JOptionPane.showMessageDialog(this, "Producto no encontrado.");
+				return;
+			}
+			
+			Producto p = new Producto();
+			p.setCodigoProducto(getCod());
+			p.setProd(getProd());
+			p.setMarca(getMarca());
+			p.setPresentacion(getPresen());
+			p.setUnidadMedida(getUniMedi());
+			p.setCantidadMedida(getCantMedi());
+			p.setStock(getStock());
+			p.setStockMin(getStockMin());
+			p.setCostoBase(getCostBas());
+			p.setPorcentMargen(getPorceMarg());
+			p.setFechaFabricacion(dateChooserFeFab.getDate());
+			p.setFechaVencimiento(dateChooserFeVenc.getDate());
+			
+			Boolean isUpdated =pDAO.updateProd(p);
+			if (isUpdated) {
+				JOptionPane.showMessageDialog(this, "El producto fue modificado con éxito.");
+				limpiarCampos();
+				productos = pDAO.readProds();
+				showTable();
+			} else
+				JOptionPane.showMessageDialog(this, "Error al modificar el producto.");
+		}catch (Exception e1) {
+			JOptionPane.showMessageDialog(this, "Error al modificar el producto.");
+		}
+		
+	}
+	protected void do_btnEliminar_actionPerformed(ActionEvent e) {
+		try {
+			if(txtCod.getText().isBlank()) {
+				JOptionPane.showMessageDialog(this, "Ingrese un código válido.");
+				return;
+			}
+			
+			Producto productoDele = pDAO.readProdByCod(txtCod.getText());
+			if(productoDele==null) {
+				JOptionPane.showMessageDialog(this, "Producto no encontrado.");
+				return;
+			}
+			
+			Boolean isDeleted = pDAO.deleteProd(productoDele.getIdProducto());
+			if (isDeleted) {
+				JOptionPane.showMessageDialog(this, "El producto fue eliminado con éxito.");
+				limpiarCampos();
+				productos = pDAO.readProds();
+				showTable();
+			} else
+				JOptionPane.showMessageDialog(this, "Error al eliminar el producto.");
+			
+		}catch (Exception e1) {
+			JOptionPane.showMessageDialog(this, "Ingrese un código válido.");
+		}
 	}
 }
