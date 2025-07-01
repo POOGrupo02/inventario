@@ -147,7 +147,7 @@ public class registrocolab extends JFrame implements ActionListener {
 	        
 	    }
 	}
-}
+}//asdasd
 
 
 
