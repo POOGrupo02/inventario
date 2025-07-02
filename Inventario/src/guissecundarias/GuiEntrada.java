@@ -29,6 +29,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 
@@ -64,10 +68,10 @@ public class GuiEntrada extends JFrame implements ActionListener {
 	private ArrayList<Producto> productos = pDAO.readProds();
 	private ArrayList<Integer> listCantProd = new ArrayList<Integer>();
 	private ArrayList<Producto> productosEntrada = new ArrayList<Producto>();
-	private String[] columnas = { "CODIGO PRODUCTO", "NOMBRE", "PRECIO", "CANTIDAD", "TOTAL" };
+	private String[] columnasRegisEntr = { "CODIGO PRODUCTO", "NOMBRE", "PRECIO", "CANTIDAD", "TOTAL" };
 	private String[] columnasEntrada = { "ID", "CODIGO PRODUCTO", "PRODUCTO", "CANTIDAD",
 			"MONTO", "PROVEEDOR", "CREATED_AT"};
-	private Object[][] datos = null;
+	private Object[][] datosRegisEntr = null;
 	private Object[][] datosEntrada = null;
 	private int cantProd = 1;
 	private final JButton btnBuscarRuc = new JButton("Buscar");
@@ -76,6 +80,7 @@ public class GuiEntrada extends JFrame implements ActionListener {
 	private final JLabel lblNewLabel_1_4 = new JLabel("Entradas");
 	private JButton btnSalir;
 	private final JLabel lblNewLabel_2 = new JLabel("New label");
+	private final JButton btnGuardarLista = new JButton("Guardar Lista");
 
 	/**
 	 * Launch the application.
@@ -112,23 +117,10 @@ public class GuiEntrada extends JFrame implements ActionListener {
 			lblNewLabel.setBounds(10, 83, 129, 14);
 			contentPane.add(lblNewLabel);
 			
-			datos = new Object[productosEntrada.size()][columnas.length];
-			table.setModel(new DefaultTableModel(datos, columnas));
+			datosRegisEntr = new Object[productosEntrada.size()][columnasRegisEntr.length];
+			table.setModel(new DefaultTableModel(datosRegisEntr, columnasRegisEntr));
 			
-			datosEntrada = new Object[entradas.size()][7];
-
-			for (int i = 0; i < entradas.size(); i++) {
-				EntradaProducto sP = entradas.get(i);
-				datosEntrada[i][0] = sP.getId();
-				datosEntrada[i][1] = sP.getCodProd();
-				datosEntrada[i][2] = sP.getProducto();
-				datosEntrada[i][3] = sP.getCantidad();
-				datosEntrada[i][4] = sP.getMonto();
-				datosEntrada[i][5] = sP.getProveedor();
-				datosEntrada[i][6] = sP.getCreatedAt();
-			}
-
-			table1.setModel(new DefaultTableModel(datosEntrada, columnasEntrada));
+			showTableEntradas();
 		}
 		{
 			cboProveedor.setBounds(10, 110, 119, 22);
@@ -249,6 +241,11 @@ public class GuiEntrada extends JFrame implements ActionListener {
 			lblNewLabel_2.setBounds(10, 209, 200, 133);
 			contentPane.add(lblNewLabel_2);
 		}
+		{
+			btnGuardarLista.addActionListener(this);
+			btnGuardarLista.setBounds(714, 668, 119, 23);
+			contentPane.add(btnGuardarLista);
+		}
 		
 		cboProveedor.addItem("");
 		cboProducto.addItem("");
@@ -262,6 +259,69 @@ public class GuiEntrada extends JFrame implements ActionListener {
 		}
 	}
 	
+	private void guardarListEntradasCsv() {
+		File archivo = new File("lista_entradas.csv");
+		try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(archivo), "UTF-8");
+				PrintWriter pw = new PrintWriter(writer)) {
+
+			writer.write('\uFEFF');
+			
+			pw.println(String.join(";", columnasEntrada));
+
+			for (int i = 0; i < entradas.size(); i++) {
+				
+				EntradaProducto sP = entradas.get(i);
+				
+				pw.println(sP.getId() + ";" + sP.getCodProd() + ";" + sP.getProducto() + ";" + sP.getCantidad() + ";" +
+						sP.getMonto() + ";" + sP.getProveedor() + ";" + sP.getCreatedAt());
+
+			}
+			JOptionPane.showMessageDialog(null, "Archivo guardado correctamente en la carpeta del proyecto");
+
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(null, "Error al guardar el archivo"+e1);
+		}
+	}
+	
+	private void guardarEntradaCsv() {
+		File archivo = new File("entrada.csv");
+		try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(archivo), "UTF-8");
+				PrintWriter pw = new PrintWriter(writer)) {
+
+			writer.write('\uFEFF');
+
+			pw.println(String.join(";", columnasRegisEntr));
+			
+			double montoTotal = 0.0;
+
+			for (int i = 0; i < productosEntrada.size(); i++) {
+				
+				String codigo = datosRegisEntr[i][0].toString();
+				String nombre = datosRegisEntr[i][1].toString();
+				String precio = datosRegisEntr[i][2].toString();
+				String cantidad = datosRegisEntr[i][3].toString();
+				String total = datosRegisEntr[i][4].toString();
+				
+				try {
+					montoTotal += Double.parseDouble(total);
+				} catch (NumberFormatException e) {
+					JOptionPane.showMessageDialog(null, "Error al obtener el monto total.");
+				}
+				
+				pw.println(codigo + ";" + nombre + ";" + precio + ";" + cantidad + ";" + total);
+			}
+			
+			pw.println();
+
+			pw.println("MONTO TOTAL;;;;" + String.format("%.2f", montoTotal));
+
+			JOptionPane.showMessageDialog(null, "Archivo guardado correctamente en la carpeta del proyecto");
+
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(null, "Error al guardar el archivo");
+		}
+	}
+	
 	private void limpiarGui() {
 		productosEntrada.clear();
 		listCantProd.clear();
@@ -269,23 +329,43 @@ public class GuiEntrada extends JFrame implements ActionListener {
 		txtRuc.setText("");
 		cboProveedor.setSelectedIndex(0);
 		cboProducto.setSelectedIndex(0);
-		showTable();
+		showTableRegiEnt();
 	}
 	
-	private void showTable() {
-		datos = new Object[productosEntrada.size()][columnas.length];
+	private void showTableEntradas() {
+		datosEntrada = new Object[entradas.size()][7];
+
+		for (int i = 0; i < entradas.size(); i++) {
+			EntradaProducto sP = entradas.get(i);
+			datosEntrada[i][0] = sP.getId();
+			datosEntrada[i][1] = sP.getCodProd();
+			datosEntrada[i][2] = sP.getProducto();
+			datosEntrada[i][3] = sP.getCantidad();
+			datosEntrada[i][4] = sP.getMonto();
+			datosEntrada[i][5] = sP.getProveedor();
+			datosEntrada[i][6] = sP.getCreatedAt();
+		}
+
+		table1.setModel(new DefaultTableModel(datosEntrada, columnasEntrada));
+	}
+	
+	private void showTableRegiEnt() {
+		datosRegisEntr = new Object[productosEntrada.size()][columnasRegisEntr.length];
 		for(int i = 0; i < productosEntrada.size(); i++) {
 			Producto p = productosEntrada.get(i);
-			datos[i][0] = p.getCodigoProducto();
-			datos[i][1] = p.getProd();
-			datos[i][2] = p.getCostoBase();
-			datos[i][3] = listCantProd.get(i);
-			datos[i][4] = p.getCostoBase() * listCantProd.get(i);
+			datosRegisEntr[i][0] = p.getCodigoProducto();
+			datosRegisEntr[i][1] = p.getProd();
+			datosRegisEntr[i][2] = p.getCostoBase();
+			datosRegisEntr[i][3] = listCantProd.get(i);
+			datosRegisEntr[i][4] = p.getCostoBase() * listCantProd.get(i);
 		}
-		table.setModel(new DefaultTableModel(datos, columnas));
+		table.setModel(new DefaultTableModel(datosRegisEntr, columnasRegisEntr));
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnGuardarLista) {
+			do_btnGuardarLista_actionPerformed(e);
+		}
 		if (e.getSource() == btnSalir) {
 			do_btnSalir_actionPerformed(e);
 		}
@@ -353,7 +433,7 @@ public class GuiEntrada extends JFrame implements ActionListener {
 
 			productosEntrada.add(producto);
 			listCantProd.add(cantProd);
-			showTable();
+			showTableRegiEnt();
 			cantProd = 1;
 			txtCantProd.setText(cantProd + "");
 			txtCodProd.setText("");
@@ -382,7 +462,7 @@ public class GuiEntrada extends JFrame implements ActionListener {
 		
 		if(isDeleted) {
 			txtCodProdElim.setText("");
-			showTable();
+			showTableRegiEnt();
 		}else {
 			JOptionPane.showMessageDialog(this, "El producto no está agregado en el carrito.");
 			return;
@@ -415,8 +495,8 @@ public class GuiEntrada extends JFrame implements ActionListener {
 		for (int i = 0; i < productosEntrada.size(); i++) {
 			EntradaProducto sP = new EntradaProducto();
 			sP.setProducto(String.valueOf(productosEntrada.get(i).getIdProducto()));
-			sP.setCantidad(Integer.parseInt(datos[i][3].toString()));
-			sP.setMonto(Double.parseDouble(datos[i][4].toString()));
+			sP.setCantidad(Integer.parseInt(datosRegisEntr[i][3].toString()));
+			sP.setMonto(Double.parseDouble(datosRegisEntr[i][4].toString()));
 			listEntrada.add(sP);
 		}
 		
@@ -428,8 +508,11 @@ public class GuiEntrada extends JFrame implements ActionListener {
 		}
 		
 		 if (eDAO.createEntradas(listEntrada, idCliente)) {
-			 JOptionPane.showMessageDialog(this, "Entrada registrada con éxito.");
+			 JOptionPane.showMessageDialog(this, "Entrada registrada con éxito. Puede visualizarlo en el archivo .csv generado.");
+			 guardarEntradaCsv();
 			 limpiarGui();
+			 entradas = eDAO.readEntradas();
+			 showTableEntradas();
 		 }else {
 			 JOptionPane.showMessageDialog(this, "Hubo un error al momento de registrar le venta.");
 		 }
@@ -452,5 +535,8 @@ public class GuiEntrada extends JFrame implements ActionListener {
 	}
 	protected void do_btnSalir_actionPerformed(ActionEvent e) {
 		dispose();
+	}
+	protected void do_btnGuardarLista_actionPerformed(ActionEvent e) {
+		guardarListEntradasCsv();
 	}
 }
