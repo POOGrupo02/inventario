@@ -28,6 +28,10 @@ import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import java.awt.Color;
@@ -88,6 +92,9 @@ public class GuiSalida extends JFrame implements ActionListener {
 	private final JLabel lblNewLabel_1_4 = new JLabel("Salidas");
 	private final JButton btnSalir = new JButton("SALIR");
 	private JLabel lblNewLabel_3;
+	private String formsPgsTxt = "";
+	private final JButton btnGuardarLista = new JButton("Guardar Lista");
+	private final JButton btnEliminarFormPg = new JButton("Eliminar");
 	
 	/**
 	 * Launch the application.
@@ -135,21 +142,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 			txtCantProd.setText(cantProd+"");
 			
 			
-			datosSalida = new Object[salidas.size()][8];
-
-			for (int i = 0; i < salidas.size(); i++) {
-				SalidaProducto sP = salidas.get(i);
-				datosSalida[i][0] = sP.getId();
-				datosSalida[i][1] = sP.getCliente();
-				datosSalida[i][2] = sP.getCodProd();
-				datosSalida[i][3] = sP.getProducto();
-				datosSalida[i][4] = sP.getCantidad();
-				datosSalida[i][5] = sP.getMonto();
-				datosSalida[i][6] = sP.getFormaPago();
-				datosSalida[i][7] = sP.getCreatedAt();
-			}
-
-			table1.setModel(new DefaultTableModel(datosSalida, columnasSalidas));
+			showTableSalidas();
 		}
 		{
 			scrollPane.setViewportView(table);
@@ -269,7 +262,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 		}
 		{
 			btnAgregarFormPag.addActionListener(this);
-			btnAgregarFormPag.setBounds(250, 297, 201, 23);
+			btnAgregarFormPag.setBounds(250, 297, 167, 23);
 			wqe.add(btnAgregarFormPag);
 		}
 		{
@@ -313,6 +306,16 @@ public class GuiSalida extends JFrame implements ActionListener {
 			lblNewLabel_3.setBounds(307, 108, 217, 167);
 			wqe.add(lblNewLabel_3);
 		}
+		{
+			btnGuardarLista.addActionListener(this);
+			btnGuardarLista.setBounds(742, 667, 119, 23);
+			wqe.add(btnGuardarLista);
+		}
+		{
+			btnEliminarFormPg.addActionListener(this);
+			btnEliminarFormPg.setBounds(427, 297, 97, 23);
+			wqe.add(btnEliminarFormPg);
+		}
 		cboProducto.addItem("");
 		cboFormPag.addItem("");
 		
@@ -325,7 +328,38 @@ public class GuiSalida extends JFrame implements ActionListener {
 		}
 	}
 	
-	private void showTable() {
+	private void showTxtFormPg() {
+		formsPgsTxt = "";
+		for (int i = 0; i < formasPago.size(); i++) {
+			for (int k = 0; k < fPg.size(); k++) {
+				if(formasPago.get(i) == fPg.get(k).getId()) {
+					formsPgsTxt += i > 0 ? (", "+fPg.get(k).getNombre()) : fPg.get(k).getNombre();
+				}
+			}
+		}
+		
+		lblFormPag.setText("Formas de pago seleccionadas: "+formsPgsTxt);
+	}
+	
+	private void showTableSalidas() {
+		datosSalida = new Object[salidas.size()][8];
+
+		for (int i = 0; i < salidas.size(); i++) {
+			SalidaProducto sP = salidas.get(i);
+			datosSalida[i][0] = sP.getId();
+			datosSalida[i][1] = sP.getCliente();
+			datosSalida[i][2] = sP.getCodProd();
+			datosSalida[i][3] = sP.getProducto();
+			datosSalida[i][4] = sP.getCantidad();
+			datosSalida[i][5] = sP.getMonto();
+			datosSalida[i][6] = sP.getFormaPago();
+			datosSalida[i][7] = sP.getCreatedAt();
+		}
+
+		table1.setModel(new DefaultTableModel(datosSalida, columnasSalidas));
+	}
+	
+	private void showTableCarrito() {
 		datosCarrito = new Object[productosCarrito.size()][columnasCarrito.length];
 		for(int i = 0; i < productosCarrito.size(); i++) {
 			Producto p = productosCarrito.get(i);
@@ -349,6 +383,73 @@ public class GuiSalida extends JFrame implements ActionListener {
 		return id;
 	}
 	
+	private void guardarListVentasCsv() {
+		File archivo = new File("lista_ventas.csv");
+		try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(archivo), "UTF-8");
+				PrintWriter pw = new PrintWriter(writer)) {
+
+			writer.write('\uFEFF');
+			
+			pw.println("ID;CLIENTE;CODIGO_PRODUCTO;PRODUCTO;CANTIDAD;MONTO;FORMA DE PAGO; CREATED_AT");
+
+			for (int i = 0; i < salidas.size(); i++) {
+				
+				SalidaProducto sP = salidas.get(i);
+				
+				pw.println(sP.getId() + ";" + sP.getCliente() + ";" + sP.getCodProd() + ";" + sP.getProducto() + ";" + sP.getCantidad() + ";" +
+						sP.getMonto() + ";" + sP.getFormaPago() + ";" + sP.getCreatedAt());
+
+			}
+			JOptionPane.showMessageDialog(null, "Archivo guardado correctamente en la carpeta del proyecto");
+
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(null, "Error al guardar el archivo");
+		}
+	}
+	
+	private void guardarVentaCsv() {
+		File archivo = new File("venta.csv");
+		try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(archivo), "UTF-8");
+				PrintWriter pw = new PrintWriter(writer)) {
+
+			writer.write('\uFEFF');
+
+			pw.println(String.join(";", columnasCarrito));
+			
+			double montoTotal = 0.0;
+
+			for (int i = 0; i < productosCarrito.size(); i++) {
+				
+				String codigo = datosCarrito[i][0].toString();
+				String nombre = datosCarrito[i][1].toString();
+				String precio = datosCarrito[i][2].toString();
+				String cantidad = datosCarrito[i][3].toString();
+				String total = datosCarrito[i][4].toString();
+				
+				try {
+					montoTotal += Double.parseDouble(total);
+				} catch (NumberFormatException e) {
+					JOptionPane.showMessageDialog(null, "Error al obtener el monto total.");
+				}
+				
+				pw.println(codigo + ";" + nombre + ";" + precio + ";" + cantidad + ";" + total);
+			}
+			
+			pw.println();
+
+			pw.println("MONTO TOTAL;;;;" + String.format("%.2f", montoTotal));
+			
+			pw.println();
+			
+			pw.println("FORMAS DE PAGO;;;;" + formsPgsTxt);
+
+			JOptionPane.showMessageDialog(null, "Archivo guardado correctamente en la carpeta del proyecto");
+
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(null, "Error al guardar el archivo");
+		}
+	}
+	
 	private void limpiarGui() {
 		productosCarrito.clear();
 		listCantProd.clear();
@@ -362,10 +463,16 @@ public class GuiSalida extends JFrame implements ActionListener {
 		cboFormPag.setSelectedIndex(0);
 		cboProducto.setSelectedIndex(0);
 		lblFormPag.setText("Formas de pago seleccionadas:");
-		showTable();
+		showTableCarrito();
 	}
 	
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnEliminarFormPg) {
+			do_btnEliminarFormPg_actionPerformed(e);
+		}
+		if (e.getSource() == btnGuardarLista) {
+			do_btnGuardarLista_actionPerformed(e);
+		}
 		if (e.getSource() == btnSalir) {
 			do_btnSalir_actionPerformed(e);
 		}
@@ -421,7 +528,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 			
 			productosCarrito.add(producto);
 			listCantProd.add(cantProd);
-			showTable();
+			showTableCarrito();
 			cantProd = 1;
 			txtCantProd.setText(cantProd+"");
 			txtCodProd.setText("");
@@ -461,7 +568,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 		
 		if(isDeleted) {
 			txtCodProdElim.setText("");
-			showTable();
+			showTableCarrito();
 		}else {
 			JOptionPane.showMessageDialog(this, "El producto no está agregado en el carrito.");
 			return;
@@ -503,8 +610,11 @@ public class GuiSalida extends JFrame implements ActionListener {
 		cliente.setCelular(txtCelular.getText());
 		
 		 if (sDAO.createSalidas(listSalida, formasPago, cliente)) {
-			 JOptionPane.showMessageDialog(this, "Venta registrada con éxito.");
+			 JOptionPane.showMessageDialog(this, "Venta registrada con éxito. Puede visualizarlo en el archivo .csv generado.");
+			 guardarVentaCsv();
 			 limpiarGui();
+			 salidas = sDAO.readSalidas();
+			 showTableSalidas();
 		 }else {
 			 JOptionPane.showMessageDialog(this, "Hubo un error al momento de registrar le venta.");
 		 }
@@ -524,16 +634,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 		
 		formasPago.add(getIdFormPag());
 		
-		String t = "";
-		for (int i = 0; i < formasPago.size(); i++) {
-			for (int k = 0; k < fPg.size(); k++) {
-				if(formasPago.get(i) == fPg.get(k).getId()) {
-					t += i > 0 ? (", "+fPg.get(k).getNombre()) : fPg.get(k).getNombre();
-				}
-			}
-		}
-		
-		lblFormPag.setText("Formas de pago seleccionadas: "+t);
+		showTxtFormPg();
 		
 		cboFormPag.setSelectedIndex(0);
 	}
@@ -557,5 +658,38 @@ public class GuiSalida extends JFrame implements ActionListener {
 	}
 	protected void do_btnSalir_actionPerformed(ActionEvent e) {
 		dispose();
+	}
+	protected void do_btnGuardarLista_actionPerformed(ActionEvent e) {
+		guardarListVentasCsv();
+	}
+	protected void do_btnEliminarFormPg_actionPerformed(ActionEvent e) {
+		
+		if(formasPago.isEmpty()) {
+			JOptionPane.showMessageDialog(this, "No hay ninguna forma de pago para eliminar.");
+			return;
+		}
+		
+		if(cboFormPag.getSelectedIndex()==0) {
+			JOptionPane.showMessageDialog(this, "Elija la forma de pago que quiere eliminar.");
+			return;
+		}
+		
+		Boolean isDeleted = false;
+		for (int i = 0; i < formasPago.size(); i++) {
+			if(formasPago.get(i) == getIdFormPag()) {
+				formasPago.remove(i);
+				isDeleted = true;
+			}
+		}
+		
+		if(!isDeleted) {
+			JOptionPane.showMessageDialog(this, "La forma de pago que quiere eliminar no se encuentra registrada.");
+			return;
+		}
+		
+		showTxtFormPg();
+		
+		cboFormPag.setSelectedIndex(0);
+		
 	}
 }
