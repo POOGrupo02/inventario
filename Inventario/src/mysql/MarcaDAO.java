@@ -36,6 +36,8 @@ public class MarcaDAO {
 				Marca m = new Marca();
 				m.setId(rs.getInt("id_marca"));
 				m.setName(rs.getString("nombre"));
+				m.setCreatedAt(rs.getString("created_at"));
+                m.setUpdatedAt(rs.getString("updated_at"));
 				marcas.add(m);
 			}
 		} catch (SQLException e) {

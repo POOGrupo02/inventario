@@ -37,6 +37,8 @@ public class FormaPagoDAO {
                 FormaPago fP = new FormaPago();
                 fP.setId(rs.getInt("id_form_pag"));
                 fP.setNombre(rs.getString("nombre"));
+                fP.setCreatedAt(rs.getString("created_at"));
+                fP.setUpdatedAt(rs.getString("updated_at"));
                 formasPagos.add(fP);
             }
         } catch (SQLException e) {
@@ -59,37 +61,4 @@ public class FormaPagoDAO {
             return false;
         }
     }
-	
-	public Boolean deleteFormaPago(int id) {
-        String sqlDelete = "UPDATE formas_pago SET estado = FALSE WHERE id_form_pag = ?";
-
-        try (Connection con = conexion.getConnection();
-             PreparedStatement ps = con.prepareStatement(sqlDelete)) {
-            ps.setInt(1, id);
-            ps.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-	
-	public Boolean exitsOnBd(int idFormPag) {
-		String sqlQuestion = "SELECT * FROM formas_pago where id_form_pag = ?";
-		try (Connection con = conexion.getConnection();
-				PreparedStatement ps = con.prepareStatement(sqlQuestion)) {
-			
-			ps.setInt(1,idFormPag);
-			
-			try(ResultSet rs = ps.executeQuery();){
-				if (rs.next()) {
-					return true;
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return false;
-	}
 }

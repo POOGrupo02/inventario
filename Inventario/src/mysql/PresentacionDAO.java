@@ -37,6 +37,8 @@ public class PresentacionDAO {
 				Presentacion pr = new Presentacion();
 				pr.setId(rs.getInt("id_present"));
 				pr.setName(rs.getString("nombre"));
+				pr.setCreatedAt(rs.getString("created_at"));
+                pr.setUpdatedAt(rs.getString("updated_at"));
 				presentaciones.add(pr);
 			}
 		} catch (SQLException e) {

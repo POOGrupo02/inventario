@@ -562,7 +562,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 			} else
 				JOptionPane.showMessageDialog(this, "Error al registrar el producto.");
 		} catch (Exception e2) {
-			JOptionPane.showMessageDialog(this, "Error al registrar el producto, verifique los datos ingresados.");
+			JOptionPane.showMessageDialog(this, "Verifique los datos ingresados.");
 			// TODO: handle exception
 		}
 	}
@@ -598,7 +598,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 				return;
 			}
 		} catch (Exception e2) {
-			JOptionPane.showMessageDialog(this, "Ingrese un código válido");
+			JOptionPane.showMessageDialog(this, "Verifique los datos ingresados.");
 		}
 	}
 	
@@ -628,7 +628,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 
 			table.setModel(new DefaultTableModel(datos, columnas));
 		} catch (Exception e2) {
-			JOptionPane.showMessageDialog(this, "Ingrese un código válido");
+			JOptionPane.showMessageDialog(this, "Verifique los datos ingresados.");
 		}
 	}
 	protected void do_btnGuardarLista_actionPerformed(ActionEvent e) {
@@ -667,7 +667,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 			} else
 				JOptionPane.showMessageDialog(this, "Error al modificar el producto.");
 		}catch (Exception e1) {
-			JOptionPane.showMessageDialog(this, "Error al modificar el producto.");
+			JOptionPane.showMessageDialog(this, "Verifique los datos ingresados.");
 		}
 		
 	}
@@ -694,7 +694,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(this, "Error al eliminar el producto.");
 			
 		}catch (Exception e1) {
-			JOptionPane.showMessageDialog(this, "Ingrese un código válido.");
+			JOptionPane.showMessageDialog(this, "Verifique los datos ingresados.");
 		}
 	}
 	protected void do_btnSalir_actionPerformed(ActionEvent e) {

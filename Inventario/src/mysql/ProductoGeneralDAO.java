@@ -35,6 +35,8 @@ public class ProductoGeneralDAO {
                 ProductoGeneral p = new ProductoGeneral();
                 p.setId(rs.getInt("id_prod_gen"));
                 p.setName(rs.getString("nombre"));
+                p.setCreatedAt(rs.getString("created_at"));
+                p.setUpdatedAt(rs.getString("updated_at"));
                 productosGen.add(p);
             }
         } catch (SQLException e) {

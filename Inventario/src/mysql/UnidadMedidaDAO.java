@@ -35,6 +35,8 @@ public class UnidadMedidaDAO {
                 UnidadMedida um = new UnidadMedida();
                 um.setId(rs.getInt("id_uni_medi"));
                 um.setName(rs.getString("nombre"));
+                um.setCreatedAt(rs.getString("created_at"));
+                um.setUpdatedAt(rs.getString("updated_at"));
                 unidadesMedidas.add(um);
             }
         } catch (SQLException e) {

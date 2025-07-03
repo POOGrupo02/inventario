@@ -481,41 +481,46 @@ public class GuiEntrada extends JFrame implements ActionListener {
 		}
 	}
 	protected void do_btnNewButton_actionPerformed(ActionEvent e) {
-		ArrayList<EntradaProducto> listEntrada = new ArrayList<>();
-		if(productosEntrada.isEmpty()) {
-			JOptionPane.showMessageDialog(this, "No se encuentra ningún producto en el carrito.");
-			return;
-		}
-		
-		if(cboProveedor.getSelectedIndex() == 0) {
-			JOptionPane.showMessageDialog(this, "No se ha seleccionado a ningún proveedor.");
-			return;
-		}
-		
-		for (int i = 0; i < productosEntrada.size(); i++) {
-			EntradaProducto sP = new EntradaProducto();
-			sP.setProducto(String.valueOf(productosEntrada.get(i).getIdProducto()));
-			sP.setCantidad(Integer.parseInt(datosRegisEntr[i][3].toString()));
-			sP.setMonto(Double.parseDouble(datosRegisEntr[i][4].toString()));
-			listEntrada.add(sP);
-		}
-		
-		int idCliente = -1;
-		for (int i = 0; i < proveedores.size(); i++) {
-			if(proveedores.get(i).getRuc().equals(cboProveedor.getSelectedItem().toString())) {
-				idCliente = proveedores.get(i).getId();
+		try {
+			ArrayList<EntradaProducto> listEntrada = new ArrayList<>();
+			if(productosEntrada.isEmpty()) {
+				JOptionPane.showMessageDialog(this, "No se encuentra ningún producto en el carrito.");
+				return;
 			}
+			
+			if(cboProveedor.getSelectedIndex() == 0) {
+				JOptionPane.showMessageDialog(this, "No se ha seleccionado a ningún proveedor.");
+				return;
+			}
+			
+			for (int i = 0; i < productosEntrada.size(); i++) {
+				EntradaProducto sP = new EntradaProducto();
+				sP.setProducto(String.valueOf(productosEntrada.get(i).getIdProducto()));
+				sP.setCantidad(Integer.parseInt(datosRegisEntr[i][3].toString()));
+				sP.setMonto(Double.parseDouble(datosRegisEntr[i][4].toString()));
+				listEntrada.add(sP);
+			}
+			
+			int idCliente = -1;
+			for (int i = 0; i < proveedores.size(); i++) {
+				if(proveedores.get(i).getRuc().equals(cboProveedor.getSelectedItem().toString())) {
+					idCliente = proveedores.get(i).getId();
+				}
+			}
+			
+			 if (eDAO.createEntradas(listEntrada, idCliente)) {
+				 JOptionPane.showMessageDialog(this, "Entrada registrada con éxito. Puede visualizarlo en el archivo .csv generado.");
+				 guardarEntradaCsv();
+				 limpiarGui();
+				 entradas = eDAO.readEntradas();
+				 showTableEntradas();
+			 }else {
+				 JOptionPane.showMessageDialog(this, "Hubo un error al momento de registrar le venta.");
+			 }
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(this, "Hubo un error al momento de registrar le venta.");
 		}
 		
-		 if (eDAO.createEntradas(listEntrada, idCliente)) {
-			 JOptionPane.showMessageDialog(this, "Entrada registrada con éxito. Puede visualizarlo en el archivo .csv generado.");
-			 guardarEntradaCsv();
-			 limpiarGui();
-			 entradas = eDAO.readEntradas();
-			 showTableEntradas();
-		 }else {
-			 JOptionPane.showMessageDialog(this, "Hubo un error al momento de registrar le venta.");
-		 }
 	}
 	protected void do_btnBuscarRuc_actionPerformed(ActionEvent e) {
 		if(txtRuc.getText().isBlank()) {

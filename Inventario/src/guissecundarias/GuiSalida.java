@@ -534,7 +534,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 			txtCodProd.setText("");
 			cboProducto.setSelectedIndex(0);
 		}catch (Exception e1) {
-			JOptionPane.showMessageDialog(this, "Error al registrar producto."+e1);
+			JOptionPane.showMessageDialog(this, "Verifique los datos ingresados.");
 		}
 	}
 	protected void do_btnPlus_actionPerformed(ActionEvent e) {
@@ -573,51 +573,57 @@ public class GuiSalida extends JFrame implements ActionListener {
 			JOptionPane.showMessageDialog(this, "El producto no está agregado en el carrito.");
 			return;
 		}
+		
 	}
 	protected void do_btnRegistrarVenta_actionPerformed(ActionEvent e) {
-		ArrayList<SalidaProducto> listSalida = new ArrayList<>();
-		if(productosCarrito.isEmpty()) {
-			JOptionPane.showMessageDialog(this, "No se encuentra ningún producto en el carrito.");
-			return;
-		}
-		if(formasPago.isEmpty()) {
-			JOptionPane.showMessageDialog(this, "No se ha seleccionada por lo menos una forma de pago.");
-			return;
+		try {
+			ArrayList<SalidaProducto> listSalida = new ArrayList<>();
+			if(productosCarrito.isEmpty()) {
+				JOptionPane.showMessageDialog(this, "No se encuentra ningún producto en el carrito.");
+				return;
+			}
+			if(formasPago.isEmpty()) {
+				JOptionPane.showMessageDialog(this, "No se ha seleccionada por lo menos una forma de pago.");
+				return;
+			}
+			
+			if(txtDni.getText().isBlank() || txtNombre.getText().isBlank() || txtApellido.getText().isBlank() || cboSexo.getSelectedIndex() == 0) {
+				JOptionPane.showMessageDialog(this, "Los campos obligatorios para cliente no pueden estar.");
+				return;
+			}
+			
+			if(txtDni.getText().length()!=8) {
+				JOptionPane.showMessageDialog(this, "La cantidad de números en un DNI solo es de 8.");
+				return;
+			}
+			
+			for (int i = 0; i < productosCarrito.size(); i++) {
+				SalidaProducto sP = new SalidaProducto();
+				sP.setProducto(String.valueOf(productosCarrito.get(i).getIdProducto()));
+				sP.setCantidad(Integer.parseInt(datosCarrito[i][3].toString()));
+				sP.setMonto(Double.parseDouble(datosCarrito[i][4].toString()));
+				listSalida.add(sP);
+			}
+			Cliente cliente = new Cliente();
+			cliente.setDni(txtDni.getText());
+			cliente.setNombre(txtNombre.getText());
+			cliente.setApellido(txtApellido.getText());
+			cliente.setSexo(cboSexo.getSelectedItem().toString());
+			cliente.setCelular(txtCelular.getText());
+			
+			 if (sDAO.createSalidas(listSalida, formasPago, cliente)) {
+				 JOptionPane.showMessageDialog(this, "Venta registrada con éxito. Puede visualizarlo en el archivo .csv generado.");
+				 guardarVentaCsv();
+				 limpiarGui();
+				 salidas = sDAO.readSalidas();
+				 showTableSalidas();
+			 }else {
+				 JOptionPane.showMessageDialog(this, "Hubo un error al momento de registrar le venta.");
+			 }
+		}catch (Exception e1) {
+			JOptionPane.showMessageDialog(this, "Hubo un error al momento de registrar le venta.");
 		}
 		
-		if(txtDni.getText().isBlank() || txtNombre.getText().isBlank() || txtApellido.getText().isBlank() || cboSexo.getSelectedIndex() == 0) {
-			JOptionPane.showMessageDialog(this, "Los campos obligatorios para cliente no pueden estar.");
-			return;
-		}
-		
-		if(txtDni.getText().length()!=8) {
-			JOptionPane.showMessageDialog(this, "La cantidad de números en un DNI solo es de 8.");
-			return;
-		}
-		
-		for (int i = 0; i < productosCarrito.size(); i++) {
-			SalidaProducto sP = new SalidaProducto();
-			sP.setProducto(String.valueOf(productosCarrito.get(i).getIdProducto()));
-			sP.setCantidad(Integer.parseInt(datosCarrito[i][3].toString()));
-			sP.setMonto(Double.parseDouble(datosCarrito[i][4].toString()));
-			listSalida.add(sP);
-		}
-		Cliente cliente = new Cliente();
-		cliente.setDni(txtDni.getText());
-		cliente.setNombre(txtNombre.getText());
-		cliente.setApellido(txtApellido.getText());
-		cliente.setSexo(cboSexo.getSelectedItem().toString());
-		cliente.setCelular(txtCelular.getText());
-		
-		 if (sDAO.createSalidas(listSalida, formasPago, cliente)) {
-			 JOptionPane.showMessageDialog(this, "Venta registrada con éxito. Puede visualizarlo en el archivo .csv generado.");
-			 guardarVentaCsv();
-			 limpiarGui();
-			 salidas = sDAO.readSalidas();
-			 showTableSalidas();
-		 }else {
-			 JOptionPane.showMessageDialog(this, "Hubo un error al momento de registrar le venta.");
-		 }
 	}
 	protected void do_btnAgregarFormPag_actionPerformed(ActionEvent e) {
 		if(cboFormPag.getSelectedIndex()==0) {
