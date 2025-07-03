@@ -77,6 +77,7 @@ public class ProductoDAO {
 		}
 		return productos;
 	}
+	
 
 	public Producto readProdByCod(String codigo) {
 		Producto producto = null;
@@ -132,7 +133,8 @@ public class ProductoDAO {
 	            "porcent_margen = ?, " +
 	            "cantidad_medida = ?, " +
 	            "fecha_fabricacion = ?, " +
-	            "fecha_vencimiento = ? " +
+	            "fecha_vencimiento = ?, " +
+	            "estado = ? " +
 	            "WHERE codigo_producto = ?";
 
 	    try (Connection con = conexion.getConnection();
@@ -149,7 +151,8 @@ public class ProductoDAO {
 	        ps.setDouble(10, p.getCantidadMedida());
 	        ps.setDate(11, new Date(p.getFechaFabricacion().getTime()));
 	        ps.setDate(12, new Date(p.getFechaVencimiento().getTime()));
-	        ps.setString(13, p.getCodigoProducto());
+	        ps.setBoolean(13, true);
+	        ps.setString(14, p.getCodigoProducto());
 	        ps.executeUpdate();
 	        return true;
 	    } catch (SQLException e) {
@@ -170,6 +173,25 @@ public class ProductoDAO {
 			e.printStackTrace();
 			return false;
 		}
+	}
+	
+	public Boolean exitsOnBd(String codProd) {
+		String sqlQuestion = "SELECT * FROM productos where codigo_producto = ?";
+		try (Connection con = conexion.getConnection();
+				PreparedStatement ps = con.prepareStatement(sqlQuestion)) {
+			
+			ps.setString(1,codProd);
+			
+			try(ResultSet rs = ps.executeQuery();){
+				if (rs.next()) {
+					return true;
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
 	}
 	
 	

@@ -531,6 +531,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 				return;
 			}
 			
+			
 			Producto p = new Producto();
 			p.setCodigoProducto(getCod());
 			p.setProd(getProd());
@@ -545,8 +546,14 @@ public class GuiProducto extends JDialog implements ActionListener {
 			p.setFechaFabricacion(dateChooserFeFab.getDate());
 			p.setFechaVencimiento(dateChooserFeVenc.getDate());
 			
-
-			Boolean isCreated = pDAO.createProd(p);
+			Boolean isCreated = false;
+			
+			if(pDAO.exitsOnBd(getCod())) {
+				isCreated = pDAO.updateProd(p);
+			}else {
+				isCreated = pDAO.createProd(p);
+			}
+			
 			if (isCreated) {
 				JOptionPane.showMessageDialog(this, "El producto fue registrado con éxito.");
 				limpiarCampos();
@@ -555,8 +562,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 			} else
 				JOptionPane.showMessageDialog(this, "Error al registrar el producto.");
 		} catch (Exception e2) {
-			System.out.println(e2);
-			JOptionPane.showMessageDialog(this, "Error al registrar el producto, verifique los datos ingresados");
+			JOptionPane.showMessageDialog(this, "Error al registrar el producto, verifique los datos ingresados.");
 			// TODO: handle exception
 		}
 	}

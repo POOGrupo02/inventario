@@ -110,6 +110,25 @@ public class ProveedorDAO {
             return false;
         }
     }
+    
+    public Boolean exitsOnBd(String ruc) {
+		String sqlQuestion = "SELECT * FROM proveedores where ruc = ?";
+		try (Connection con = conexion.getConnection();
+				PreparedStatement ps = con.prepareStatement(sqlQuestion)) {
+			
+			ps.setString(1,ruc);
+			
+			try(ResultSet rs = ps.executeQuery();){
+				if (rs.next()) {
+					return true;
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
 
     private Proveedor mapProveedor(ResultSet rs) throws SQLException {
         Proveedor p = new Proveedor();

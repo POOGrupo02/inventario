@@ -73,4 +73,23 @@ public class FormaPagoDAO {
             return false;
         }
     }
+	
+	public Boolean exitsOnBd(int idFormPag) {
+		String sqlQuestion = "SELECT * FROM formas_pago where id_form_pag = ?";
+		try (Connection con = conexion.getConnection();
+				PreparedStatement ps = con.prepareStatement(sqlQuestion)) {
+			
+			ps.setInt(1,idFormPag);
+			
+			try(ResultSet rs = ps.executeQuery();){
+				if (rs.next()) {
+					return true;
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
 }
