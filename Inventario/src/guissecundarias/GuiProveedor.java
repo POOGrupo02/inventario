@@ -89,7 +89,7 @@ public class GuiProveedor extends JDialog implements ActionListener {
 		{
 			btnSalir = new JButton("SALIR");
 			btnSalir.addActionListener(this);
-			btnSalir.setBounds(367, 532, 89, 23);
+			btnSalir.setBounds(369, 546, 89, 23);
 			contentPanel.add(btnSalir);
 		}
 		{

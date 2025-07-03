@@ -24,6 +24,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
 
 public class GuiUniMedi extends JFrame implements ActionListener {
 
@@ -41,6 +42,7 @@ public class GuiUniMedi extends JFrame implements ActionListener {
 	private UnidadMedidaDAO uDAO = new UnidadMedidaDAO();
 	private ArrayList<UnidadMedida> unidadesMedi = uDAO.readUnidadesMedidas();
 	private String[] columnas = { "ID", "NOMBRE", "CREATED_AT", "UPDATED_AT" };
+	private JButton btnModificar_1;
 
 	/**
 	 * Launch the application.
@@ -62,9 +64,10 @@ public class GuiUniMedi extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public GuiUniMedi() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 917, 511);
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(128, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
@@ -112,6 +115,12 @@ public class GuiUniMedi extends JFrame implements ActionListener {
 		{
 			scrollPane.setViewportView(table);
 		}
+		{
+			btnModificar_1 = new JButton("SALIR");
+			btnModificar_1.addActionListener(this);
+			btnModificar_1.setBounds(13, 363, 89, 23);
+			contentPane.add(btnModificar_1);
+		}
 	}
 	
 	private void showTable() {
@@ -129,6 +138,9 @@ public class GuiUniMedi extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnModificar_1) {
+			do_btnModificar_1_actionPerformed(e);
+		}
 		if (e.getSource() == btnModificar) {
 			do_btnModificar_actionPerformed(e);
 		}
@@ -197,5 +209,8 @@ public class GuiUniMedi extends JFrame implements ActionListener {
 		} catch (Exception e1) {
 			JOptionPane.showMessageDialog(this, "Verifique los datos ingresados.");
 		}
+	}
+	protected void do_btnModificar_1_actionPerformed(ActionEvent e) {
+		dispose();
 	}
 }

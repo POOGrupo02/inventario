@@ -23,6 +23,7 @@ import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
 
 public class GuiMarca extends JFrame implements ActionListener {
 
@@ -40,6 +41,7 @@ public class GuiMarca extends JFrame implements ActionListener {
 	private MarcaDAO mDAO = new MarcaDAO();
 	private ArrayList<Marca> marcas = mDAO.readMarcas();
 	private String[] columnas = { "ID", "NOMBRE", "CREATED_AT", "UPDATED_AT" };
+	private final JButton btnSalir = new JButton("SALIR");
 
 	/**
 	 * Launch the application.
@@ -64,6 +66,7 @@ public class GuiMarca extends JFrame implements ActionListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 735, 492);
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(128, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
@@ -111,6 +114,11 @@ public class GuiMarca extends JFrame implements ActionListener {
 			txtNewMarca.setBounds(112, 192, 86, 20);
 			contentPane.add(txtNewMarca);
 		}
+		{
+			btnSalir.addActionListener(this);
+			btnSalir.setBounds(13, 368, 89, 23);
+			contentPane.add(btnSalir);
+		}
 	}
 	
 	private void showTable() {
@@ -127,6 +135,9 @@ public class GuiMarca extends JFrame implements ActionListener {
 		table.setModel(new DefaultTableModel(datos, columnas));
 	}
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnSalir) {
+			do_btnSalir_actionPerformed(e);
+		}
 		if (e.getSource() == btnModificar) {
 			do_btnModificar_actionPerformed(e);
 		}
@@ -196,5 +207,8 @@ public class GuiMarca extends JFrame implements ActionListener {
 		} catch (Exception e1) {
 			JOptionPane.showMessageDialog(this, "Verifique los datos ingresados.");
 		}
+	}
+	protected void do_btnSalir_actionPerformed(ActionEvent e) {
+		dispose();
 	}
 }

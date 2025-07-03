@@ -22,6 +22,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
 
 public class GuiCliente extends JFrame implements ActionListener {
 
@@ -43,6 +44,7 @@ public class GuiCliente extends JFrame implements ActionListener {
 	private ClienteDAO cDAO = new ClienteDAO();
 	private ArrayList<Cliente> clientes = cDAO.readClientes();
 	private String[] columnas = { "DNI", "NOMBRE", "APELLIDO", "SEXO" , "CELULAR", "CREATED_AT", "UPDATED_AT"};
+	private final JButton btnSalir = new JButton("SALIR");
 
 	/**
 	 * Launch the application.
@@ -69,6 +71,7 @@ public class GuiCliente extends JFrame implements ActionListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 959, 457);
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(128, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
@@ -130,8 +133,16 @@ public class GuiCliente extends JFrame implements ActionListener {
 		{
 			scrollPane.setViewportView(table);
 		}
+		{
+			btnSalir.addActionListener(this);
+			btnSalir.setBounds(155, 312, 89, 23);
+			contentPane.add(btnSalir);
+		}
 	}
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnSalir) {
+			do_btnSalir_actionPerformed(e);
+		}
 		if (e.getSource() == btnModificar) {
 			do_btnModificar_actionPerformed(e);
 		}
@@ -189,5 +200,8 @@ public class GuiCliente extends JFrame implements ActionListener {
 		 }else {
 			 JOptionPane.showMessageDialog(this, "Hubo un error al momento de modificar el cliente.");
 		 }
+	}
+	protected void do_btnSalir_actionPerformed(ActionEvent e) {
+		dispose();
 	}
 }

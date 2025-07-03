@@ -22,6 +22,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
 
 public class GuiFormaPago extends JFrame implements ActionListener {
 
@@ -39,6 +40,7 @@ public class GuiFormaPago extends JFrame implements ActionListener {
 	private final JTextField txtIdFormPg = new JTextField();
 	private final JLabel lblId = new JLabel("ID");
 	private final JTextField txtNewFormPg = new JTextField();
+	private final JButton btnSalir = new JButton("SALIR");
 
 	/**
 	 * Launch the application.
@@ -65,6 +67,7 @@ public class GuiFormaPago extends JFrame implements ActionListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 894, 408);
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(128, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
@@ -111,9 +114,17 @@ public class GuiFormaPago extends JFrame implements ActionListener {
 			txtNewFormPg.setBounds(109, 161, 86, 20);
 			contentPane.add(txtNewFormPg);
 		}
+		{
+			btnSalir.addActionListener(this);
+			btnSalir.setBounds(10, 260, 89, 23);
+			contentPane.add(btnSalir);
+		}
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnSalir) {
+			do_btnSalir_actionPerformed(e);
+		}
 		if (e.getSource() == btnModificar) {
 			do_btnModificar_actionPerformed(e);
 		}
@@ -200,5 +211,8 @@ public class GuiFormaPago extends JFrame implements ActionListener {
 			JOptionPane.showMessageDialog(this, "Verifique los datos ingresados.");
 		}
 
+	}
+	protected void do_btnSalir_actionPerformed(ActionEvent e) {
+		dispose();
 	}
 }

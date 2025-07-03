@@ -23,6 +23,8 @@ import java.awt.Font;
 import java.awt.Color;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+
 import java.awt.Label;
 
 public class GuiInventario extends JFrame implements ActionListener {
@@ -144,6 +146,7 @@ public class GuiInventario extends JFrame implements ActionListener {
 		// Registrar producto
 		GuiProducto product = new GuiProducto();
 		product.setVisible(true);
+		product.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
 		// listar productos
 		// GuiListaProductos lP = new GuiListaProductos();

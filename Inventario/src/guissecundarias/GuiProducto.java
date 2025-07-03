@@ -89,7 +89,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 	public GuiProducto() {
 		setModal(true);
 		setTitle("Producto");
-		setBounds(100, 100, 1087, 614);
+		setBounds(100, 100, 1090, 622);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(new Color(128, 255, 255));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
