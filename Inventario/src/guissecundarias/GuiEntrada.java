@@ -42,13 +42,8 @@ public class GuiEntrada extends JFrame implements ActionListener {
 	private JPanel contentPane;
 	private final JLabel lblNewLabel = new JLabel("RUC de proveedor");
 	private final JComboBox<String> cboProveedor = new JComboBox<>();
-	private final JLabel lblBuscarRuc = new JLabel("Buscar RUC");
-	private final JTextField txtRuc = new JTextField();
 	private final JLabel lblNewLabel_1 = new JLabel("Código de producto");
 	private final JComboBox<String> cboProducto = new JComboBox<String>();
-	private final JLabel lblNewLabel_1_3 = new JLabel("Buscar código");
-	private final JTextField txtCodProd = new JTextField();
-	private final JButton btnBuscar = new JButton("Buscar");
 	private final JButton btnMinus = new JButton("");
 	private final JTextField txtCantProd = new JTextField();
 	private final JButton btnPlus = new JButton("");
@@ -64,7 +59,7 @@ public class GuiEntrada extends JFrame implements ActionListener {
 	private ArrayList<EntradaProducto> entradas = eDAO.readEntradas();
 	private ProductoDAO pDAO = new ProductoDAO();
 	private ProveedorDAO provDAO = new ProveedorDAO();
-	private ArrayList<Proveedor> proveedores = provDAO.readProveedores();
+	private ArrayList<Proveedor> proveedores = new ArrayList<>();
 	private ArrayList<Producto> productos = pDAO.readProds();
 	private ArrayList<Integer> listCantProd = new ArrayList<Integer>();
 	private ArrayList<Producto> productosEntrada = new ArrayList<Producto>();
@@ -74,7 +69,6 @@ public class GuiEntrada extends JFrame implements ActionListener {
 	private Object[][] datosRegisEntr = null;
 	private Object[][] datosEntrada = null;
 	private int cantProd = 1;
-	private final JButton btnBuscarRuc = new JButton("Buscar");
 	private final JScrollPane scrollPane_1 = new JScrollPane();
 	private final JTable table1 = new JTable();
 	private final JLabel lblNewLabel_1_4 = new JLabel("Entradas");
@@ -102,8 +96,6 @@ public class GuiEntrada extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public GuiEntrada() {
-		txtRuc.setBounds(154, 111, 84, 20);
-		txtRuc.setColumns(10);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 1003, 748);
 		contentPane = new JPanel();
@@ -127,36 +119,14 @@ public class GuiEntrada extends JFrame implements ActionListener {
 			contentPane.add(cboProveedor);
 		}
 		{
-			lblBuscarRuc.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			lblBuscarRuc.setBounds(154, 83, 84, 14);
-			contentPane.add(lblBuscarRuc);
-		}
-		{
-			contentPane.add(txtRuc);
-		}
-		{
 			lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
 			lblNewLabel_1.setBounds(10, 11, 140, 14);
 			contentPane.add(lblNewLabel_1);
 		}
 		{
+			cboProducto.addActionListener(this);
 			cboProducto.setBounds(10, 39, 126, 22);
 			contentPane.add(cboProducto);
-		}
-		{
-			lblNewLabel_1_3.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			lblNewLabel_1_3.setBounds(154, 13, 97, 14);
-			contentPane.add(lblNewLabel_1_3);
-		}
-		{
-			txtCodProd.setColumns(10);
-			txtCodProd.setBounds(154, 40, 86, 20);
-			contentPane.add(txtCodProd);
-		}
-		{
-			btnBuscar.addActionListener(this);
-			btnBuscar.setBounds(250, 39, 78, 23);
-			contentPane.add(btnBuscar);
 		}
 		{
 			btnMinus.addActionListener(this);
@@ -215,11 +185,6 @@ public class GuiEntrada extends JFrame implements ActionListener {
 			contentPane.add(btnNewButton);
 		}
 		{
-			btnBuscarRuc.addActionListener(this);
-			btnBuscarRuc.setBounds(248, 110, 78, 23);
-			contentPane.add(btnBuscarRuc);
-		}
-		{
 			scrollPane_1.setBounds(10, 396, 694, 295);
 			contentPane.add(scrollPane_1);
 		}
@@ -247,15 +212,10 @@ public class GuiEntrada extends JFrame implements ActionListener {
 			contentPane.add(btnGuardarLista);
 		}
 		
-		cboProveedor.addItem("");
 		cboProducto.addItem("");
 		
 		for (int i = 0; i < productos.size(); i++) {
 			cboProducto.addItem(productos.get(i).getCodigoProducto());
-		}
-		
-		for (int i = 0; i < proveedores.size(); i++) {
-			cboProveedor.addItem(proveedores.get(i).getRuc());
 		}
 	}
 	
@@ -322,11 +282,20 @@ public class GuiEntrada extends JFrame implements ActionListener {
 		}
 	}
 	
+	private int getIdProdFilt() {
+		String product = cboProducto.getSelectedItem().toString();
+		int id = -1;
+		for (int i = 0; i < productos.size(); i++) {
+			if (productos.get(i).getCodigoProducto().equals(product)) {
+				id = productos.get(i).getIdProducto();
+			}
+		}
+		return id;
+	}
+	
 	private void limpiarGui() {
 		productosEntrada.clear();
 		listCantProd.clear();
-		txtCodProd.setText("");
-		txtRuc.setText("");
 		cboProveedor.setSelectedIndex(0);
 		cboProducto.setSelectedIndex(0);
 		showTableRegiEnt();
@@ -363,14 +332,14 @@ public class GuiEntrada extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == cboProducto) {
+			do_cboProducto_actionPerformed(e);
+		}
 		if (e.getSource() == btnGuardarLista) {
 			do_btnGuardarLista_actionPerformed(e);
 		}
 		if (e.getSource() == btnSalir) {
 			do_btnSalir_actionPerformed(e);
-		}
-		if (e.getSource() == btnBuscarRuc) {
-			do_btnBuscarRuc_actionPerformed(e);
 		}
 		if (e.getSource() == btnNewButton) {
 			do_btnNewButton_actionPerformed(e);
@@ -387,26 +356,6 @@ public class GuiEntrada extends JFrame implements ActionListener {
 		if (e.getSource() == btnAgregarProd) {
 			do_btnAgregarProd_actionPerformed(e);
 		}
-		if (e.getSource() == btnBuscar) {
-			do_btnBuscar_actionPerformed(e);
-		}
-	}
-
-	protected void do_btnBuscar_actionPerformed(ActionEvent e) {
-		if(txtCodProd.getText().isBlank()) {
-			JOptionPane.showMessageDialog(this, "El campo de código producto está vacío.");
-			return;
-		}
-		
-		for (int i = 0; i < productos.size(); i++) {
-			if(productos.get(i).getCodigoProducto().equalsIgnoreCase(txtCodProd.getText())) {
-				cboProducto.setSelectedItem(productos.get(i).getCodigoProducto());
-				txtCodProd.setText("");
-				return;
-			}
-		}
-		
-		JOptionPane.showMessageDialog(this, "No se encontró el código.");
 	}
 
 	protected void do_btnAgregarProd_actionPerformed(ActionEvent e) {
@@ -436,7 +385,6 @@ public class GuiEntrada extends JFrame implements ActionListener {
 			showTableRegiEnt();
 			cantProd = 1;
 			txtCantProd.setText(cantProd + "");
-			txtCodProd.setText("");
 			cboProducto.setSelectedIndex(0);
 		} catch (Exception e1) {
 			JOptionPane.showMessageDialog(this, "Error al registrar producto." + e1);
@@ -522,26 +470,18 @@ public class GuiEntrada extends JFrame implements ActionListener {
 		}
 		
 	}
-	protected void do_btnBuscarRuc_actionPerformed(ActionEvent e) {
-		if(txtRuc.getText().isBlank()) {
-			JOptionPane.showMessageDialog(this, "El campo del ruc está vacío.");
-			return;
-		}
-		
-		for (int i = 0; i < proveedores.size(); i++) {
-			if(proveedores.get(i).getRuc().equalsIgnoreCase(txtRuc.getText())) {
-				cboProveedor.setSelectedItem(proveedores.get(i).getRuc());
-				txtRuc.setText("");
-				return;
-			}
-		}
-		
-		JOptionPane.showMessageDialog(this, "No se encontró el ruc.");
-	}
 	protected void do_btnSalir_actionPerformed(ActionEvent e) {
 		dispose();
 	}
 	protected void do_btnGuardarLista_actionPerformed(ActionEvent e) {
 		guardarListEntradasCsv();
+	}
+	protected void do_cboProducto_actionPerformed(ActionEvent e) {
+		cboProveedor.removeAllItems();
+		cboProveedor.addItem("");
+		proveedores = eDAO.readProvsByIdProd(getIdProdFilt());
+		for (int i = 0; i < proveedores.size(); i++) {
+			cboProveedor.addItem(proveedores.get(i).getRuc());
+		}
 	}
 }

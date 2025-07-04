@@ -16,11 +16,13 @@ import clasepadre.Producto;
 import claseshijo.Marca;
 import claseshijo.Presentacion;
 import claseshijo.ProductoGeneral;
+import claseshijo.Proveedor;
 import claseshijo.UnidadMedida;
 import mysql.MarcaDAO;
 import mysql.PresentacionDAO;
 import mysql.ProductoDAO;
 import mysql.ProductoGeneralDAO;
+import mysql.ProveedorDAO;
 import mysql.UnidadMedidaDAO;
 
 import javax.swing.JLabel;
@@ -58,11 +60,15 @@ public class GuiProducto extends JDialog implements ActionListener {
 	private PresentacionDAO prDAO = new PresentacionDAO();
 	private UnidadMedidaDAO uDAO = new UnidadMedidaDAO();
 	private MarcaDAO mDAO = new MarcaDAO();
+	private ProveedorDAO provDAO = new ProveedorDAO();
+	private ArrayList<Proveedor> provs = provDAO.readProveedores();
+	private ArrayList<Integer> proveedores = new ArrayList<>();
 	private ArrayList<Producto> productos = pDAO.readProds();
 	private ArrayList<ProductoGeneral> pg = pgDAO.readProductosGenerales();
 	private ArrayList<Marca> m = mDAO.readMarcas();
 	private ArrayList<Presentacion> pr = prDAO.readPresentaciones();
 	private ArrayList<UnidadMedida> u = uDAO.readUnidadesMedidas();
+	private String provsTxt = "";
 	private JDateChooser dateChooserFeVenc = new JDateChooser();
 	private String[] columnas = { "CÓDIGO_PRODUCTO", "NOMBRE", "MARCA", "PRESENTACIÓN", "UNIDAD DE MEDIDA",
 			"CANTIDAD_MEDIDA", "STOCK", "STOCK_MIN", "COSTO_BASE", "PORCENT_MARGEN", "FECHA_FABRICACION",
@@ -119,7 +125,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 
 		btnAgregar = new JButton("Registrar");
 		btnAgregar.addActionListener(this);
-		btnAgregar.setBounds(25, 514, 89, 23);
+		btnAgregar.setBounds(25, 549, 89, 23);
 		contentPanel.add(btnAgregar);
 
 		lblNewLabel_4 = new JLabel("Stock mínimo:");
@@ -131,12 +137,12 @@ public class GuiProducto extends JDialog implements ActionListener {
 			contentPanel.add(txtStockMin);
 		}
 
-		lblNewLabel_5 = new JLabel("Fecha de fabricación");
+		lblNewLabel_5 = new JLabel("Fecha de fabricación:");
 		lblNewLabel_5.setBounds(25, 393, 152, 14);
 		contentPanel.add(lblNewLabel_5);
 
-		lblNewLabel_6 = new JLabel("Fecha de vencimiento");
-		lblNewLabel_6.setBounds(25, 440, 152, 14);
+		lblNewLabel_6 = new JLabel("Fecha de vencimiento:");
+		lblNewLabel_6.setBounds(25, 435, 152, 14);
 		contentPanel.add(lblNewLabel_6);
 		lblNombre.setBounds(25, 51, 89, 14);
 
@@ -240,18 +246,40 @@ public class GuiProducto extends JDialog implements ActionListener {
 		}
 		{
 			btnModificar.addActionListener(this);
-			btnModificar.setBounds(130, 514, 89, 23);
+			btnModificar.setBounds(130, 549, 89, 23);
 			contentPanel.add(btnModificar);
 		}
 		{
 			btnEliminar.addActionListener(this);
-			btnEliminar.setBounds(229, 514, 89, 23);
+			btnEliminar.setBounds(229, 549, 89, 23);
 			contentPanel.add(btnEliminar);
 		}
 		{
 			btnSalir.addActionListener(this);
-			btnSalir.setBounds(332, 514, 153, 23);
+			btnSalir.setBounds(332, 549, 153, 23);
 			contentPanel.add(btnSalir);
+		}
+		{
+			lblNewLabel_6_1.setBounds(25, 482, 89, 14);
+			contentPanel.add(lblNewLabel_6_1);
+		}
+		{
+			lblProv.setBounds(25, 513, 314, 14);
+			contentPanel.add(lblProv);
+		}
+		{
+			cboProv.setBounds(187, 478, 110, 22);
+			contentPanel.add(cboProv);
+		}
+		{
+			btnAgregarProv.addActionListener(this);
+			btnAgregarProv.setBounds(320, 476, 152, 23);
+			contentPanel.add(btnAgregarProv);
+		}
+		{
+			btnEliminarProveedor.addActionListener(this);
+			btnEliminarProveedor.setBounds(487, 478, 152, 23);
+			contentPanel.add(btnEliminarProveedor);
 		}
 
 		cboProd.addItem("");
@@ -259,6 +287,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 		cboPresen.addItem("");
 		cboUniMedi.addItem("");
 		cboProdFilt.addItem("");
+		cboProv.addItem("");
 
 		for (int i = 0; i < pg.size(); i++) {
 			cboProd.addItem(pg.get(i).getName());
@@ -273,10 +302,21 @@ public class GuiProducto extends JDialog implements ActionListener {
 		for (int i = 0; i < u.size(); i++) {
 			cboUniMedi.addItem(u.get(i).getName());
 		}
+		
+		for (int i = 0; i < provs.size(); i++) {
+			cboProv.addItem(provs.get(i).getNombreEmpresa());
+		}
+		
 	}
 	
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnEliminarProveedor) {
+			do_btnEliminarProveedor_actionPerformed(e);
+		}
+		if (e.getSource() == btnAgregarProv) {
+			do_btnAgregarProv_actionPerformed(e);
+		}
 		if (e.getSource() == btnSalir) {
 			do_btnSalir_actionPerformed(e);
 		}
@@ -330,6 +370,24 @@ public class GuiProducto extends JDialog implements ActionListener {
 	private final JButton btnModificar = new JButton("Modificar");
 	private final JButton btnEliminar = new JButton("Eliminar");
 	private final JButton btnSalir = new JButton("SALIR");
+	private final JLabel lblNewLabel_6_1 = new JLabel("Proveedor:");
+	private final JLabel lblProv = new JLabel("Proveeedores seleccionados: ");
+	private final JComboBox<String> cboProv = new JComboBox<String>();
+	private final JButton btnAgregarProv = new JButton("Agregar proveedor");
+	private final JButton btnEliminarProveedor = new JButton("Eliminar proveedor");
+	
+	private void showTxtProvs() {
+		provsTxt = "";
+		for (int i = 0; i < proveedores.size(); i++) {
+			for (int k = 0; k < provs.size(); k++) {
+				if(proveedores.get(i) == provs.get(k).getId()) {
+					provsTxt += i > 0 ? (", "+provs.get(k).getNombreEmpresa()) : provs.get(k).getNombreEmpresa();
+				}
+			}
+		}
+		
+		lblProv.setText("Proveeedores seleccionados: "+provsTxt);
+	}
 	
 	private void showTable() {
 		Object[][] datos = new Object[productos.size()][14];
@@ -395,7 +453,16 @@ public class GuiProducto extends JDialog implements ActionListener {
 		return Double.parseDouble(txtPorceMarg.getText());
 	}
 
-	
+	private int getIdProv() {
+		String proveedor = cboProv.getSelectedItem().toString();
+		int id = -1;
+		for (int i = 0; i < provs.size(); i++) {
+			if (provs.get(i).getNombreEmpresa().equals(proveedor)) {
+				id = provs.get(i).getId();
+			}
+		}
+		return id;
+	}
 
 	private int getIdProd() {
 		String product = cboProd.getSelectedItem().toString();
@@ -514,6 +581,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 		txtPorceMarg.setText("");
 		dateChooserFeFab.setDate(null);
 		dateChooserFeVenc.setDate(null);
+		lblProv.setText("Proveeedores seleccionados: ");
 		// Reiniciar JComboBox al primer ítem
 		cboProd.setSelectedIndex(0);
 		cboMarca.setSelectedIndex(0);
@@ -528,6 +596,11 @@ public class GuiProducto extends JDialog implements ActionListener {
 			
 			if (pDAO.readProdByCod(getCod()) != null) {
 				JOptionPane.showMessageDialog(this, "El código del producto ya existe.");
+				return;
+			}
+			
+			if(proveedores.isEmpty()) {
+				JOptionPane.showMessageDialog(this, "No se ha seleccionado por lo menos un proveedor.");
 				return;
 			}
 			
@@ -549,9 +622,9 @@ public class GuiProducto extends JDialog implements ActionListener {
 			Boolean isCreated = false;
 			
 			if(pDAO.exitsOnBd(getCod())) {
-				isCreated = pDAO.updateProd(p);
+				isCreated = pDAO.updateProd(p, proveedores);
 			}else {
-				isCreated = pDAO.createProd(p);
+				isCreated = pDAO.createProd(p, proveedores);
 			}
 			
 			if (isCreated) {
@@ -645,6 +718,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 			}
 			
 			Producto p = new Producto();
+			p.setIdProducto(productoMod.getIdProducto());
 			p.setCodigoProducto(getCod());
 			p.setProd(getProd());
 			p.setMarca(getMarca());
@@ -658,7 +732,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 			p.setFechaFabricacion(dateChooserFeFab.getDate());
 			p.setFechaVencimiento(dateChooserFeVenc.getDate());
 			
-			Boolean isUpdated =pDAO.updateProd(p);
+			Boolean isUpdated =pDAO.updateProd(p, proveedores);
 			if (isUpdated) {
 				JOptionPane.showMessageDialog(this, "El producto fue modificado con éxito.");
 				limpiarCampos();
@@ -674,7 +748,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 	protected void do_btnEliminar_actionPerformed(ActionEvent e) {
 		try {
 			if(txtCod.getText().isBlank()) {
-				JOptionPane.showMessageDialog(this, "Ingrese un código válido.");
+				JOptionPane.showMessageDialog(this, "El campo de código no puede estar vacío.");
 				return;
 			}
 			
@@ -699,5 +773,52 @@ public class GuiProducto extends JDialog implements ActionListener {
 	}
 	protected void do_btnSalir_actionPerformed(ActionEvent e) {
 		dispose();
+	}
+	protected void do_btnAgregarProv_actionPerformed(ActionEvent e) {
+		if(cboProv.getSelectedIndex()==0) {
+			JOptionPane.showMessageDialog(this, "Elija el proveedor.");
+			return;
+		}
+		
+		for (int i = 0; i < proveedores.size(); i++) {
+			if(proveedores.get(i) == getIdProv()) {
+				JOptionPane.showMessageDialog(this, "Ya está registrado este proveedor.");
+				return;
+			}
+		}
+		
+		proveedores.add(getIdProv());
+		
+		showTxtProvs();
+		
+		cboProv.setSelectedIndex(0);
+	}
+	protected void do_btnEliminarProveedor_actionPerformed(ActionEvent e) {
+		if(proveedores.isEmpty()) {
+			JOptionPane.showMessageDialog(this, "No hay ningún proveedor para eliminar.");
+			return;
+		}
+		
+		if(cboProv.getSelectedIndex()==0) {
+			JOptionPane.showMessageDialog(this, "Elija la forma de pago que quiere eliminar.");
+			return;
+		}
+		
+		Boolean isDeleted = false;
+		for (int i = 0; i < proveedores.size(); i++) {
+			if(proveedores.get(i) == getIdProv()) {
+				proveedores.remove(i);
+				isDeleted = true;
+			}
+		}
+		
+		if(!isDeleted) {
+			JOptionPane.showMessageDialog(this, "El proveedor que quiere eliminar no se encuentra registrado.");
+			return;
+		}
+		
+		showTxtProvs();
+		
+		cboProv.setSelectedIndex(0);
 	}
 }

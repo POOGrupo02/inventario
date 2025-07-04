@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import clasepadre.Producto;
 import claseshijo.Cliente;
 import claseshijo.Proveedor;
 import mysql.ProveedorDAO;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 import java.awt.Font;
@@ -58,7 +60,9 @@ public class GuiProveedor extends JDialog implements ActionListener {
 	private JTable table;
 	private ProveedorDAO pDAO = new ProveedorDAO();
 	private ArrayList<Proveedor> proveedores = pDAO.readProveedores();
-	private String[] columnas = { "RUC", "NOMBRE EMPRESA", "CONTACTO", "TELEFONO", "EMAIL", "DIRECCION","CREATED_AT", "UPDATED_AT"};
+	private String[] columnas = { "RUC", "NOMBRE EMPRESA", "CONTACTO", "TELEFONO", "EMAIL", "DIRECCION", "CREATED_AT",
+			"UPDATED_AT" };
+	private final JLabel lblNewLabel_11_1 = new JLabel("(opcional)");
 
 	/**
 	 * Launch the application.
@@ -83,19 +87,18 @@ public class GuiProveedor extends JDialog implements ActionListener {
 		contentPanel.setBackground(new Color(128, 255, 255));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		
-		
+
 		contentPanel.setLayout(null);
 		{
 			btnSalir = new JButton("SALIR");
 			btnSalir.addActionListener(this);
-			btnSalir.setBounds(369, 546, 89, 23);
+			btnSalir.setBounds(487, 532, 89, 23);
 			contentPanel.add(btnSalir);
 		}
 		{
 			lblNewLabel = new JLabel("New label");
 			lblNewLabel.setIcon(new ImageIcon(GuiProveedor.class.getResource("/images/proveedor .jpg")));
-			lblNewLabel.setBounds(118, 419, 239, 150);
+			lblNewLabel.setBounds(238, 421, 239, 150);
 			contentPanel.add(lblNewLabel);
 		}
 		{
@@ -239,6 +242,10 @@ public class GuiProveedor extends JDialog implements ActionListener {
 			{
 				table = new JTable();
 				scrollPane.setViewportView(table);
+				{
+					lblNewLabel_11_1.setBounds(109, 561, 66, 14);
+					contentPanel.add(lblNewLabel_11_1);
+				}
 				showTable();
 			}
 		}
@@ -259,6 +266,19 @@ public class GuiProveedor extends JDialog implements ActionListener {
 		}
 	}
 	
+	private void limpiarCampos() {
+		txtRuc.setText("");
+		txtNomEmpre.setText("");
+		txtNomConta.setText("");
+		txtApelliConta.setText("");
+		txtTelefono.setText("");
+		txtEmail.setText("");
+		txtVia.setText("");
+		txtNomVia.setText("");
+		txtNumVia.setText("");
+		txtReferencia.setText("");
+	}
+
 	private void showTable() {
 		Object[][] datos = new Object[proveedores.size()][8];
 
@@ -276,14 +296,137 @@ public class GuiProveedor extends JDialog implements ActionListener {
 
 		table.setModel(new DefaultTableModel(datos, columnas));
 	}
-	
+
 	protected void do_btnSalir_actionPerformed(ActionEvent e) {
 		dispose();
 	}
+
 	protected void do_btnRegistrar_actionPerformed(ActionEvent e) {
+		try {
+			if (txtRuc.getText().isBlank() || txtNomEmpre.getText().isBlank() || txtNomConta.getText().isBlank()
+					|| txtApelliConta.getText().isBlank() || txtTelefono.getText().isBlank()
+					|| txtEmail.getText().isBlank() || txtVia.getText().isBlank() || txtNomVia.getText().isBlank()
+					|| txtNumVia.getText().isBlank()) {
+				JOptionPane.showMessageDialog(this, "Los campos requeridos no pueden estar vacíos.");
+				return;
+			}
+			if (txtRuc.getText().length()!=11) {
+				JOptionPane.showMessageDialog(this, "El RUC solo debe ser de 11 dígitos.");
+				return;
+			}
+			if (pDAO.readProveedorByRuc(txtRuc.getText()) != null) {
+				JOptionPane.showMessageDialog(this, "Este RUC ya se encuentra registrado.");
+				return;
+			}
+
+			Proveedor p = new Proveedor();
+			p.setRuc(txtRuc.getText());
+			p.setNombreEmpresa(txtNomEmpre.getText());
+			p.setNombreContacto(txtNomConta.getText());
+			p.setApellidoContacto(txtApelliConta.getText());
+			p.setTelefono(txtTelefono.getText());
+			p.setEmail(txtEmail.getText());
+			p.setVia(txtVia.getText());
+			p.setNombreVia(txtNomVia.getText());
+			p.setNumeroVia(txtNumVia.getText());
+			p.setReferencia(txtReferencia.getText());
+
+			Boolean isCreated = false;
+
+			if (pDAO.exitsOnBd(txtRuc.getText())) {
+				isCreated = pDAO.updateProveedor(p);
+			} else {
+				isCreated = pDAO.createProveedor(p);
+			}
+			
+			if (isCreated) {
+				JOptionPane.showMessageDialog(this, "El proveedor fue registrado con éxito.");
+				limpiarCampos();
+				proveedores = pDAO.readProveedores();
+				showTable();
+			} else
+				JOptionPane.showMessageDialog(this, "Error al registrar el proveedor.");
+
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(this, "Verifique los datos ingresados.");
+		}
 	}
+
 	protected void do_btnModificar_actionPerformed(ActionEvent e) {
+		try {
+			if (txtRuc.getText().isBlank() || txtNomEmpre.getText().isBlank() || txtNomConta.getText().isBlank()
+					|| txtApelliConta.getText().isBlank() || txtTelefono.getText().isBlank()
+					|| txtEmail.getText().isBlank() || txtVia.getText().isBlank() || txtNomVia.getText().isBlank()
+					|| txtNumVia.getText().isBlank()) {
+				JOptionPane.showMessageDialog(this, "Los campos requeridos no pueden estar vacíos.");
+				return;
+			}
+			if (txtRuc.getText().length()!=11) {
+				JOptionPane.showMessageDialog(this, "El RUC solo debe ser de 11 dígitos.");
+				return;
+			}
+			
+			
+			if(pDAO.readProveedorByRuc(txtRuc.getText()) == null) {
+				JOptionPane.showMessageDialog(this, "Proveedor no encontrado.");
+				return;
+			}
+			
+			Proveedor p = new Proveedor();
+			p.setRuc(txtRuc.getText());
+			p.setNombreEmpresa(txtNomEmpre.getText());
+			p.setNombreContacto(txtNomConta.getText());
+			p.setApellidoContacto(txtApelliConta.getText());
+			p.setTelefono(txtTelefono.getText());
+			p.setEmail(txtEmail.getText());
+			p.setVia(txtVia.getText());
+			p.setNombreVia(txtNomVia.getText());
+			p.setNumeroVia(txtNumVia.getText());
+			p.setReferencia(txtReferencia.getText());
+			
+			Boolean isUpdated =pDAO.updateProveedor(p);
+			if (isUpdated) {
+				JOptionPane.showMessageDialog(this, "El proveedor fue modificado con éxito.");
+				limpiarCampos();
+				proveedores = pDAO.readProveedores();
+				showTable();
+			} else
+				JOptionPane.showMessageDialog(this, "Error al modificar el proveedor.");
+			
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(this, "Verifique los datos ingresados.");
+		}
+		
+		
 	}
+
 	protected void do_btnEliminar_actionPerformed(ActionEvent e) {
+		try {
+			if(txtRuc.getText().isBlank()) {
+				JOptionPane.showMessageDialog(this, "El campo de RUC no puede estar vacío.");
+				return;
+			}
+			if (txtRuc.getText().length()!=11) {
+				JOptionPane.showMessageDialog(this, "El RUC solo debe ser de 11 dígitos.");
+				return;
+			}
+			Proveedor proveDele = pDAO.readProveedorByRuc(txtRuc.getText());
+			if(proveDele==null) {
+				JOptionPane.showMessageDialog(this, "Proveedor no encontrado.");
+				return;
+			}
+			
+			Boolean isDeleted = pDAO.deleteProveedor(proveDele.getId());
+			if (isDeleted) {
+				JOptionPane.showMessageDialog(this, "El proveedor fue eliminado con éxito.");
+				limpiarCampos();
+				proveedores = pDAO.readProveedores();
+				showTable();
+			} else
+				JOptionPane.showMessageDialog(this, "Error al eliminar el proveedor.");
+			
+		}catch (Exception e1) {
+			JOptionPane.showMessageDialog(this, "Verifique los datos ingresados.");
+		}
 	}
 }

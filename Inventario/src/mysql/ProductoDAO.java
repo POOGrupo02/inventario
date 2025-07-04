@@ -20,8 +20,7 @@ public class ProductoDAO {
 		    "JOIN marcas m ON p.id_marca = m.id_marca " +
 			"WHERE p.estado = TRUE ";
 
-	public Boolean createProd(Producto p) {
-		Boolean isCreated = true;
+	public Boolean createProd(Producto p, ArrayList<Integer> proveedores) {
 		
 		String sqlCreate =
 			    "INSERT INTO productos (" +
@@ -38,9 +37,12 @@ public class ProductoDAO {
 			        "fecha_fabricacion, " +
 			        "fecha_vencimiento" +
 			    ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		
+		String sqlCreateProvProd = "INSERT INTO proveedores_productos (id_proveedor, id_producto) VALUES (?,?)";
 
 		try (Connection con = conexion.getConnection();
-				PreparedStatement ps = con.prepareStatement(sqlCreate)) {
+				PreparedStatement ps = con.prepareStatement(sqlCreate, Statement.RETURN_GENERATED_KEYS);
+				PreparedStatement psProvProd = con.prepareStatement(sqlCreateProvProd)) {
 			ps.setString(1, p.getCodigoProducto());
 			ps.setInt(2, Integer.parseInt(p.getProd()));
 			ps.setInt(3, Integer.parseInt(p.getUnidadMedida()));
@@ -54,12 +56,29 @@ public class ProductoDAO {
 			ps.setDate(11, new Date(p.getFechaFabricacion().getTime()));
 			ps.setDate(12, new Date(p.getFechaVencimiento().getTime()));
 			ps.executeUpdate();
+			
+			int idProducto = -1;
+	        try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+	            if (generatedKeys.next()) {
+	            	idProducto = generatedKeys.getInt(1);
+	            } else {
+	                throw new SQLException("No se pudo obtener el ID generado para el producto.");
+	            }
+	        }
+	        
+	        for(int prov : proveedores) {
+	        	psProvProd.setInt(1, prov);
+	        	psProvProd.setInt(2, idProducto);
+	        	psProvProd.addBatch();
+	        }
+	        
+	        psProvProd.executeBatch();
+			
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			isCreated = false;
+			return false;
 		}
-
-		return isCreated;
 	}
 
 	public ArrayList<Producto> readProds() {
@@ -120,7 +139,9 @@ public class ProductoDAO {
 		return productos;
 	}
 
-	public Boolean updateProd(Producto p) {
+	public Boolean updateProd(Producto p, ArrayList<Integer> proveedores) {
+		String sqlCreateProvProd = "INSERT INTO proveedores_productos (id_proveedor, id_producto) VALUES (?,?)";
+		String sqlDeleteProvProd = "DELETE FROM proveedores_productos WHERE id_producto = ?";
 	    String sqlUpdate = "UPDATE productos SET " +
 	            "codigo_producto = ?, " +
 	            "id_prod_gen = ?, " +
@@ -138,7 +159,9 @@ public class ProductoDAO {
 	            "WHERE codigo_producto = ?";
 
 	    try (Connection con = conexion.getConnection();
-	    		PreparedStatement ps = con.prepareStatement(sqlUpdate)) {
+	    		PreparedStatement ps = con.prepareStatement(sqlUpdate);
+	    		PreparedStatement psDeleteProvProd = con.prepareStatement(sqlDeleteProvProd);
+	    		PreparedStatement psProvProd = con.prepareStatement(sqlCreateProvProd)) {
 	        ps.setString(1, p.getCodigoProducto());
 	        ps.setInt(2, Integer.parseInt(p.getProd()));
 	        ps.setInt(3, Integer.parseInt(p.getUnidadMedida()));
@@ -154,6 +177,19 @@ public class ProductoDAO {
 	        ps.setBoolean(13, true);
 	        ps.setString(14, p.getCodigoProducto());
 	        ps.executeUpdate();
+	        
+	        psDeleteProvProd.setInt(1, p.getIdProducto());
+	        psDeleteProvProd.executeUpdate();
+	        
+	        
+	        for(int prov : proveedores) {
+	        	psProvProd.setInt(1, prov);
+	        	psProvProd.setInt(2, p.getIdProducto());
+	        	psProvProd.addBatch();
+	        }
+	        
+	        psProvProd.executeBatch();
+	        
 	        return true;
 	    } catch (SQLException e) {
 	        e.printStackTrace();
