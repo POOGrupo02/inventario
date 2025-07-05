@@ -7,8 +7,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import guissecundarias.GUISProducto;
 import guissecundarias.GuiEntrada;
 import guissecundarias.GuiProducto;
+import guissecundarias.GuiProvPorProd;
 import guissecundarias.GuiProveedor;
 import guissecundarias.GuiSalida;
 
@@ -40,6 +42,8 @@ public class GuiInventario extends JFrame implements ActionListener {
 	private JLabel lblNewLabel_1_1;
 	private JLabel lblNewLabel_1;
 	private final JButton btnSalir = new JButton("SALIR");
+	private JLabel lblNewLabel_1_1_2;
+	private JButton btnProvXProducto;
 
 	/**
 	 * Launch the application.
@@ -122,9 +126,26 @@ public class GuiInventario extends JFrame implements ActionListener {
 			btnSalir.setBounds(765, 536, 89, 23);
 			contentPane.add(btnSalir);
 		}
+		{
+			lblNewLabel_1_1_2 = new JLabel("Proveedor por proudcto");
+			lblNewLabel_1_1_2.setForeground(Color.BLACK);
+			lblNewLabel_1_1_2.setFont(new Font("Tahoma", Font.BOLD, 25));
+			lblNewLabel_1_1_2.setBounds(582, 24, 296, 31);
+			contentPane.add(lblNewLabel_1_1_2);
+		}
+		{
+			btnProvXProducto = new JButton("");
+			btnProvXProducto.setIcon(new ImageIcon(GuiInventario.class.getResource("/images/proveedor por producto (1).jpg")));
+			btnProvXProducto.addActionListener(this);
+			btnProvXProducto.setBounds(607, 102, 234, 148);
+			contentPane.add(btnProvXProducto);
+		}
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnProvXProducto) {
+			do_btnProvXProducto_actionPerformed(e);
+		}
 		if (e.getSource() == btnSalir) {
 			do_btnSalir_actionPerformed(e);
 		}
@@ -144,7 +165,7 @@ public class GuiInventario extends JFrame implements ActionListener {
 
 	protected void do_btnProductos_actionPerformed(ActionEvent e) {
 		// Registrar producto
-		GuiProducto product = new GuiProducto();
+		GUISProducto product = new GUISProducto();
 		product.setVisible(true);
 		product.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
@@ -168,5 +189,9 @@ public class GuiInventario extends JFrame implements ActionListener {
 	}
 	protected void do_btnSalir_actionPerformed(ActionEvent e) {
 		dispose();
+	}
+	protected void do_btnProvXProducto_actionPerformed(ActionEvent e) {
+		GuiProvPorProd provXProducto=new GuiProvPorProd();
+		provXProducto.setVisible(true);
 	}
 }

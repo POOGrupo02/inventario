@@ -63,7 +63,7 @@ public class GuiMarca extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public GuiMarca() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 735, 492);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(128, 255, 255));

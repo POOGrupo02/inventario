@@ -20,6 +20,8 @@ import javax.swing.JTable;
 import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import java.awt.Color;
 
 public class GuiProvPorProd extends JFrame implements ActionListener {
 
@@ -32,6 +34,7 @@ public class GuiProvPorProd extends JFrame implements ActionListener {
 	private ArrayList<Proveedor> proveedores = pDAO.readProveedores();
 	private ArrayList<ProvPorProd> provsPorProds = pDAO.readProvPorProd();
 	private String[] columnas = { "PROVEEDOR", "CODIGO PRODUCTO", "PRODUCTO"};
+	private JLabel lblNewLabel;
 
 	/**
 	 * Launch the application.
@@ -56,6 +59,7 @@ public class GuiProvPorProd extends JFrame implements ActionListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 835, 485);
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(128, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
@@ -72,6 +76,11 @@ public class GuiProvPorProd extends JFrame implements ActionListener {
 			cboProv.addActionListener(this);
 			cboProv.setBounds(50, 62, 104, 22);
 			contentPane.add(cboProv);
+			{
+				lblNewLabel = new JLabel("Elegir proveedor:");
+				lblNewLabel.setBounds(50, 37, 91, 14);
+				contentPane.add(lblNewLabel);
+			}
 			
 			showTable();
 		}

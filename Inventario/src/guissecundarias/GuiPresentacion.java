@@ -29,7 +29,7 @@ public class GuiPresentacion extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private final JLabel lblPresentacin = new JLabel("Presentación");
+	private final JLabel lblPresentacin = new JLabel("Presentación de producto");
 	private final JTextField txtPresen = new JTextField();
 	private final JButton btnRegistrar = new JButton("Registrar");
 	private final JLabel lblId = new JLabel("ID");
@@ -63,7 +63,7 @@ public class GuiPresentacion extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public GuiPresentacion() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 933, 593);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(128, 255, 255));
@@ -73,7 +73,7 @@ public class GuiPresentacion extends JFrame implements ActionListener {
 		contentPane.setLayout(null);
 		{
 			lblPresentacin.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			lblPresentacin.setBounds(13, 93, 154, 24);
+			lblPresentacin.setBounds(13, 93, 164, 24);
 			contentPane.add(lblPresentacin);
 			showTable();
 		}
