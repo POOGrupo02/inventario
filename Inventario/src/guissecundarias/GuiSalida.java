@@ -135,6 +135,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 			scrollPane.setBounds(566, 60, 347, 335);
 			wqe.add(scrollPane);
 			datosCarrito = new Object[productosCarrito.size()][columnasCarrito.length];
+			table.setEnabled(false);
 
 			table.setModel(new DefaultTableModel(datosCarrito, columnasCarrito));
 			table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -288,6 +289,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 			wqe.add(scrollPane_1);
 		}
 		{
+			table1.setEnabled(false);
 			scrollPane_1.setViewportView(table1);
 		}
 		{

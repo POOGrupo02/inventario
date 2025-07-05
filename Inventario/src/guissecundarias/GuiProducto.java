@@ -206,6 +206,7 @@ public class GuiProducto extends JDialog implements ActionListener {
 			contentPanel.add(scrollPane);
 		}
 		{
+			table.setEnabled(false);
 			scrollPane.setViewportView(table);
 		}
 		{

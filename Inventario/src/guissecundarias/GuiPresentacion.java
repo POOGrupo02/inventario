@@ -112,6 +112,7 @@ public class GuiPresentacion extends JFrame implements ActionListener {
 			contentPane.add(scrollPane);
 		}
 		{
+			table.setEnabled(false);
 			scrollPane.setViewportView(table);
 		}
 		{

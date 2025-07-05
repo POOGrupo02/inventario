@@ -14,41 +14,35 @@ public class EntradasDAO {
 
 	ConexionMySQL conexion = new ConexionMySQL();
 
-	private static final String SQL_SELECT = "SELECT " + "e.id_entrada, " + "pv.nombre_empresa AS proveedor, "
-			+ "p.codigo_producto, " + "pg.nombre AS producto, " + "ep.cantidad, " + "ep.monto, " + "e.created_at "
-			+ "FROM entradas e " + "JOIN proveedores pv ON e.id_proveedor = pv.id_proveedor "
-			+ "JOIN entradas_productos ep ON e.id_entrada = ep.id_entrada "
-			+ "JOIN productos p ON ep.id_producto = p.id_producto "
-			+ "JOIN productos_generales pg ON p.id_prod_gen = pg.id_prod_gen " + "ORDER BY e.id_entrada;";
+	private static final String SQL_SELECT = "SELECT " +
+		    "e.id_entrada, " +
+		    "p.codigo_producto, " +
+		    "pg.nombre AS producto, " +
+		    "pv.nombre_empresa AS proveedor, " +
+		    "e.cantidad, " +
+		    "e.monto, " +
+		    "e.created_at " +
+		    "FROM entradas e " +
+		    "JOIN proveedores pv ON e.id_proveedor = pv.id_proveedor " +
+		    "JOIN productos p ON e.id_producto = p.id_producto " +
+		    "JOIN productos_generales pg ON p.id_prod_gen = pg.id_prod_gen " +
+		    "ORDER BY e.id_entrada DESC;";
 
-	public Boolean createEntradas(ArrayList<EntradaProducto> entradas, int idProveedor) {
-		String sqlCreate = "INSERT INTO entradas (id_proveedor) VALUES (?)";
-		String sqlCreateMany = "INSERT INTO entradas_productos (id_entrada, id_producto, cantidad, monto) VALUES (?, ?, ?, ?)";
-
+	public Boolean createEntradas(ArrayList<EntradaProducto> entradas) {
+		String sqlCreate = "INSERT INTO entradas (id_producto, id_proveedor, cantidad, monto) VALUES (?,?,?,?)";
+		
 		try (Connection con = conexion.getConnection();
-				PreparedStatement ps = con.prepareStatement(sqlCreate, Statement.RETURN_GENERATED_KEYS);
-				PreparedStatement psMany = con.prepareStatement(sqlCreateMany)) {
-			ps.setInt(1, idProveedor);
-			ps.executeUpdate();
-
-			int idEntrada = -1;
-			try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
-				if (generatedKeys.next()) {
-					idEntrada = generatedKeys.getInt(1);
-				} else {
-					throw new SQLException("No se pudo obtener el ID generado para la entrada.");
-				}
-			}
+				PreparedStatement ps = con.prepareStatement(sqlCreate)) {
 
 			for (EntradaProducto ep : entradas) {
-				psMany.setInt(1, idEntrada);
-				psMany.setInt(2, Integer.parseInt(ep.getProducto()));
-				psMany.setInt(3, ep.getCantidad());
-				psMany.setDouble(4, ep.getMonto());
-				psMany.addBatch();
+				ps.setInt(1, Integer.parseInt(ep.getProducto()));
+				ps.setInt(2, Integer.parseInt(ep.getProveedor()));
+				ps.setInt(3, ep.getCantidad());
+				ps.setDouble(4, ep.getMonto());
+				ps.addBatch();
 			}
 
-			psMany.executeBatch();
+			ps.executeBatch();
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -82,10 +76,10 @@ public class EntradasDAO {
 	}
 
 	public ArrayList<Proveedor> readProvsByIdProd(int idProd) {
-		String sqlSelect = "SELECT pr.id_proveedor, pr.ruc AS ruc "
+		String sqlSelect = "SELECT pr.id_proveedor, pr.ruc AS ruc, pr.nombre_empresa AS proveedor "
 				+ "FROM proveedores pr "
 				+ "JOIN proveedores_productos prp ON pr.id_proveedor = prp.id_proveedor "
-				+ "WHERE prp.id_producto = ?";
+				+ "WHERE prp.id_producto = ? AND estado = TRUE";
 		
 		ArrayList<Proveedor> proveedores = new ArrayList<>();
 
@@ -98,6 +92,7 @@ public class EntradasDAO {
 					Proveedor prv = new Proveedor();
 					prv.setId(rs.getInt("id_proveedor"));
 					prv.setRuc(rs.getString("ruc"));
+					prv.setNombreEmpresa(rs.getString("proveedor"));
 					proveedores.add(prv);
 				}
 			}

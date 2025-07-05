@@ -241,6 +241,7 @@ public class GuiProveedor extends JDialog implements ActionListener {
 			contentPanel.add(scrollPane);
 			{
 				table = new JTable();
+				table.setEnabled(false);
 				scrollPane.setViewportView(table);
 				{
 					lblNewLabel_11_1.setBounds(109, 561, 66, 14);

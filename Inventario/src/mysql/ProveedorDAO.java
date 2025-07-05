@@ -3,6 +3,7 @@ package mysql;
 import java.sql.*;
 import java.util.ArrayList;
 
+import claseshijo.ProvPorProd;
 import claseshijo.Proveedor;
 
 public class ProveedorDAO {
@@ -12,6 +13,17 @@ public class ProveedorDAO {
         "SELECT id_proveedor, ruc, nombre_empresa, nombre_contacto, apellido_contacto, " +
         "telefono, email, via, nombre_via, numero_via, referencia, estado, created_at, updated_at " +
         "FROM proveedores WHERE estado = TRUE ";
+    
+    private static final String SQL_SELECT_PROV_PROD = 
+	        "SELECT p.nombre_empresa AS proveedor, " +
+	        "pr.codigo_producto, " +
+	        "pg.nombre AS producto " +
+	        "FROM proveedores p " +
+	        "JOIN proveedores_productos pp ON p.id_proveedor = pp.id_proveedor " +
+	        "JOIN productos pr ON pp.id_producto = pr.id_producto " +
+	        "JOIN productos_generales pg ON pr.id_prod_gen = pg.id_prod_gen " +
+	        "WHERE p.estado = TRUE AND pr.estado = TRUE " +
+	        "ORDER BY p.nombre_empresa, pr.codigo_producto";
 
     public boolean createProveedor(Proveedor p) {
         String sql = "INSERT INTO proveedores (ruc, nombre_empresa, nombre_contacto, apellido_contacto, telefono, email, " +
@@ -50,6 +62,24 @@ public class ProveedorDAO {
             e.printStackTrace();
         }
         return proveedores;
+    }
+    
+    public Proveedor readProveedorById(int id) {
+        Proveedor p = null;
+        String sql = SQL_SELECT + "AND id_proveedor = ?";
+        try (Connection con = conexion.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    p = mapProveedor(rs);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return p;
     }
 
     public Proveedor readProveedorByRuc(String ruc) {
@@ -111,6 +141,69 @@ public class ProveedorDAO {
         }
     }
     
+    public ArrayList<ProvPorProd> readProvPorProd(){
+    	
+    	ArrayList<ProvPorProd> provsPorProds = new ArrayList<>();
+        try (Connection con = conexion.getConnection();
+             PreparedStatement ps = con.prepareStatement(SQL_SELECT_PROV_PROD);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+            	ProvPorProd pvPr = new ProvPorProd();
+            	pvPr.setCodigoProducto(rs.getString("codigo_producto"));
+            	pvPr.setProducto(rs.getString("producto"));
+            	pvPr.setProveedor(rs.getString("proveedor"));
+            	provsPorProds.add(pvPr);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return provsPorProds;
+
+    }
+    
+    public ArrayList<ProvPorProd> readProvPorProdByProv(String proveedor){
+    	
+    	String select ="";
+    	if(proveedor.isEmpty()) {
+    		select = SQL_SELECT_PROV_PROD;
+    	}else {
+    		select = 
+        	        "SELECT p.nombre_empresa AS proveedor, " +
+        	        "pr.codigo_producto, " +
+        	        "pg.nombre AS producto " +
+        	        "FROM proveedores p " +
+        	        "JOIN proveedores_productos pp ON p.id_proveedor = pp.id_proveedor " +
+        	        "JOIN productos pr ON pp.id_producto = pr.id_producto " +
+        	        "JOIN productos_generales pg ON pr.id_prod_gen = pg.id_prod_gen " +
+        	        "WHERE p.estado = TRUE AND pr.estado = TRUE AND p.nombre_empresa = ? " +
+        	        "ORDER BY p.nombre_empresa, pr.codigo_producto";
+    	}
+    	
+    	
+    	ArrayList<ProvPorProd> provsPorProds = new ArrayList<>();
+        try (Connection con = conexion.getConnection();
+             PreparedStatement ps = con.prepareStatement(select);
+             ) {
+        	if(!proveedor.isEmpty()) {
+        		ps.setString(1, proveedor);
+        	}
+        	
+        	try(ResultSet rs = ps.executeQuery()){
+        		while (rs.next()) {
+                	ProvPorProd pvPr = new ProvPorProd();
+                	pvPr.setCodigoProducto(rs.getString("codigo_producto"));
+                	pvPr.setProducto(rs.getString("producto"));
+                	pvPr.setProveedor(rs.getString("proveedor"));
+                	provsPorProds.add(pvPr);
+                }
+        	}
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return provsPorProds;
+    }
     public Boolean exitsOnBd(String ruc) {
 		String sqlQuestion = "SELECT * FROM proveedores where ruc = ?";
 		try (Connection con = conexion.getConnection();

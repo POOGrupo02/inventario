@@ -77,6 +77,7 @@ public class GuiMarca extends JFrame implements ActionListener {
 			showTable();
 		}
 		{
+			table.setEnabled(false);
 			scrollPane.setViewportView(table);
 		}
 		{

@@ -59,11 +59,13 @@ public class GuiEntrada extends JFrame implements ActionListener {
 	private ArrayList<EntradaProducto> entradas = eDAO.readEntradas();
 	private ProductoDAO pDAO = new ProductoDAO();
 	private ProveedorDAO provDAO = new ProveedorDAO();
-	private ArrayList<Proveedor> proveedores = new ArrayList<>();
+	private ArrayList<Proveedor> proveedores = provDAO.readProveedores();
+	private ArrayList<Proveedor> proveedoresEntrada = new ArrayList<>();
+	private ArrayList<Integer> idProveedores = new ArrayList<>();
 	private ArrayList<Producto> productos = pDAO.readProds();
 	private ArrayList<Integer> listCantProd = new ArrayList<Integer>();
 	private ArrayList<Producto> productosEntrada = new ArrayList<Producto>();
-	private String[] columnasRegisEntr = { "CODIGO PRODUCTO", "NOMBRE", "PRECIO", "CANTIDAD", "TOTAL" };
+	private String[] columnasRegisEntr = { "CODIGO PRODUCTO", "PRODUCTO", "PROVEEDOR" ,"PRECIO", "CANTIDAD", "TOTAL" };
 	private String[] columnasEntrada = { "ID", "CODIGO PRODUCTO", "PRODUCTO", "CANTIDAD",
 			"MONTO", "PROVEEDOR", "CREATED_AT"};
 	private Object[][] datosRegisEntr = null;
@@ -110,6 +112,7 @@ public class GuiEntrada extends JFrame implements ActionListener {
 			contentPane.add(lblNewLabel);
 			
 			datosRegisEntr = new Object[productosEntrada.size()][columnasRegisEntr.length];
+			table.setEnabled(false);
 			table.setModel(new DefaultTableModel(datosRegisEntr, columnasRegisEntr));
 			
 			showTableEntradas();
@@ -189,6 +192,7 @@ public class GuiEntrada extends JFrame implements ActionListener {
 			contentPane.add(scrollPane_1);
 		}
 		{
+			table1.setEnabled(false);
 			scrollPane_1.setViewportView(table1);
 		}
 		{
@@ -255,12 +259,12 @@ public class GuiEntrada extends JFrame implements ActionListener {
 			double montoTotal = 0.0;
 
 			for (int i = 0; i < productosEntrada.size(); i++) {
-				
 				String codigo = datosRegisEntr[i][0].toString();
 				String nombre = datosRegisEntr[i][1].toString();
-				String precio = datosRegisEntr[i][2].toString();
-				String cantidad = datosRegisEntr[i][3].toString();
-				String total = datosRegisEntr[i][4].toString();
+				String proveedor = datosRegisEntr[i][2].toString();
+				String precio = datosRegisEntr[i][3].toString();
+				String cantidad = datosRegisEntr[i][4].toString();
+				String total = datosRegisEntr[i][5].toString();
 				
 				try {
 					montoTotal += Double.parseDouble(total);
@@ -268,7 +272,7 @@ public class GuiEntrada extends JFrame implements ActionListener {
 					JOptionPane.showMessageDialog(null, "Error al obtener el monto total.");
 				}
 				
-				pw.println(codigo + ";" + nombre + ";" + precio + ";" + cantidad + ";" + total);
+				pw.println(codigo + ";" + nombre + ";" + proveedor + ";" + precio + ";" + cantidad + ";" + total);
 			}
 			
 			pw.println();
@@ -293,9 +297,22 @@ public class GuiEntrada extends JFrame implements ActionListener {
 		return id;
 	}
 	
+	private int getIdProv() {
+		String proveedor = cboProveedor.getSelectedItem().toString();
+		int id = -1;
+		for (int i = 0; i < proveedoresEntrada.size(); i++) {
+			if (proveedoresEntrada.get(i).getNombreEmpresa().equals(proveedor)) {
+				id = proveedoresEntrada.get(i).getId();
+			}
+		}
+		return id;
+	}
+	
+	
 	private void limpiarGui() {
 		productosEntrada.clear();
 		listCantProd.clear();
+		idProveedores.clear();
 		cboProveedor.setSelectedIndex(0);
 		cboProducto.setSelectedIndex(0);
 		showTableRegiEnt();
@@ -313,7 +330,7 @@ public class GuiEntrada extends JFrame implements ActionListener {
 			datosEntrada[i][4] = sP.getMonto();
 			datosEntrada[i][5] = sP.getProveedor();
 			datosEntrada[i][6] = sP.getCreatedAt();
-		}
+		}	
 
 		table1.setModel(new DefaultTableModel(datosEntrada, columnasEntrada));
 	}
@@ -324,9 +341,10 @@ public class GuiEntrada extends JFrame implements ActionListener {
 			Producto p = productosEntrada.get(i);
 			datosRegisEntr[i][0] = p.getCodigoProducto();
 			datosRegisEntr[i][1] = p.getProd();
-			datosRegisEntr[i][2] = p.getCostoBase();
-			datosRegisEntr[i][3] = listCantProd.get(i);
-			datosRegisEntr[i][4] = p.getCostoBase() * listCantProd.get(i);
+			datosRegisEntr[i][2] = provDAO.readProveedorById(idProveedores.get(i)).getNombreEmpresa() ;
+			datosRegisEntr[i][3] = p.getCostoBase();
+			datosRegisEntr[i][4] = listCantProd.get(i);
+			datosRegisEntr[i][5] = p.getCostoBase() * listCantProd.get(i);
 		}
 		table.setModel(new DefaultTableModel(datosRegisEntr, columnasRegisEntr));
 	}
@@ -365,6 +383,11 @@ public class GuiEntrada extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(this, "Seleccione un producto.");
 				return;
 			}
+			
+			if(cboProveedor.getSelectedIndex() == 0) {
+				JOptionPane.showMessageDialog(this, "Seleccione un proveedor.");
+				return;
+			}
 
 			boolean isAgregado = false;
 			for (int i = 0; i < productosEntrada.size(); i++) {
@@ -379,8 +402,9 @@ public class GuiEntrada extends JFrame implements ActionListener {
 			}
 
 			Producto producto = pDAO.readProdByCod(cboProducto.getSelectedItem().toString());
-
+			
 			productosEntrada.add(producto);
+			idProveedores.add(getIdProv());
 			listCantProd.add(cantProd);
 			showTableRegiEnt();
 			cantProd = 1;
@@ -404,6 +428,7 @@ public class GuiEntrada extends JFrame implements ActionListener {
 			if(productosEntrada.get(i).getCodigoProducto().equalsIgnoreCase(prodElim)) {
 				productosEntrada.remove(i);
 				listCantProd.remove(i);
+				idProveedores.remove(i);
 				isDeleted = true;
 			}
 		}
@@ -436,36 +461,26 @@ public class GuiEntrada extends JFrame implements ActionListener {
 				return;
 			}
 			
-			if(cboProveedor.getSelectedIndex() == 0) {
-				JOptionPane.showMessageDialog(this, "No se ha seleccionado a ningún proveedor.");
-				return;
-			}
-			
 			for (int i = 0; i < productosEntrada.size(); i++) {
 				EntradaProducto sP = new EntradaProducto();
+				sP.setProveedor(String.valueOf(idProveedores.get(i)));
 				sP.setProducto(String.valueOf(productosEntrada.get(i).getIdProducto()));
-				sP.setCantidad(Integer.parseInt(datosRegisEntr[i][3].toString()));
-				sP.setMonto(Double.parseDouble(datosRegisEntr[i][4].toString()));
+				sP.setCantidad(Integer.parseInt(datosRegisEntr[i][4].toString()));
+				sP.setMonto(Double.parseDouble(datosRegisEntr[i][5].toString()));
 				listEntrada.add(sP);
 			}
 			
-			int idCliente = -1;
-			for (int i = 0; i < proveedores.size(); i++) {
-				if(proveedores.get(i).getRuc().equals(cboProveedor.getSelectedItem().toString())) {
-					idCliente = proveedores.get(i).getId();
-				}
-			}
-			
-			 if (eDAO.createEntradas(listEntrada, idCliente)) {
+			 if (eDAO.createEntradas(listEntrada)) {
 				 JOptionPane.showMessageDialog(this, "Entrada registrada con éxito. Puede visualizarlo en el archivo .csv generado.");
 				 guardarEntradaCsv();
 				 limpiarGui();
 				 entradas = eDAO.readEntradas();
 				 showTableEntradas();
 			 }else {
-				 JOptionPane.showMessageDialog(this, "Hubo un error al momento de registrar le venta.");
+				 JOptionPane.showMessageDialog(this, "Hubo un error al momento de registrar la venta.");
 			 }
 		} catch (Exception e1) {
+			e1.printStackTrace();
 			JOptionPane.showMessageDialog(this, "Hubo un error al momento de registrar le venta.");
 		}
 		
@@ -479,9 +494,9 @@ public class GuiEntrada extends JFrame implements ActionListener {
 	protected void do_cboProducto_actionPerformed(ActionEvent e) {
 		cboProveedor.removeAllItems();
 		cboProveedor.addItem("");
-		proveedores = eDAO.readProvsByIdProd(getIdProdFilt());
-		for (int i = 0; i < proveedores.size(); i++) {
-			cboProveedor.addItem(proveedores.get(i).getRuc());
+		proveedoresEntrada = eDAO.readProvsByIdProd(getIdProdFilt());
+		for (int i = 0; i < proveedoresEntrada.size(); i++) {
+			cboProveedor.addItem(proveedoresEntrada.get(i).getNombreEmpresa());
 		}
 	}
 }

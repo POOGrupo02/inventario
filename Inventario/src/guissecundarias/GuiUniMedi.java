@@ -113,6 +113,7 @@ public class GuiUniMedi extends JFrame implements ActionListener {
 			contentPane.add(scrollPane);
 		}
 		{
+			table.setEnabled(false);
 			scrollPane.setViewportView(table);
 		}
 		{
