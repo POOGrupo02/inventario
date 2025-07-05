@@ -22,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import java.awt.Color;
+import javax.swing.JButton;
 
 public class GuiProvPorProd extends JFrame implements ActionListener {
 
@@ -35,6 +36,7 @@ public class GuiProvPorProd extends JFrame implements ActionListener {
 	private ArrayList<ProvPorProd> provsPorProds = pDAO.readProvPorProd();
 	private String[] columnas = { "PROVEEDOR", "CODIGO PRODUCTO", "PRODUCTO"};
 	private JLabel lblNewLabel;
+	private final JButton btnNewButton = new JButton("SALIR");
 
 	/**
 	 * Launch the application.
@@ -56,7 +58,7 @@ public class GuiProvPorProd extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public GuiProvPorProd() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 835, 485);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(128, 255, 255));
@@ -78,8 +80,13 @@ public class GuiProvPorProd extends JFrame implements ActionListener {
 			contentPane.add(cboProv);
 			{
 				lblNewLabel = new JLabel("Elegir proveedor:");
-				lblNewLabel.setBounds(50, 37, 91, 14);
+				lblNewLabel.setBounds(50, 37, 104, 14);
 				contentPane.add(lblNewLabel);
+			}
+			{
+				btnNewButton.addActionListener(this);
+				btnNewButton.setBounds(430, 375, 89, 23);
+				contentPane.add(btnNewButton);
 			}
 			
 			showTable();
@@ -105,6 +112,9 @@ public class GuiProvPorProd extends JFrame implements ActionListener {
 		table.setModel(new DefaultTableModel(datos, columnas));
 	}
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnNewButton) {
+			do_btnNewButton_actionPerformed(e);
+		}
 		if (e.getSource() == cboProv) {
 			do_cboProv_actionPerformed(e);
 		}
@@ -128,5 +138,8 @@ public class GuiProvPorProd extends JFrame implements ActionListener {
 			JOptionPane.showMessageDialog(this, "Verifique los datos ingresados.");
 		}
 		
+	}
+	protected void do_btnNewButton_actionPerformed(ActionEvent e) {
+		dispose();
 	}
 }
