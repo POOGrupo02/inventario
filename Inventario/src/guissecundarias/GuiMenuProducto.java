@@ -13,7 +13,7 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class GUISProducto extends JFrame implements ActionListener {
+public class GuiMenuProducto extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -36,7 +36,7 @@ public class GUISProducto extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					GUISProducto frame = new GUISProducto();
+					GuiMenuProducto frame = new GuiMenuProducto();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -48,7 +48,7 @@ public class GUISProducto extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public GUISProducto() {
+	public GuiMenuProducto() {
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 915, 583);
 		contentPane = new JPanel();
@@ -60,7 +60,7 @@ public class GUISProducto extends JFrame implements ActionListener {
 		{
 			btnProductos = new JButton("");
 			btnProductos.addActionListener(this);
-			btnProductos.setIcon(new ImageIcon(GUISProducto.class.getResource("/images/registra_producto.png")));
+			btnProductos.setIcon(new ImageIcon(GuiMenuProducto.class.getResource("/images/registra_producto.png")));
 			btnProductos.setBounds(26, 64, 198, 200);
 			contentPane.add(btnProductos);
 		}
@@ -74,7 +74,7 @@ public class GUISProducto extends JFrame implements ActionListener {
 		{
 			btnProductos_1 = new JButton("");
 			btnProductos_1.addActionListener(this);
-			btnProductos_1.setIcon(new ImageIcon(GUISProducto.class.getResource("/images/Marca (1).jpg")));
+			btnProductos_1.setIcon(new ImageIcon(GuiMenuProducto.class.getResource("/images/Marca (1).jpg")));
 			btnProductos_1.setBounds(280, 64, 224, 200);
 			contentPane.add(btnProductos_1);
 		}
@@ -94,7 +94,7 @@ public class GUISProducto extends JFrame implements ActionListener {
 		{
 			btnPresentación = new JButton("");
 			btnPresentación.addActionListener(this);
-			btnPresentación.setIcon(new ImageIcon(GUISProducto.class.getResource("/images/presentacion (1).png")));
+			btnPresentación.setIcon(new ImageIcon(GuiMenuProducto.class.getResource("/images/presentacion (1).png")));
 			btnPresentación.setBounds(578, 64, 198, 200);
 			contentPane.add(btnPresentación);
 		}
@@ -108,7 +108,7 @@ public class GUISProducto extends JFrame implements ActionListener {
 		{
 			btnUnidadMedida = new JButton("");
 			btnUnidadMedida.addActionListener(this);
-			btnUnidadMedida.setIcon(new ImageIcon(GUISProducto.class.getResource("/images/unidad medida (1).jpg")));
+			btnUnidadMedida.setIcon(new ImageIcon(GuiMenuProducto.class.getResource("/images/unidad medida (1).jpg")));
 			btnUnidadMedida.setBounds(152, 311, 198, 200);
 			contentPane.add(btnUnidadMedida);
 		}
@@ -122,7 +122,7 @@ public class GUISProducto extends JFrame implements ActionListener {
 		{
 			btnProductoGeneral = new JButton("");
 			btnProductoGeneral.addActionListener(this);
-			btnProductoGeneral.setIcon(new ImageIcon(GUISProducto.class.getResource("/images/ProductoGeneral (1).jpeg")));
+			btnProductoGeneral.setIcon(new ImageIcon(GuiMenuProducto.class.getResource("/images/ProductoGeneral (1).jpeg")));
 			btnProductoGeneral.setBounds(435, 311, 198, 200);
 			contentPane.add(btnProductoGeneral);
 		}

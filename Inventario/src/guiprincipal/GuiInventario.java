@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import guissecundarias.GUISProducto;
+import guissecundarias.GuiMenuProducto;
 import guissecundarias.GuiEntrada;
 import guissecundarias.GuiProducto;
 import guissecundarias.GuiProvPorProd;
@@ -165,7 +165,7 @@ public class GuiInventario extends JFrame implements ActionListener {
 
 	protected void do_btnProductos_actionPerformed(ActionEvent e) {
 		// Registrar producto
-		GUISProducto product = new GUISProducto();
+		GuiMenuProducto product = new GuiMenuProducto();
 		product.setVisible(true);
 		product.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
