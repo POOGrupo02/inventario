@@ -66,18 +66,18 @@ public class GuiRegistro extends JFrame implements ActionListener {
 		}
 		{
 			txtUsuario = new JTextField();
-			txtUsuario.setBounds(125, 43, 96, 20);
+			txtUsuario.setBounds(125, 43, 121, 20);
 			contentPane.add(txtUsuario);
 			txtUsuario.setColumns(10);
 		}
 		{
 			passContraseña = new JPasswordField();
-			passContraseña.setBounds(125, 81, 96, 20);
+			passContraseña.setBounds(125, 81, 121, 20);
 			contentPane.add(passContraseña);
 		}
 		{
 			btnRegistrar = new JButton("REGISTRAR");
-			btnRegistrar.setBounds(125, 133, 96, 23);
+			btnRegistrar.setBounds(125, 165, 121, 21);
 			contentPane.add(btnRegistrar);
 		}
 		{

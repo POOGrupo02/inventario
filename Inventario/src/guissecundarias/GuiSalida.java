@@ -23,6 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.JComboBox;
@@ -32,6 +33,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import java.awt.Color;
@@ -95,6 +97,9 @@ public class GuiSalida extends JFrame implements ActionListener {
 	private String formsPgsTxt = "";
 	private final JButton btnGuardarLista = new JButton("Guardar Lista");
 	private final JButton btnEliminarFormPg = new JButton("Eliminar");
+	private final com.toedter.calendar.JDateChooser dateChooser = new com.toedter.calendar.JDateChooser();
+	private JButton btnVerVentasPorFecha;
+	
 	
 	/**
 	 * Launch the application.
@@ -141,7 +146,9 @@ public class GuiSalida extends JFrame implements ActionListener {
 			table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 			
 			txtCantProd.setText(cantProd+"");
-			
+			dateChooser.getCalendarButton().addActionListener(this);
+			dateChooser.setBounds(733, 440, 167, 25);
+			wqe.add(dateChooser);
 			
 			showTableSalidas();
 		}
@@ -318,6 +325,12 @@ public class GuiSalida extends JFrame implements ActionListener {
 			btnEliminarFormPg.setBounds(427, 297, 97, 23);
 			wqe.add(btnEliminarFormPg);
 		}
+		{
+			btnVerVentasPorFecha = new JButton("Ver Ventas Por Fecha");
+			btnVerVentasPorFecha.addActionListener(this);
+			btnVerVentasPorFecha.setBounds(733, 406, 167, 23);
+			wqe.add(btnVerVentasPorFecha);
+		}
 		cboProducto.addItem("");
 		cboFormPag.addItem("");
 		
@@ -410,6 +423,46 @@ public class GuiSalida extends JFrame implements ActionListener {
 		}
 	}
 	
+	private void mostrarVentasPorFecha() {
+	    java.util.Date fechaSeleccionada = dateChooser.getDate();
+	    
+	    if (fechaSeleccionada == null) {
+	        JOptionPane.showMessageDialog(this, "Debe seleccionar una fecha.");
+	        return;
+	    }
+
+	    java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	    java.time.LocalDate fechaLocal = fechaSeleccionada.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+	    String fechaConsulta = fechaLocal.format(formatter);
+
+	    double totalIngresos = 0;
+	    StringBuilder detalle = new StringBuilder();
+	    boolean hayVentas = false;
+
+	    for (SalidaProducto s : salidas) {
+	        if (s.getCreatedAt().startsWith(fechaConsulta)) {
+	            hayVentas = true;
+	            totalIngresos += s.getMonto();
+	            detalle.append("ID: ").append(s.getId())
+	                   .append(", Producto: ").append(s.getProducto())
+	                   .append(", Cantidad: ").append(s.getCantidad())
+	                   .append(", Monto: S/ ").append(String.format("%.2f", s.getMonto()))
+	                   .append("\n");
+	        }
+	    }
+
+	    if (!hayVentas) {
+	        JOptionPane.showMessageDialog(this, "No hubo ventas en la fecha seleccionada.");
+	        return;
+	    }
+
+	    JOptionPane.showMessageDialog(this,
+	            "Ventas del " + fechaConsulta + ":\n\n" + detalle.toString() +
+	            "\nTOTAL INGRESOS: S/ " + String.format("%.2f", totalIngresos),
+	            "Resumen de Ventas",
+	            JOptionPane.INFORMATION_MESSAGE);
+	}
+	
 	private void guardarVentaCsv() {
 		File archivo = new File("venta.csv");
 		try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(archivo), "UTF-8");
@@ -470,6 +523,12 @@ public class GuiSalida extends JFrame implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnVerVentasPorFecha) {
+			do_btnVerVentasPorFecha_actionPerformed(e);
+		}
+		if (e.getSource() == dateChooser.getCalendarButton()) {
+			do_dateChooserCalendarButton_actionPerformed(e);
+		}
 		if (e.getSource() == btnEliminarFormPg) {
 			do_btnEliminarFormPg_actionPerformed(e);
 		}
@@ -700,5 +759,49 @@ public class GuiSalida extends JFrame implements ActionListener {
 		
 		cboFormPag.setSelectedIndex(0);
 		
+	}
+	protected void do_dateChooserCalendarButton_actionPerformed(ActionEvent e) {
+	}
+	
+	protected void do_btnVerVentasPorFecha_actionPerformed(ActionEvent e) {
+		
+		java.util.Date fecha = dateChooser.getDate();
+	    if (fecha != null) {
+	        // Convertir a formato yyyy-MM-dd
+	        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+	        String fechaStr = sdf.format(fecha);
+
+	        // Llamar al DAO
+	        SalidasDAO sDAO = new SalidasDAO();
+	        ArrayList<SalidaProducto> lista = sDAO.readSalidasPorFecha(fechaStr);
+	        
+	        if (lista.isEmpty()) {
+	            JOptionPane.showMessageDialog(this, "No hay ventas registradas en la fecha seleccionada.");
+	            return;
+	        }
+
+	        // Crear el modelo para la tabla
+	        String[] columnas = { "ID", "Cliente", "Cod. Producto", "Producto", "Usuario", "Cantidad", "Monto", "Forma Pago", "Fecha" };
+	        Object[][] datos = new Object[lista.size()][columnas.length];
+
+	        for (int i = 0; i < lista.size(); i++) {
+	            SalidaProducto sp = lista.get(i);
+	            datos[i][0] = sp.getId();
+	            datos[i][1] = sp.getCliente();
+	            datos[i][2] = sp.getCodProd();
+	            datos[i][3] = sp.getProducto();
+	            datos[i][4] = sp.getUsuario();
+	            datos[i][5] = sp.getCantidad();
+	            datos[i][6] = sp.getMonto();
+	            datos[i][7] = sp.getFormaPago();
+	            datos[i][8] = sp.getCreatedAt();
+	        }
+
+	        table1.setModel(new javax.swing.table.DefaultTableModel(datos, columnas));
+	        table1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+	    } else {
+	        javax.swing.JOptionPane.showMessageDialog(null, "Seleccione una fecha.");
+	    }
 	}
 }

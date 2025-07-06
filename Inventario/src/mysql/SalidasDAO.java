@@ -95,6 +95,57 @@ public class SalidasDAO {
 		}
 
 	}
+	public ArrayList<SalidaProducto> readSalidasPorFecha(String fecha) {
+		ArrayList<SalidaProducto> salidasProductos = new ArrayList<>();
+
+		String sql = "SELECT "
+		        + "s.id_salida, "
+		        + "CONCAT(c.nombre, ' ', c.apellido) AS cliente, "
+		        + "p.codigo_producto, "
+		        + "pg.nombre AS producto, "
+		        + "u.nombre_usuario AS usuario, "
+		        + "sp.cantidad, "
+		        + "sp.monto, "
+		        + "GROUP_CONCAT(fp.nombre SEPARATOR ', ') AS forma_pago, "
+		        + "s.created_at "
+		        + "FROM salidas s "
+		        + "JOIN clientes c ON s.id_cliente = c.id_cliente "
+		        + "JOIN usuarios u ON s.id_usuario = u.id "
+		        + "JOIN salidas_formas_pagos sfp ON s.id_salida = sfp.id_salida "
+		        + "JOIN formas_pago fp ON sfp.id_form_pag = fp.id_form_pag "
+		        + "JOIN salidas_productos sp ON s.id_salida = sp.id_salida "
+		        + "JOIN productos p ON sp.id_producto = p.id_producto "
+		        + "JOIN productos_generales pg ON p.id_prod_gen = pg.id_prod_gen "
+		        + "WHERE DATE(s.created_at) = ? "
+		        + "GROUP BY s.id_salida, p.codigo_producto, pg.nombre, sp.cantidad, sp.monto "
+		        + "ORDER BY s.id_salida DESC;";
+
+		try (Connection con = conexion.getConnection();
+		     PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setString(1, fecha);  // formato: "yyyy-MM-dd"
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+				SalidaProducto sP = new SalidaProducto();
+				sP.setId(rs.getInt("id_salida"));
+				sP.setCliente(rs.getString("cliente"));
+				sP.setCodProd(rs.getString("codigo_producto"));
+				sP.setProducto(rs.getString("producto"));
+				sP.setUsuario(rs.getString("usuario"));
+				sP.setCantidad(rs.getInt("cantidad"));
+				sP.setMonto(rs.getDouble("monto"));
+				sP.setFormaPago(rs.getString("forma_pago"));
+				sP.setCreatedAt(rs.getString("created_at"));
+				salidasProductos.add(sP);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return salidasProductos;
+	}
 
 	public ArrayList<SalidaProducto> readSalidas() {
 		ArrayList<SalidaProducto> salidasProductos = new ArrayList<>();

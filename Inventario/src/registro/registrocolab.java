@@ -107,7 +107,7 @@ public class registrocolab extends JFrame implements ActionListener {
 		}
 		{
 			btnNewButton_1 = new JButton("CREAR CUENTA");
-			btnNewButton_1.setBounds(158, 203, 126, 23);
+			btnNewButton_1.setBounds(171, 203, 157, 23);
 			btnNewButton_1.addActionListener(this);
 			contentPane.add(btnNewButton_1);
 		}

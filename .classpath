@@ -13,6 +13,6 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/leona/Downloads/SEMANA12-NRC 16749 BD/mysql-connector-j-9.3.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/piero/Downloads/mysql-connector-j-9.3.0/mysql-connector-j-9.3.0/mysql-connector-j-9.3.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
