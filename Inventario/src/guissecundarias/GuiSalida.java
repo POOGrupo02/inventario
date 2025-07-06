@@ -61,7 +61,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 	private ProductoDAO pDAO = new ProductoDAO();
 	private ArrayList<Producto> productosCarrito = new ArrayList<Producto>();
 	private String[] columnasCarrito = { "CODIGO PRODUCTO", "NOMBRE", "PRECIO", "CANTIDAD" , "TOTAL"};
-	private String[] columnasSalidas = { "ID", "CLIENTE", "CODIGO PRODUCTO", "PRODUCTO", "CANTIDAD",
+	private String[] columnasSalidas = { "ID", "USUARIO" , "CLIENTE", "CODIGO PRODUCTO", "PRODUCTO", "CANTIDAD",
 			"MONTO", "FORMA DE PAGO", "CREATED_AT"};
 	private final JButton btnPlus = new JButton("");
 	private final JButton btnMinus = new JButton("");
@@ -344,18 +344,19 @@ public class GuiSalida extends JFrame implements ActionListener {
 	}
 	
 	private void showTableSalidas() {
-		datosSalida = new Object[salidas.size()][8];
+		datosSalida = new Object[salidas.size()][9];
 
 		for (int i = 0; i < salidas.size(); i++) {
 			SalidaProducto sP = salidas.get(i);
 			datosSalida[i][0] = sP.getId();
-			datosSalida[i][1] = sP.getCliente();
-			datosSalida[i][2] = sP.getCodProd();
-			datosSalida[i][3] = sP.getProducto();
-			datosSalida[i][4] = sP.getCantidad();
-			datosSalida[i][5] = sP.getMonto();
-			datosSalida[i][6] = sP.getFormaPago();
-			datosSalida[i][7] = sP.getCreatedAt();
+			datosSalida[i][1] = sP.getUsuario();
+			datosSalida[i][2] = sP.getCliente();
+			datosSalida[i][3] = sP.getCodProd();
+			datosSalida[i][4] = sP.getProducto();
+			datosSalida[i][5] = sP.getCantidad();
+			datosSalida[i][6] = sP.getMonto();
+			datosSalida[i][7] = sP.getFormaPago();
+			datosSalida[i][8] = sP.getCreatedAt();
 		}
 
 		table1.setModel(new DefaultTableModel(datosSalida, columnasSalidas));
@@ -392,13 +393,13 @@ public class GuiSalida extends JFrame implements ActionListener {
 
 			writer.write('\uFEFF');
 			
-			pw.println("ID;CLIENTE;CODIGO_PRODUCTO;PRODUCTO;CANTIDAD;MONTO;FORMA DE PAGO; CREATED_AT");
+			pw.println("ID;USUARIO;CLIENTE;CODIGO_PRODUCTO;PRODUCTO;CANTIDAD;MONTO;FORMA DE PAGO; CREATED_AT");
 
 			for (int i = 0; i < salidas.size(); i++) {
 				
 				SalidaProducto sP = salidas.get(i);
 				
-				pw.println(sP.getId() + ";" + sP.getCliente() + ";" + sP.getCodProd() + ";" + sP.getProducto() + ";" + sP.getCantidad() + ";" +
+				pw.println(sP.getId() + ";" + sP.getUsuario() + ";" + sP.getCliente() + ";" + sP.getCodProd() + ";" + sP.getProducto() + ";" + sP.getCantidad() + ";" +
 						sP.getMonto() + ";" + sP.getFormaPago() + ";" + sP.getCreatedAt());
 
 			}

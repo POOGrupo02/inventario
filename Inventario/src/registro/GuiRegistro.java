@@ -103,8 +103,8 @@ public class GuiRegistro extends JFrame implements ActionListener {
 	        return;
 	    }
 
-	    if (usuario.length() < 8) {
-	        JOptionPane.showMessageDialog(this, "Usuario inválido. Debe tener al menos 8 caracteres.");
+	    if (usuario.length() < 4) {
+	        JOptionPane.showMessageDialog(this, "Usuario inválido. Debe tener al menos 4 caracteres.");
 	        return;
 	    }
 

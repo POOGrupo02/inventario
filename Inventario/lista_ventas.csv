@@ -1,21 +1,10 @@
-﻿ID;CLIENTE;CODIGO_PRODUCTO;PRODUCTO;CANTIDAD;MONTO;FORMA DE PAGO; CREATED_AT
-1;Juan Perez;PRD001;Arroz;10;30.0;Tarjeta, Efectivo;2025-07-01 18:28:50
-1;Juan Perez;PRD002;Leche;20;40.0;Tarjeta, Efectivo;2025-07-01 18:28:50
-1;Juan Perez;PRD003;Jabón;15;60.0;Tarjeta, Efectivo;2025-07-01 18:28:50
-2;Luis García;PRD001;Arroz;15;37.5;Tarjeta;2025-07-01 18:28:50
-2;Luis García;PRD002;Leche;25;30.0;Tarjeta;2025-07-01 18:28:50
-2;Luis García;PRD003;Jabón;30;90.0;Tarjeta;2025-07-01 18:28:50
-3;María Lopez;PRD001;Arroz;20;50.0;Transferencia;2025-07-01 18:28:50
-3;María Lopez;PRD002;Leche;30;36.0;Transferencia;2025-07-01 18:28:50
-3;María Lopez;PRD003;Jabón;40;120.0;Transferencia;2025-07-01 18:28:50
-4;Juan Perez;PRD001;Arroz;1;3.0;Efectivo;2025-07-01 19:57:35
-5;Juan Perez;PRD001;Arroz;3;9.0;Efectivo;2025-07-01 20:00:10
-5;Juan Perez;PRD002;Leche;1;1.38;Efectivo;2025-07-01 20:00:10
-5;Juan Perez;PRD003;Jabón;6;22.5;Efectivo;2025-07-01 20:00:10
-6;Juan Perez;PRD001;Arroz;6;18.0;Tarjeta, Efectivo;2025-07-01 20:06:41
-7;Juan Perez;PRD001;Arroz;4;12.0;Transferencia, Tarjeta;2025-07-01 20:08:08
-7;Juan Perez;PRD002;Leche;2;2.76;Transferencia, Tarjeta;2025-07-01 20:08:08
-8;Juan Perez;PRD001;Arroz;4;12.0;Efectivo;2025-07-01 20:32:49
-9;Juan Perez;PRD002;Leche;2;2.76;Efectivo;2025-07-01 20:34:30
-10;Jair Carhuachin;PRD003;Jabón;4;15.0;Efectivo;2025-07-01 20:38:44
-11;Jair Carhuachin;PRD002;Leche;2;2.76;Efectivo;2025-07-01 20:40:49
+﻿ID;USUARIO;CLIENTE;CODIGO_PRODUCTO;PRODUCTO;CANTIDAD;MONTO;FORMA DE PAGO; CREATED_AT
+1;jdev2514;Ana Pérez;PRD001;Arroz;10;30.0;Efectivo, Tarjeta;2025-07-05 23:23:33
+1;jdev2514;Ana Pérez;PRD002;Leche;20;40.0;Efectivo, Tarjeta;2025-07-05 23:23:33
+1;jdev2514;Ana Pérez;PRD003;Jabón;15;60.0;Efectivo, Tarjeta;2025-07-05 23:23:33
+2;jdev2514;Luis García;PRD001;Arroz;15;37.5;Tarjeta;2025-07-05 23:23:33
+2;jdev2514;Luis García;PRD002;Leche;25;30.0;Tarjeta;2025-07-05 23:23:33
+2;jdev2514;Luis García;PRD003;Jabón;30;90.0;Tarjeta;2025-07-05 23:23:33
+3;jdev2514;María Lopez;PRD001;Arroz;20;50.0;Transferencia;2025-07-05 23:23:33
+3;jdev2514;María Lopez;PRD002;Leche;30;36.0;Transferencia;2025-07-05 23:23:33
+3;jdev2514;María Lopez;PRD003;Jabón;40;120.0;Transferencia;2025-07-05 23:23:33

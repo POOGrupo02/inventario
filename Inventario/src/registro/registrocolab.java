@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import claseshijo.Singleton;
 import guiprincipal.GuiInventario;
 import mysql.UsuarioDAO;
 
@@ -144,8 +145,11 @@ public class registrocolab extends JFrame implements ActionListener {
             return;
         }
         UsuarioDAO dao = new UsuarioDAO();
-        if (dao.validarUsuario(usuario, clavefinal)) {
+        int idUsuario = dao.validarUsuario(usuario, clavefinal);
+        if (idUsuario!=0) {
             dispose();
+            Singleton singleton = Singleton.getInstancia();
+	    	singleton.setIdUsuario(idUsuario);
             JOptionPane.showMessageDialog(null, "Bienvenido al sistema", "Ingresaste", JOptionPane.INFORMATION_MESSAGE);
             GuiInventario gi = new GuiInventario();
             gi.setVisible(true);

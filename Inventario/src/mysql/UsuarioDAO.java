@@ -26,6 +26,7 @@ public class UsuarioDAO {
     }
 
     public boolean existeUsuario(String usuario) {
+    	
         String sql = "SELECT COUNT(*) FROM usuarios WHERE nombre_usuario = ?";
 
         try (Connection con = new ConexionMySQL().getConnection();
@@ -46,8 +47,8 @@ public class UsuarioDAO {
     }
 
   
-    public boolean validarUsuario(String usuario, String contrasena) {
-        String sql = "SELECT COUNT(*) FROM usuarios WHERE nombre_usuario = ? AND contrasena = ?";
+    public int validarUsuario(String usuario, String contrasena) {
+        String sql = "SELECT id FROM usuarios WHERE nombre_usuario = ? AND contrasena = ?";
 
         try (Connection con = new ConexionMySQL().getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -57,14 +58,14 @@ public class UsuarioDAO {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                int count = rs.getInt(1);
-                return count > 0;
+                int id = rs.getInt(1);
+                return id;
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return 0;
     }
 
 

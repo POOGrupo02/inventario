@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import claseshijo.Cliente;
 import claseshijo.EntradaProducto;
 import claseshijo.SalidaProducto;
+import claseshijo.Singleton;
 
 public class SalidasDAO {
 
@@ -20,22 +21,24 @@ public class SalidasDAO {
 	        + "CONCAT(c.nombre, ' ', c.apellido) AS cliente, "
 	        + "p.codigo_producto, "
 	        + "pg.nombre AS producto, "
+	        + "u.nombre_usuario AS usuario, "
 	        + "sp.cantidad, "
 	        + "sp.monto, "
 	        + "GROUP_CONCAT(fp.nombre SEPARATOR ', ') AS forma_pago, "
 	        + "s.created_at "
 	        + "FROM salidas s "
 	        + "JOIN clientes c ON s.id_cliente = c.id_cliente "
+	        + "JOIN usuarios u ON s.id_usuario = u.id "
 	        + "JOIN salidas_formas_pagos sfp ON s.id_salida = sfp.id_salida "
 	        + "JOIN formas_pago fp ON sfp.id_form_pag = fp.id_form_pag "
 	        + "JOIN salidas_productos sp ON s.id_salida = sp.id_salida "
 	        + "JOIN productos p ON sp.id_producto = p.id_producto "
 	        + "JOIN productos_generales pg ON p.id_prod_gen = pg.id_prod_gen "
 	        + "GROUP BY s.id_salida, p.codigo_producto, pg.nombre, sp.cantidad, sp.monto "
-	        + "ORDER BY s.id_salida;";
+	        + "ORDER BY s.id_salida DESC;";
 	
 	public Boolean createSalidas(ArrayList<SalidaProducto> listSalida, ArrayList<Integer> formasPago, Cliente cliente) {
-		String sqlCreate = "INSERT INTO salidas (id_cliente) VALUES (?)";
+		String sqlCreate = "INSERT INTO salidas (id_cliente, id_usuario) VALUES (?,?)";
 		String sqlCreateMany = "INSERT INTO salidas_productos (id_salida, id_producto, cantidad, monto) VALUES (?, ?, ?, ?)";
 		String sqlCreateFormPag = "INSERT INTO salidas_formas_pagos (id_salida, id_form_pag) VALUES (?,?)";
 
@@ -56,6 +59,7 @@ public class SalidasDAO {
 			}
 			
 			ps.setInt(1, idCliente);
+			ps.setInt(2, Singleton.getInstancia().getIdUsuario());
 			ps.executeUpdate();
 			
 			int idSalida = -1;
@@ -105,6 +109,7 @@ public class SalidasDAO {
                 sP.setCliente(rs.getString("cliente"));
                 sP.setCodProd(rs.getString("codigo_producto"));
                 sP.setProducto(rs.getString("producto"));
+                sP.setUsuario(rs.getString("usuario"));
                 sP.setCantidad(rs.getInt("cantidad"));
                 sP.setMonto(rs.getDouble("monto"));
                 sP.setFormaPago(rs.getString("forma_pago")); 

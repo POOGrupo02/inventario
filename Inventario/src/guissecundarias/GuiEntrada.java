@@ -66,7 +66,7 @@ public class GuiEntrada extends JFrame implements ActionListener {
 	private ArrayList<Integer> listCantProd = new ArrayList<Integer>();
 	private ArrayList<Producto> productosEntrada = new ArrayList<Producto>();
 	private String[] columnasRegisEntr = { "CODIGO PRODUCTO", "PRODUCTO", "PROVEEDOR" ,"PRECIO", "CANTIDAD", "TOTAL" };
-	private String[] columnasEntrada = { "ID", "CODIGO PRODUCTO", "PRODUCTO", "CANTIDAD",
+	private String[] columnasEntrada = { "ID", "USUARIO", "CODIGO PRODUCTO", "PRODUCTO", "CANTIDAD",
 			"MONTO", "PROVEEDOR", "CREATED_AT"};
 	private Object[][] datosRegisEntr = null;
 	private Object[][] datosEntrada = null;
@@ -236,7 +236,7 @@ public class GuiEntrada extends JFrame implements ActionListener {
 				
 				EntradaProducto sP = entradas.get(i);
 				
-				pw.println(sP.getId() + ";" + sP.getCodProd() + ";" + sP.getProducto() + ";" + sP.getCantidad() + ";" +
+				pw.println(sP.getId() + ";" + sP.getUsuario() + ";" + sP.getCodProd() + ";" + sP.getProducto() + ";" + sP.getCantidad() + ";" +
 						sP.getMonto() + ";" + sP.getProveedor() + ";" + sP.getCreatedAt());
 
 			}
@@ -319,17 +319,18 @@ public class GuiEntrada extends JFrame implements ActionListener {
 	}
 	
 	private void showTableEntradas() {
-		datosEntrada = new Object[entradas.size()][7];
+		datosEntrada = new Object[entradas.size()][8];
 
 		for (int i = 0; i < entradas.size(); i++) {
 			EntradaProducto sP = entradas.get(i);
 			datosEntrada[i][0] = sP.getId();
-			datosEntrada[i][1] = sP.getCodProd();
-			datosEntrada[i][2] = sP.getProducto();
-			datosEntrada[i][3] = sP.getCantidad();
-			datosEntrada[i][4] = sP.getMonto();
-			datosEntrada[i][5] = sP.getProveedor();
-			datosEntrada[i][6] = sP.getCreatedAt();
+			datosEntrada[i][1] = sP.getUsuario();
+			datosEntrada[i][2] = sP.getCodProd();
+			datosEntrada[i][3] = sP.getProducto();
+			datosEntrada[i][4] = sP.getCantidad();
+			datosEntrada[i][5] = sP.getMonto();
+			datosEntrada[i][6] = sP.getProveedor();
+			datosEntrada[i][7] = sP.getCreatedAt();
 		}	
 
 		table1.setModel(new DefaultTableModel(datosEntrada, columnasEntrada));
@@ -492,6 +493,8 @@ public class GuiEntrada extends JFrame implements ActionListener {
 		guardarListEntradasCsv();
 	}
 	protected void do_cboProducto_actionPerformed(ActionEvent e) {
+		cantProd = 1;
+		txtCantProd.setText(cantProd + "");
 		cboProveedor.removeAllItems();
 		cboProveedor.addItem("");
 		proveedoresEntrada = eDAO.readProvsByIdProd(getIdProdFilt());
