@@ -198,11 +198,13 @@ public class GuiMarca extends JFrame implements ActionListener {
 	}
 	protected void do_btnModificar_actionPerformed(ActionEvent e) {
 		try {
-			int id = Integer.parseInt(txtId.getText());
+			
 			if (txtNewMarca.getText().isBlank() || txtId.getText().isBlank()) {
 				JOptionPane.showMessageDialog(this, "Los campos no pueden estar vacíos.");
 				return;
 			}
+			
+			int id = Integer.parseInt(txtId.getText());
 			
 			Boolean exits = false;
 			for (int i = 0; i < marcas.size(); i++) {
@@ -244,15 +246,25 @@ public class GuiMarca extends JFrame implements ActionListener {
 		dispose();
 	}
 	protected void do_btnEliminarPorId_actionPerformed(ActionEvent e) {
-		int id = Integer.parseInt(txtId.getText());
-		
-		if(mDAO.isUsed(id)) {
-			JOptionPane.showMessageDialog(this, "No se puede borrar esta marca porque está siendo utilizada por un producto.");
-			return;
-		}else {
-			mDAO.deleteMarca(id);
-			marcas = mDAO.readMarcas();
-			showTable();
+		try {
+			
+			if (txtId.getText().isBlank()) {
+				JOptionPane.showMessageDialog(this, "El campo no puede estar vacío.");
+				return;
+			}
+			int id = Integer.parseInt(txtId.getText());
+			
+			if(mDAO.isUsed(id)) {
+				JOptionPane.showMessageDialog(this, "No se puede borrar esta marca porque está siendo utilizada por un producto.");
+				return;
+			}else {
+				mDAO.deleteMarca(id);
+				marcas = mDAO.readMarcas();
+				showTable();
+			}
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(this, "Verifique los datos ingresados.");
 		}
+		
 	}
 }

@@ -248,15 +248,27 @@ public class GuiPresentacion extends JFrame implements ActionListener {
 	}
 
 	protected void do_btnEliminar_actionPerformed(ActionEvent e) {
-		int id = Integer.parseInt(txtId.getText());
+		
+		try {
+			if (txtId.getText().isBlank()) {
+				JOptionPane.showMessageDialog(this, "El campo no puede estar vacío.");
+				return;
+			}
+			
+			int id = Integer.parseInt(txtId.getText());
 
-		if (pDAO.isUsed(id)) {
-			JOptionPane.showMessageDialog(this, "No se puede borrar esta presentación porque está siendo utilizada por un producto.");
-			return;
-		} else {
-			pDAO.deletePresentacion(id);
-			presentaciones = pDAO.readPresentaciones();
-			showTable();
+			if (pDAO.isUsed(id)) {
+				JOptionPane.showMessageDialog(this, "No se puede borrar esta presentación porque está siendo utilizada por un producto.");
+				return;
+			} else {
+				pDAO.deletePresentacion(id);
+				presentaciones = pDAO.readPresentaciones();
+				showTable();
+			}
+		}catch (Exception e1) {
+			JOptionPane.showMessageDialog(this, "Verifique los datos ingresados.");
 		}
+		
+		
 	}
 }

@@ -247,15 +247,25 @@ public class GuiProductoGeneral extends JFrame implements ActionListener {
 	}
 	protected void do_btnEliminar_actionPerformed(ActionEvent e) {
 		
-		int id = Integer.parseInt(txtId.getText());
+		try {
+			if (txtId.getText().isBlank()) {
+				JOptionPane.showMessageDialog(this, "El campo no puede estar vacío.");
+				return;
+			}
+			
+			int id = Integer.parseInt(txtId.getText());
 
-		if (pGeDAO.isUsed(id)) {
-			JOptionPane.showMessageDialog(this, "No se puede borrar este producto general porque está siendo utilizado por un producto.");
-			return;
-		} else {
-			pGeDAO.deleteProductGen(id);
-			prodGenerales = pGeDAO.readProductosGenerales();
-			showTable();
+			if (pGeDAO.isUsed(id)) {
+				JOptionPane.showMessageDialog(this, "No se puede borrar este producto general porque está siendo utilizado por un producto.");
+				return;
+			} else {
+				pGeDAO.deleteProductGen(id);
+				prodGenerales = pGeDAO.readProductosGenerales();
+				showTable();
+			}
+		}catch (Exception e1) {
+			JOptionPane.showMessageDialog(this, "Verifique los datos ingresados.");
 		}
+		
 	}
 }

@@ -246,15 +246,26 @@ public class GuiUniMedi extends JFrame implements ActionListener {
 		dispose();
 	}
 	protected void do_btnEliminar_actionPerformed(ActionEvent e) {
-		int id = Integer.parseInt(txtId.getText());
+		
+		try {
+			if (txtId.getText().isBlank()) {
+				JOptionPane.showMessageDialog(this, "El campo no puede estar vacío.");
+				return;
+			}
+			
+			int id = Integer.parseInt(txtId.getText());
 
-		if (uDAO.isUsed(id)) {
-			JOptionPane.showMessageDialog(this, "No se puede borrar esta unidad de medida porque está siendo utilizada por un producto.");
-			return;
-		} else {
-			uDAO.deleteUniMedi(id);
-			unidadesMedi = uDAO.readUnidadesMedidas();
-			showTable();
+			if (uDAO.isUsed(id)) {
+				JOptionPane.showMessageDialog(this, "No se puede borrar esta unidad de medida porque está siendo utilizada por un producto.");
+				return;
+			} else {
+				uDAO.deleteUniMedi(id);
+				unidadesMedi = uDAO.readUnidadesMedidas();
+				showTable();
+			}
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(this, "Verifique los datos ingresados.");
 		}
+		
 	}
 }

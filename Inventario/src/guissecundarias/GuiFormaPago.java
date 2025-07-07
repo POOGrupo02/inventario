@@ -248,19 +248,28 @@ public class GuiFormaPago extends JFrame implements ActionListener {
 		dispose();
 	}
 	protected void do_btnEliminar_actionPerformed(ActionEvent e) {
-		for (int i = 0; i < formasPago.size(); i++) {
-			String id = String.valueOf(formasPago.get(i).getId());
-			if (id.equals(txtIdFormPg.getText().trim())) {
-				fPgDAO.deleteFormaPago(formasPago.get(i).getId());
-				JOptionPane.showMessageDialog(this, "Forma de pago eliminada con éxito.");
-				formasPago = fPgDAO.readFormasPagos();
-				showTable();
-				txtNewFormPg.setText("");
-				txtIdFormPg.setText("");
+		try {
+			if (txtIdFormPg.getText().isBlank()) {
+				JOptionPane.showMessageDialog(this, "El campo no puede estar vacío.");
 				return;
 			}
+			for (int i = 0; i < formasPago.size(); i++) {
+				String id = String.valueOf(formasPago.get(i).getId());
+				if (id.equals(txtIdFormPg.getText().trim())) {
+					fPgDAO.deleteFormaPago(formasPago.get(i).getId());
+					JOptionPane.showMessageDialog(this, "Forma de pago eliminada con éxito.");
+					formasPago = fPgDAO.readFormasPagos();
+					showTable();
+					txtNewFormPg.setText("");
+					txtIdFormPg.setText("");
+					return;
+				}
+			}
+			
+			JOptionPane.showMessageDialog(this, "Forma de pago no encontrada.");
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(this, "Verifique los datos ingresados.");
 		}
 		
-		JOptionPane.showMessageDialog(this, "Forma de pago no encontrada.");
 	}
 }
