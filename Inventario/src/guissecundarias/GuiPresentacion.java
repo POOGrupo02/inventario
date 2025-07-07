@@ -42,6 +42,8 @@ public class GuiPresentacion extends JFrame implements ActionListener {
 	private ArrayList<Presentacion> presentaciones = pDAO.readPresentaciones();
 	private String[] columnas = { "ID", "NOMBRE", "CREATED_AT", "UPDATED_AT" };
 	private final JButton btnSalir = new JButton("SALIR");
+	private final JLabel lblPresentacin_2 = new JLabel("Presentación");
+	private final JButton btnEliminar = new JButton("Eliminar por id");
 
 	/**
 	 * Launch the application.
@@ -116,12 +118,24 @@ public class GuiPresentacion extends JFrame implements ActionListener {
 			scrollPane.setViewportView(table);
 		}
 		{
+			btnSalir.setForeground(Color.WHITE);
+			btnSalir.setBackground(Color.RED);
 			btnSalir.addActionListener(this);
-			btnSalir.setBounds(10, 358, 89, 23);
+			btnSalir.setBounds(818, 520, 89, 23);
 			contentPane.add(btnSalir);
 		}
+		{
+			lblPresentacin_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			lblPresentacin_2.setBounds(112, 193, 86, 24);
+			contentPane.add(lblPresentacin_2);
+		}
+		{
+			btnEliminar.addActionListener(this);
+			btnEliminar.setBounds(109, 256, 119, 23);
+			contentPane.add(btnEliminar);
+		}
 	}
-	
+
 	private void showTable() {
 		Object[][] datos = new Object[presentaciones.size()][4];
 
@@ -137,6 +151,9 @@ public class GuiPresentacion extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnEliminar) {
+			do_btnEliminar_actionPerformed(e);
+		}
 		if (e.getSource() == btnSalir) {
 			do_btnSalir_actionPerformed(e);
 		}
@@ -147,12 +164,20 @@ public class GuiPresentacion extends JFrame implements ActionListener {
 			do_btnRegistrar_actionPerformed(e);
 		}
 	}
+
 	protected void do_btnRegistrar_actionPerformed(ActionEvent e) {
 		try {
 
 			if (txtPresen.getText().isBlank()) {
 				JOptionPane.showMessageDialog(this, "El campo no puede estar vacío.");
 				return;
+			}
+
+			for (int i = 0; i < presentaciones.size(); i++) {
+				if (presentaciones.get(i).getName().equalsIgnoreCase(txtPresen.getText().trim())) {
+					JOptionPane.showMessageDialog(this, "Nombre ya registrado.");
+					return;
+				}
 			}
 
 			Presentacion p = new Presentacion();
@@ -172,6 +197,7 @@ public class GuiPresentacion extends JFrame implements ActionListener {
 			// TODO: handle exception
 		}
 	}
+
 	protected void do_btnModificar_actionPerformed(ActionEvent e) {
 		try {
 			int id = Integer.parseInt(txtId.getText());
@@ -179,17 +205,24 @@ public class GuiPresentacion extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(this, "Los campos no pueden estar vacíos.");
 				return;
 			}
-			
+
 			Boolean exits = false;
 			for (int i = 0; i < presentaciones.size(); i++) {
-				if(presentaciones.get(i).getId() == id){
+				if (presentaciones.get(i).getId() == id) {
 					exits = true;
 				}
 			}
-			
-			if(!exits) {
+
+			if (!exits) {
 				JOptionPane.showMessageDialog(this, "No existe una marca con ese ID.");
 				return;
+			}
+
+			for (int i = 0; i < presentaciones.size(); i++) {
+				if (presentaciones.get(i).getName().equalsIgnoreCase(txtNewPresen.getText().trim())) {
+					JOptionPane.showMessageDialog(this, "Nombre ya registrado.");
+					return;
+				}
 			}
 
 			Presentacion p = new Presentacion();
@@ -202,14 +235,28 @@ public class GuiPresentacion extends JFrame implements ActionListener {
 				txtId.setText("");
 				presentaciones = pDAO.readPresentaciones();
 				showTable();
-			}else {
+			} else {
 				JOptionPane.showMessageDialog(this, "Error al modificar la presentación.");
 			}
 		} catch (Exception e1) {
 			JOptionPane.showMessageDialog(this, "Verifique los datos ingresados.");
 		}
 	}
+
 	protected void do_btnSalir_actionPerformed(ActionEvent e) {
 		dispose();
+	}
+
+	protected void do_btnEliminar_actionPerformed(ActionEvent e) {
+		int id = Integer.parseInt(txtId.getText());
+
+		if (pDAO.isUsed(id)) {
+			JOptionPane.showMessageDialog(this, "No se puede borrar esta presentación porque está siendo utilizada por un producto.");
+			return;
+		} else {
+			pDAO.deletePresentacion(id);
+			presentaciones = pDAO.readPresentaciones();
+			showTable();
+		}
 	}
 }

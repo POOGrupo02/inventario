@@ -84,8 +84,10 @@ public class GuiProvPorProd extends JFrame implements ActionListener {
 				contentPane.add(lblNewLabel);
 			}
 			{
+				btnNewButton.setForeground(Color.WHITE);
+				btnNewButton.setBackground(Color.RED);
 				btnNewButton.addActionListener(this);
-				btnNewButton.setBounds(430, 375, 89, 23);
+				btnNewButton.setBounds(720, 412, 89, 23);
 				contentPane.add(btnNewButton);
 			}
 			

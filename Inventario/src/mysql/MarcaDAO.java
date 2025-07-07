@@ -37,7 +37,7 @@ public class MarcaDAO {
 				m.setId(rs.getInt("id_marca"));
 				m.setName(rs.getString("nombre"));
 				m.setCreatedAt(rs.getString("created_at"));
-                m.setUpdatedAt(rs.getString("updated_at"));
+				m.setUpdatedAt(rs.getString("updated_at"));
 				marcas.add(m);
 			}
 		} catch (SQLException e) {
@@ -58,5 +58,37 @@ public class MarcaDAO {
 			e.printStackTrace();
 			return false;
 		}
+	}
+	
+	public Boolean deleteMarca(int id) {
+		String sqlDelete = "DELETE FROM marcas WHERE id_marca = ?";
+		
+		try (Connection con = conexion.getConnection(); PreparedStatement ps = con.prepareStatement(sqlDelete)) {
+			ps.setInt(1, id);
+			ps.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public Boolean isUsed(int id) {
+		String sqlQuestion = "SELECT COUNT(*) FROM productos WHERE estado = 1 AND id_marca = ?";
+
+		try (Connection con = conexion.getConnection(); PreparedStatement ps = con.prepareStatement(sqlQuestion)) {
+
+			ps.setInt(1, id);
+
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				int count = rs.getInt(1);
+				return count > 0;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return false;
 	}
 }

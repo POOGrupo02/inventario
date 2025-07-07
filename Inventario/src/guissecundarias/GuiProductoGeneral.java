@@ -43,6 +43,8 @@ public class GuiProductoGeneral extends JFrame implements ActionListener {
 	private ArrayList<ProductoGeneral> prodGenerales = pGeDAO.readProductosGenerales();
 	private String[] columnas = { "ID", "NOMBRE", "CREATED_AT", "UPDATED_AT" };
 	private final JButton btnSalir = new JButton("SALIR");
+	private final JButton btnEliminar = new JButton("Eliminar por id");
+	private final JLabel lblProductoGeneral_1 = new JLabel("Producto general");
 
 	/**
 	 * Launch the application.
@@ -118,13 +120,28 @@ public class GuiProductoGeneral extends JFrame implements ActionListener {
 			scrollPane.setViewportView(table);
 		}
 		{
+			btnSalir.setBackground(Color.RED);
+			btnSalir.setForeground(Color.WHITE);
 			btnSalir.addActionListener(this);
-			btnSalir.setBounds(13, 344, 89, 23);
+			btnSalir.setBounds(796, 432, 89, 23);
 			contentPane.add(btnSalir);
+		}
+		{
+			btnEliminar.addActionListener(this);
+			btnEliminar.setBounds(109, 216, 133, 23);
+			contentPane.add(btnEliminar);
+		}
+		{
+			lblProductoGeneral_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			lblProductoGeneral_1.setBounds(112, 153, 130, 24);
+			contentPane.add(lblProductoGeneral_1);
 		}
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnEliminar) {
+			do_btnEliminar_actionPerformed(e);
+		}
 		if (e.getSource() == btnSalir) {
 			do_btnSalir_actionPerformed(e);
 		}
@@ -155,6 +172,13 @@ public class GuiProductoGeneral extends JFrame implements ActionListener {
 			if (txtProdGen.getText().isBlank()) {
 				JOptionPane.showMessageDialog(this, "El campo no puede estar vacío.");
 				return;
+			}
+			
+			for (int i = 0; i < prodGenerales.size(); i++) {
+				if(prodGenerales.get(i).getName().equalsIgnoreCase(txtProdGen.getText().trim())) {
+					JOptionPane.showMessageDialog(this, "Nombre ya registrado.");
+					return;
+				}
 			}
 
 			ProductoGeneral pGe = new ProductoGeneral();
@@ -193,6 +217,13 @@ public class GuiProductoGeneral extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(this, "No existe un producto general con ese ID.");
 				return;
 			}
+			
+			for (int i = 0; i < prodGenerales.size(); i++) {
+				if(prodGenerales.get(i).getName().equalsIgnoreCase(txtNewProdGen.getText().trim())) {
+					JOptionPane.showMessageDialog(this, "Nombre ya registrado.");
+					return;
+				}
+			}
 
 			ProductoGeneral pGe = new ProductoGeneral();
 			pGe.setName(txtNewProdGen.getText().trim());
@@ -213,5 +244,18 @@ public class GuiProductoGeneral extends JFrame implements ActionListener {
 	}
 	protected void do_btnSalir_actionPerformed(ActionEvent e) {
 		dispose();
+	}
+	protected void do_btnEliminar_actionPerformed(ActionEvent e) {
+		
+		int id = Integer.parseInt(txtId.getText());
+
+		if (pGeDAO.isUsed(id)) {
+			JOptionPane.showMessageDialog(this, "No se puede borrar este producto general porque está siendo utilizado por un producto.");
+			return;
+		} else {
+			pGeDAO.deleteProductGen(id);
+			prodGenerales = pGeDAO.readProductosGenerales();
+			showTable();
+		}
 	}
 }

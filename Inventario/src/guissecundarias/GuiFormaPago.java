@@ -28,7 +28,7 @@ public class GuiFormaPago extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private final JLabel lblNewLabel = new JLabel("Formas de pago");
+	private final JLabel lblNewLabel = new JLabel("Forma de pago");
 	private final JTextField txtFormPg = new JTextField();
 	private final JScrollPane scrollPane = new JScrollPane();
 	private final JTable table = new JTable();
@@ -41,6 +41,8 @@ public class GuiFormaPago extends JFrame implements ActionListener {
 	private final JLabel lblId = new JLabel("ID");
 	private final JTextField txtNewFormPg = new JTextField();
 	private final JButton btnSalir = new JButton("SALIR");
+	private final JLabel lblFormaDePago = new JLabel("Forma de pago");
+	private final JButton btnEliminar = new JButton("Eliminar por id");
 
 	/**
 	 * Launch the application.
@@ -107,7 +109,7 @@ public class GuiFormaPago extends JFrame implements ActionListener {
 		}
 		{
 			lblId.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			lblId.setBounds(10, 129, 112, 24);
+			lblId.setBounds(10, 129, 86, 24);
 			contentPane.add(lblId);
 		}
 		{
@@ -116,13 +118,28 @@ public class GuiFormaPago extends JFrame implements ActionListener {
 			contentPane.add(txtNewFormPg);
 		}
 		{
+			btnSalir.setForeground(Color.WHITE);
+			btnSalir.setBackground(Color.RED);
 			btnSalir.addActionListener(this);
-			btnSalir.setBounds(10, 260, 89, 23);
+			btnSalir.setBounds(779, 335, 89, 23);
 			contentPane.add(btnSalir);
+		}
+		{
+			lblFormaDePago.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			lblFormaDePago.setBounds(106, 129, 112, 24);
+			contentPane.add(lblFormaDePago);
+		}
+		{
+			btnEliminar.addActionListener(this);
+			btnEliminar.setBounds(106, 192, 133, 23);
+			contentPane.add(btnEliminar);
 		}
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnEliminar) {
+			do_btnEliminar_actionPerformed(e);
+		}
 		if (e.getSource() == btnSalir) {
 			do_btnSalir_actionPerformed(e);
 		}
@@ -155,6 +172,13 @@ public class GuiFormaPago extends JFrame implements ActionListener {
 			if (txtFormPg.getText().isBlank()) {
 				JOptionPane.showMessageDialog(this, "El campo no puede estar vacío.");
 				return;
+			}
+			
+			for (int i = 0; i < formasPago.size(); i++) {
+				if(formasPago.get(i).getNombre().equalsIgnoreCase(txtFormPg.getText().trim())) {
+					JOptionPane.showMessageDialog(this, "Nombre ya registrado.");
+					return;
+				}
 			}
 
 			FormaPago fP = new FormaPago();
@@ -194,6 +218,13 @@ public class GuiFormaPago extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(this, "No existe una forma de pago con ese ID.");
 				return;
 			}
+			
+			for (int i = 0; i < formasPago.size(); i++) {
+				if(formasPago.get(i).getNombre().equalsIgnoreCase(txtNewFormPg.getText().trim())) {
+					JOptionPane.showMessageDialog(this, "Nombre ya registrado.");
+					return;
+				}
+			}
 
 			FormaPago fP = new FormaPago();
 			fP.setNombre(txtNewFormPg.getText().trim());
@@ -215,5 +246,21 @@ public class GuiFormaPago extends JFrame implements ActionListener {
 	}
 	protected void do_btnSalir_actionPerformed(ActionEvent e) {
 		dispose();
+	}
+	protected void do_btnEliminar_actionPerformed(ActionEvent e) {
+		for (int i = 0; i < formasPago.size(); i++) {
+			String id = String.valueOf(formasPago.get(i).getId());
+			if (id.equals(txtIdFormPg.getText().trim())) {
+				fPgDAO.deleteFormaPago(formasPago.get(i).getId());
+				JOptionPane.showMessageDialog(this, "Forma de pago eliminada con éxito.");
+				formasPago = fPgDAO.readFormasPagos();
+				showTable();
+				txtNewFormPg.setText("");
+				txtIdFormPg.setText("");
+				return;
+			}
+		}
+		
+		JOptionPane.showMessageDialog(this, "Forma de pago no encontrada.");
 	}
 }

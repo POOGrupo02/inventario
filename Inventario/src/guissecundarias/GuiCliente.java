@@ -135,8 +135,10 @@ public class GuiCliente extends JFrame implements ActionListener {
 			scrollPane.setViewportView(table);
 		}
 		{
+			btnSalir.setForeground(Color.WHITE);
+			btnSalir.setBackground(Color.RED);
 			btnSalir.addActionListener(this);
-			btnSalir.setBounds(155, 312, 89, 23);
+			btnSalir.setBounds(844, 384, 89, 23);
 			contentPane.add(btnSalir);
 		}
 	}

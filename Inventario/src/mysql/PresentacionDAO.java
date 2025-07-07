@@ -60,4 +60,36 @@ public class PresentacionDAO {
 			return false;
 		}
 	}
+	
+	public Boolean deletePresentacion(int id) {
+		String sqlDelete = "DELETE FROM presentaciones WHERE id_present = ?";
+		
+		try (Connection con = conexion.getConnection(); PreparedStatement ps = con.prepareStatement(sqlDelete)) {
+			ps.setInt(1, id);
+			ps.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public Boolean isUsed(int id) {
+		String sqlQuestion = "SELECT COUNT(*) FROM productos WHERE estado = 1 AND id_present = ?";
+
+		try (Connection con = conexion.getConnection(); PreparedStatement ps = con.prepareStatement(sqlQuestion)) {
+
+			ps.setInt(1, id);
+
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				int count = rs.getInt(1);
+				return count > 0;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
 }

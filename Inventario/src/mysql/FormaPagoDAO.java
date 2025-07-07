@@ -27,7 +27,7 @@ public class FormaPagoDAO {
 
 	public ArrayList<FormaPago> readFormasPagos() {
 		ArrayList<FormaPago> formasPagos = new ArrayList<>();
-        String sql = "SELECT * from formas_pago WHERE estado = TRUE";
+        String sql = "SELECT * from formas_pago WHERE estado = 1";
 
         try (Connection con = conexion.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
@@ -54,6 +54,20 @@ public class FormaPagoDAO {
              PreparedStatement ps = con.prepareStatement(sqlUpdate)) {
             ps.setString(1, formaPago.getNombre());
             ps.setInt(2, formaPago.getId());
+            ps.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+	
+	public Boolean deleteFormaPago(int id) {
+        String sqlUpdate = "UPDATE formas_pago SET estado = 0 WHERE id_form_pag = ?";
+
+        try (Connection con = conexion.getConnection();
+             PreparedStatement ps = con.prepareStatement(sqlUpdate)) {
+            ps.setInt(1, id);
             ps.executeUpdate();
             return true;
         } catch (SQLException e) {

@@ -202,8 +202,10 @@ public class GuiEntrada extends JFrame implements ActionListener {
 		}
 		
 		btnSalir = new JButton("SALIR");
+		btnSalir.setBackground(Color.RED);
+		btnSalir.setForeground(Color.WHITE);
 		btnSalir.addActionListener(this);
-		btnSalir.setBounds(735, 399, 148, 23);
+		btnSalir.setBounds(848, 668, 129, 23);
 		contentPane.add(btnSalir);
 		{
 			lblNewLabel_2.setIcon(new ImageIcon(GuiEntrada.class.getResource("/images/Stock.jpg")));

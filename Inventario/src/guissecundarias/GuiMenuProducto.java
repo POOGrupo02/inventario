@@ -80,6 +80,8 @@ public class GuiMenuProducto extends JFrame implements ActionListener {
 		}
 		{
 			btnSalir = new JButton("SALIR");
+			btnSalir.setForeground(Color.WHITE);
+			btnSalir.setBackground(Color.RED);
 			btnSalir.addActionListener(this);
 			btnSalir.setBounds(763, 496, 89, 23);
 			contentPane.add(btnSalir);

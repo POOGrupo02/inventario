@@ -43,6 +43,8 @@ public class GuiUniMedi extends JFrame implements ActionListener {
 	private ArrayList<UnidadMedida> unidadesMedi = uDAO.readUnidadesMedidas();
 	private String[] columnas = { "ID", "NOMBRE", "CREATED_AT", "UPDATED_AT" };
 	private JButton btnModificar_1;
+	private final JButton btnEliminar = new JButton("Eliminar por id");
+	private final JLabel lblUnidadDeMedida_1 = new JLabel("Unidad de medida");
 
 	/**
 	 * Launch the application.
@@ -118,9 +120,21 @@ public class GuiUniMedi extends JFrame implements ActionListener {
 		}
 		{
 			btnModificar_1 = new JButton("SALIR");
+			btnModificar_1.setForeground(Color.WHITE);
+			btnModificar_1.setBackground(Color.RED);
 			btnModificar_1.addActionListener(this);
-			btnModificar_1.setBounds(13, 363, 89, 23);
+			btnModificar_1.setBounds(802, 438, 89, 23);
 			contentPane.add(btnModificar_1);
+		}
+		{
+			btnEliminar.addActionListener(this);
+			btnEliminar.setBounds(109, 236, 133, 23);
+			contentPane.add(btnEliminar);
+		}
+		{
+			lblUnidadDeMedida_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			lblUnidadDeMedida_1.setBounds(108, 173, 140, 24);
+			contentPane.add(lblUnidadDeMedida_1);
 		}
 	}
 	
@@ -139,6 +153,9 @@ public class GuiUniMedi extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnEliminar) {
+			do_btnEliminar_actionPerformed(e);
+		}
 		if (e.getSource() == btnModificar_1) {
 			do_btnModificar_1_actionPerformed(e);
 		}
@@ -155,6 +172,13 @@ public class GuiUniMedi extends JFrame implements ActionListener {
 			if (txtUniMedi.getText().isBlank()) {
 				JOptionPane.showMessageDialog(this, "El campo no puede estar vacío.");
 				return;
+			}
+			
+			for (int i = 0; i < unidadesMedi.size(); i++) {
+				if(unidadesMedi.get(i).getName().equalsIgnoreCase(txtUniMedi.getText().trim())) {
+					JOptionPane.showMessageDialog(this, "Nombre ya registrado.");
+					return;
+				}
 			}
 
 			UnidadMedida m = new UnidadMedida();
@@ -193,6 +217,13 @@ public class GuiUniMedi extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(this, "No existe una unidad de medida con ese ID.");
 				return;
 			}
+			
+			for (int i = 0; i < unidadesMedi.size(); i++) {
+				if(unidadesMedi.get(i).getName().equalsIgnoreCase(txtNewUniMedi.getText().trim())) {
+					JOptionPane.showMessageDialog(this, "Nombre ya registrado.");
+					return;
+				}
+			}
 
 			UnidadMedida u = new UnidadMedida();
 			u.setName(txtNewUniMedi.getText().trim());
@@ -213,5 +244,17 @@ public class GuiUniMedi extends JFrame implements ActionListener {
 	}
 	protected void do_btnModificar_1_actionPerformed(ActionEvent e) {
 		dispose();
+	}
+	protected void do_btnEliminar_actionPerformed(ActionEvent e) {
+		int id = Integer.parseInt(txtId.getText());
+
+		if (uDAO.isUsed(id)) {
+			JOptionPane.showMessageDialog(this, "No se puede borrar esta unidad de medida porque está siendo utilizada por un producto.");
+			return;
+		} else {
+			uDAO.deleteUniMedi(id);
+			unidadesMedi = uDAO.readUnidadesMedidas();
+			showTable();
+		}
 	}
 }

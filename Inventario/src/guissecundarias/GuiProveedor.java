@@ -91,8 +91,10 @@ public class GuiProveedor extends JDialog implements ActionListener {
 		contentPanel.setLayout(null);
 		{
 			btnSalir = new JButton("SALIR");
+			btnSalir.setBackground(Color.RED);
+			btnSalir.setForeground(Color.WHITE);
 			btnSalir.addActionListener(this);
-			btnSalir.setBounds(487, 532, 89, 23);
+			btnSalir.setBounds(816, 614, 89, 23);
 			contentPanel.add(btnSalir);
 		}
 		{

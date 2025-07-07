@@ -99,6 +99,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 	private final JButton btnEliminarFormPg = new JButton("Eliminar");
 	private final com.toedter.calendar.JDateChooser dateChooser = new com.toedter.calendar.JDateChooser();
 	private JButton btnVerVentasPorFecha;
+	private final JButton btnVerIngresos = new JButton("Ver ingresos");
 	
 	
 	/**
@@ -129,7 +130,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 		txtCodProd.setBounds(154, 40, 86, 20);
 		txtCodProd.setColumns(10);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 939, 754);
+		setBounds(100, 100, 1134, 754);
 		wqe = new JPanel();
 		wqe.setBackground(new Color(128, 255, 255));
 		wqe.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -137,7 +138,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 		setContentPane(wqe);
 		wqe.setLayout(null);
 		{
-			scrollPane.setBounds(566, 60, 347, 335);
+			scrollPane.setBounds(742, 65, 347, 335);
 			wqe.add(scrollPane);
 			datosCarrito = new Object[productosCarrito.size()][columnasCarrito.length];
 			table.setEnabled(false);
@@ -147,7 +148,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 			
 			txtCantProd.setText(cantProd+"");
 			dateChooser.getCalendarButton().addActionListener(this);
-			dateChooser.setBounds(733, 440, 167, 25);
+			dateChooser.setBounds(909, 445, 167, 25);
 			wqe.add(dateChooser);
 			
 			showTableSalidas();
@@ -157,7 +158,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 		}
 		{
 			lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			lblNewLabel.setBounds(566, 35, 148, 14);
+			lblNewLabel.setBounds(742, 40, 148, 14);
 			wqe.add(lblNewLabel);
 		}
 		{
@@ -257,7 +258,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 		}
 		{
 			btnRegistrarVenta.addActionListener(this);
-			btnRegistrarVenta.setBounds(566, 406, 157, 23);
+			btnRegistrarVenta.setBounds(742, 411, 157, 23);
 			wqe.add(btnRegistrarVenta);
 		}
 		{
@@ -292,7 +293,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 			wqe.add(btnBuscar);
 		}
 		{
-			scrollPane_1.setBounds(10, 478, 722, 212);
+			scrollPane_1.setBounds(10, 478, 792, 212);
 			wqe.add(scrollPane_1);
 		}
 		{
@@ -305,8 +306,10 @@ public class GuiSalida extends JFrame implements ActionListener {
 			wqe.add(lblNewLabel_1_4);
 		}
 		{
+			btnSalir.setForeground(Color.WHITE);
+			btnSalir.setBackground(Color.RED);
 			btnSalir.addActionListener(this);
-			btnSalir.setBounds(338, 391, 148, 23);
+			btnSalir.setBounds(960, 667, 148, 23);
 			wqe.add(btnSalir);
 		}
 		{
@@ -317,7 +320,7 @@ public class GuiSalida extends JFrame implements ActionListener {
 		}
 		{
 			btnGuardarLista.addActionListener(this);
-			btnGuardarLista.setBounds(742, 667, 119, 23);
+			btnGuardarLista.setBounds(812, 667, 119, 23);
 			wqe.add(btnGuardarLista);
 		}
 		{
@@ -328,8 +331,13 @@ public class GuiSalida extends JFrame implements ActionListener {
 		{
 			btnVerVentasPorFecha = new JButton("Ver Ventas Por Fecha");
 			btnVerVentasPorFecha.addActionListener(this);
-			btnVerVentasPorFecha.setBounds(733, 406, 167, 23);
+			btnVerVentasPorFecha.setBounds(909, 411, 167, 23);
 			wqe.add(btnVerVentasPorFecha);
+		}
+		{
+			btnVerIngresos.addActionListener(this);
+			btnVerIngresos.setBounds(812, 633, 119, 23);
+			wqe.add(btnVerIngresos);
 		}
 		cboProducto.addItem("");
 		cboFormPag.addItem("");
@@ -403,19 +411,25 @@ public class GuiSalida extends JFrame implements ActionListener {
 		File archivo = new File("lista_ventas.csv");
 		try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(archivo), "UTF-8");
 				PrintWriter pw = new PrintWriter(writer)) {
-
+			
+			double montoTotal = 0.0;
 			writer.write('\uFEFF');
 			
 			pw.println("ID;USUARIO;CLIENTE;CODIGO_PRODUCTO;PRODUCTO;CANTIDAD;MONTO;FORMA DE PAGO; CREATED_AT");
-
+			
+			
 			for (int i = 0; i < salidas.size(); i++) {
 				
 				SalidaProducto sP = salidas.get(i);
 				
 				pw.println(sP.getId() + ";" + sP.getUsuario() + ";" + sP.getCliente() + ";" + sP.getCodProd() + ";" + sP.getProducto() + ";" + sP.getCantidad() + ";" +
 						sP.getMonto() + ";" + sP.getFormaPago() + ";" + sP.getCreatedAt());
+				
+				montoTotal += sP.getMonto();
 
 			}
+			
+			pw.println("MONTO TOTAL DE LAS VENTAS:;;;;;;;;S/"+ String.format("%.2f", montoTotal));
 			JOptionPane.showMessageDialog(null, "Archivo guardado correctamente en la carpeta del proyecto");
 
 		} catch (Exception e1) {
@@ -523,6 +537,9 @@ public class GuiSalida extends JFrame implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnVerIngresos) {
+			do_btnVerIngresos_actionPerformed(e);
+		}
 		if (e.getSource() == btnVerVentasPorFecha) {
 			do_btnVerVentasPorFecha_actionPerformed(e);
 		}
@@ -787,5 +804,15 @@ public class GuiSalida extends JFrame implements ActionListener {
 	    } else {
 	        javax.swing.JOptionPane.showMessageDialog(null, "Seleccione una fecha.");
 	    }
+	}
+	protected void do_btnVerIngresos_actionPerformed(ActionEvent e) {
+		
+		double monto = 0.0;
+		
+		for (int i = 0; i < salidas.size(); i++) {
+			monto += salidas.get(i).getMonto();
+		}
+		
+		JOptionPane.showMessageDialog(this, "Monto total de las ventas: S/"+String.format("%.2f", monto));
 	}
 }

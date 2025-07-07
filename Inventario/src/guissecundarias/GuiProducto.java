@@ -256,8 +256,10 @@ public class GuiProducto extends JDialog implements ActionListener {
 			contentPanel.add(btnEliminar);
 		}
 		{
+			btnSalir.setForeground(Color.WHITE);
+			btnSalir.setBackground(Color.RED);
 			btnSalir.addActionListener(this);
-			btnSalir.setBounds(332, 549, 153, 23);
+			btnSalir.setBounds(923, 549, 129, 23);
 			contentPanel.add(btnSalir);
 		}
 		{

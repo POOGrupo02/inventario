@@ -42,6 +42,8 @@ public class GuiMarca extends JFrame implements ActionListener {
 	private ArrayList<Marca> marcas = mDAO.readMarcas();
 	private String[] columnas = { "ID", "NOMBRE", "CREATED_AT", "UPDATED_AT" };
 	private final JButton btnSalir = new JButton("SALIR");
+	private final JButton btnEliminarPorId = new JButton("Eliminar por id");
+	private final JLabel lblMarca_1 = new JLabel("Marca");
 
 	/**
 	 * Launch the application.
@@ -64,7 +66,7 @@ public class GuiMarca extends JFrame implements ActionListener {
 	 */
 	public GuiMarca() {
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 735, 492);
+		setBounds(100, 100, 808, 492);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(128, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -72,7 +74,7 @@ public class GuiMarca extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		{
-			scrollPane.setBounds(217, 31, 460, 363);
+			scrollPane.setBounds(302, 29, 460, 363);
 			contentPane.add(scrollPane);
 			showTable();
 		}
@@ -97,7 +99,7 @@ public class GuiMarca extends JFrame implements ActionListener {
 		}
 		{
 			lblId.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			lblId.setBounds(13, 160, 112, 24);
+			lblId.setBounds(13, 157, 68, 24);
 			contentPane.add(lblId);
 		}
 		{
@@ -116,9 +118,21 @@ public class GuiMarca extends JFrame implements ActionListener {
 			contentPane.add(txtNewMarca);
 		}
 		{
+			btnSalir.setForeground(Color.WHITE);
+			btnSalir.setBackground(Color.RED);
 			btnSalir.addActionListener(this);
-			btnSalir.setBounds(13, 368, 89, 23);
+			btnSalir.setBounds(620, 419, 89, 23);
 			contentPane.add(btnSalir);
+		}
+		{
+			btnEliminarPorId.addActionListener(this);
+			btnEliminarPorId.setBounds(109, 223, 125, 23);
+			contentPane.add(btnEliminarPorId);
+		}
+		{
+			lblMarca_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			lblMarca_1.setBounds(112, 157, 68, 24);
+			contentPane.add(lblMarca_1);
 		}
 	}
 	
@@ -136,6 +150,9 @@ public class GuiMarca extends JFrame implements ActionListener {
 		table.setModel(new DefaultTableModel(datos, columnas));
 	}
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnEliminarPorId) {
+			do_btnEliminarPorId_actionPerformed(e);
+		}
 		if (e.getSource() == btnSalir) {
 			do_btnSalir_actionPerformed(e);
 		}
@@ -152,6 +169,13 @@ public class GuiMarca extends JFrame implements ActionListener {
 			if (txtMarca.getText().isBlank()) {
 				JOptionPane.showMessageDialog(this, "El campo no puede estar vacío.");
 				return;
+			}
+			
+			for (int i = 0; i < marcas.size(); i++) {
+				if(marcas.get(i).getName().equalsIgnoreCase(txtMarca.getText().trim())) {
+					JOptionPane.showMessageDialog(this, "Nombre ya registrado.");
+					return;
+				}
 			}
 
 			Marca m = new Marca();
@@ -191,6 +215,13 @@ public class GuiMarca extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(this, "No existe una marca con ese ID.");
 				return;
 			}
+			
+			for (int i = 0; i < marcas.size(); i++) {
+				if(marcas.get(i).getName().equalsIgnoreCase(txtNewMarca.getText().trim())) {
+					JOptionPane.showMessageDialog(this, "Nombre ya registrado.");
+					return;
+				}
+			}
 
 			Marca m = new Marca();
 			m.setName(txtNewMarca.getText().trim());
@@ -211,5 +242,17 @@ public class GuiMarca extends JFrame implements ActionListener {
 	}
 	protected void do_btnSalir_actionPerformed(ActionEvent e) {
 		dispose();
+	}
+	protected void do_btnEliminarPorId_actionPerformed(ActionEvent e) {
+		int id = Integer.parseInt(txtId.getText());
+		
+		if(mDAO.isUsed(id)) {
+			JOptionPane.showMessageDialog(this, "No se puede borrar esta marca porque está siendo utilizada por un producto.");
+			return;
+		}else {
+			mDAO.deleteMarca(id);
+			marcas = mDAO.readMarcas();
+			showTable();
+		}
 	}
 }
