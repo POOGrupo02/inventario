@@ -779,26 +779,10 @@ public class GuiSalida extends JFrame implements ActionListener {
 	            JOptionPane.showMessageDialog(this, "No hay ventas registradas en la fecha seleccionada.");
 	            return;
 	        }
-
-	        // Crear el modelo para la tabla
-	        String[] columnas = { "ID", "Cliente", "Cod. Producto", "Producto", "Usuario", "Cantidad", "Monto", "Forma Pago", "Fecha" };
-	        Object[][] datos = new Object[lista.size()][columnas.length];
-
-	        for (int i = 0; i < lista.size(); i++) {
-	            SalidaProducto sp = lista.get(i);
-	            datos[i][0] = sp.getId();
-	            datos[i][1] = sp.getCliente();
-	            datos[i][2] = sp.getCodProd();
-	            datos[i][3] = sp.getProducto();
-	            datos[i][4] = sp.getUsuario();
-	            datos[i][5] = sp.getCantidad();
-	            datos[i][6] = sp.getMonto();
-	            datos[i][7] = sp.getFormaPago();
-	            datos[i][8] = sp.getCreatedAt();
-	        }
-
-	        table1.setModel(new javax.swing.table.DefaultTableModel(datos, columnas));
-	        table1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+	        
+	        salidas = lista;
+	        
+	        showTableSalidas();
 
 	    } else {
 	        javax.swing.JOptionPane.showMessageDialog(null, "Seleccione una fecha.");
